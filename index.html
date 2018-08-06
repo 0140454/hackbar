@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Angular.js -->
+    <link rel="stylesheet" type="text/css" href="css/angular/angular-material.min.css" />
+    <!-- HackBar -->
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+  </head>
+  <body ng-app="HackBarApp" ng-cloak>
+    <div ng-controller="HackBarCtrl as ctrl">
+      <md-toolbar class="md-menu-toolbar md-primary">
+        <div layout="row">
+          <div>
+            <md-menu-bar>
+              <md-button ng-click="ctrl.loadUrl()">Load URL</md-button>
+              <md-button ng-click="ctrl.splitUrl()">Split URL</md-button>
+              <md-button ng-click="ctrl.executeUrl()">Execute</md-button>
+              <md-menu>
+                <md-button ng-click="$mdMenu.open()">Encoding</md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-func-button func="Encode.URL.encode">URL encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Encode.URL.decode">URL decode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-divider></md-menu-divider>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Base64.encode">Base64 encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Base64.decode">Base64 decode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-divider></md-menu-divider>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Hexadecimal.encode">Hexadecimal encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Hexadecimal.decode">Hexadecimal decode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-divider></md-menu-divider>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Unicode.encode">Unicode encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Encode.Unicode.decode">Unicode decode</md-func-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+              <md-menu>
+                <md-button ng-click="$mdMenu.open()">Hashing</md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-func-button func="Hash.MD5.digest">MD5</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Hash.SHA1.digest">SHA1</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Hash.SHA256.digest">SHA256</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-func-button func="Hash.SHA512.digest">SHA512</md-func-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+            </md-menu-bar>
+          </div>
+        </div>
+      </md-toolbar>
+      <md-content layout-padding>
+        <md-input-container class="md-block md-no-error">
+          <label>URL</label>
+          <textarea ng-model="request.url" ng-focus="ctrl.onFocus($event)" ng-element-variable="domUrl" md-no-resize></textarea>
+        </md-input-container>
+        <div layout="row" layout-xs="column">
+          <div flex>
+            <md-content layout-padding>
+              <div layout="row">
+                <md-switch ng-model="request.body.enabled" class="md-primary">Enable POST</md-switch>
+              </div>
+              <md-input-container ng-if="request.body.enabled" class="md-block md-no-error">
+                <label>Body</label>
+                <textarea ng-model="request.body.content" ng-focus="ctrl.onFocus($event)" md-no-resize></textarea>
+              </md-input-container>
+            </md-content>
+          </div>
+          <div flex>
+            <md-content layout-padding>
+              <div layout="row">
+                <md-button ng-click="ctrl.addHeader()" class="md-raised">Add</md-button>
+              </div>
+              <div ng-repeat="header in request.headers" layout="row">
+                <md-checkbox ng-model="header.enabled" class="md-header-ctrl"></md-checkbox>
+                <md-input-container class="md-block md-no-error" flex>
+                  <label>Name</label>
+                  <input ng-model="header.name" />
+                </md-input-container>
+                <md-input-container class="md-block md-no-error" flex>
+                  <label>Value</label>
+                  <input ng-model="header.value" />
+                </md-input-container>
+                <md-button ng-click="ctrl.deleteHeader($index)" class="md-icon-button md-header-ctrl">
+                  <md-icon md-svg-icon="images/icon-clear.svg"></md-icon>
+                </md-button>
+              </div>
+            </md-content>
+          </div>
+        </div>
+      </md-content>
+    </div>
+
+    <!-- Angular.js Libraries -->
+    <script src="scripts/angular/angular.min.js" type="text/javascript"></script>
+    <script src="scripts/angular/angular-animate.min.js" type="text/javascript"></script>
+    <script src="scripts/angular/angular-aria.min.js" type="text/javascript"></script>
+    <script src="scripts/angular/angular-messages.min.js" type="text/javascript"></script>
+    <!-- Angular Material Library -->
+    <script src="scripts/angular/angular-material.min.js" type="text/javascript"></script>
+    <!-- HackBar -->
+    <script src="scripts/thirdparty/utf8.js" type="text/javascript"></script>
+    <script src="scripts/thirdparty/jshashes.min.js" type="text/javascript"></script>
+    <script src="scripts/encode.js" type="text/javascript"></script>
+    <script src="scripts/hash.js" type="text/javascript"></script>
+    <script src="scripts/index.js" type="text/javascript"></script>
+  </body>
+</html>

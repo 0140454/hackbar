@@ -1,0 +1,21 @@
+md-checkbox.md-header-ctrl {
+  margin: 0;
+}
+
+md-input-container.md-no-error .md-errors-spacer {
+  display: none;
+}
+
+md-tabs {
+  padding: 0 14px;
+}
+
+md-switch {
+  font-weight: 500;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.md-button.md-header-ctrl {
+  top: 15px;
+}

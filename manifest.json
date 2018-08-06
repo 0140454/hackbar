@@ -1,0 +1,19 @@
+{
+  "name": "HackBar",
+  "version": "0.0.5",
+  "description": "HackBar for Chrome",
+  "devtools_page": "devtools.html",
+  "icons": {
+    "128": "images/icon.png"
+  },
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "manifest_version": 2
+}
