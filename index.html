@@ -92,7 +92,7 @@
                 <md-button ng-click="ctrl.addHeader()" class="md-raised">Add</md-button>
               </div>
               <div ng-repeat="header in request.headers" layout="row">
-                <md-checkbox ng-model="header.enabled" class="md-header-ctrl"></md-checkbox>
+                <md-checkbox ng-model="header.enabled" class="md-header-ctrl md-primary"></md-checkbox>
                 <md-input-container class="md-block md-no-error" flex>
                   <label>Name</label>
                   <input ng-model="header.name" />
