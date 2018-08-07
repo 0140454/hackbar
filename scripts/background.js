@@ -84,6 +84,10 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     return header.enabled === true && header.name.length > 0
   })
 
+  if (modifiedHeaders.length === 0) {
+    return
+  }
+
   details.requestHeaders = details.requestHeaders.reduce(function (obj, header) {
     obj[header.name] = header.value
     return obj
