@@ -20,31 +20,31 @@
                 <md-button ng-click="$mdMenu.open()">Encoding</md-button>
                 <md-menu-content>
                   <md-menu-item>
-                    <md-func-button func="Encode.URL.encode">URL encode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.URL.encode')">URL encode</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Encode.URL.decode">URL decode</md-func-button>
-                  </md-menu-item>
-                  <md-menu-divider></md-menu-divider>
-                  <md-menu-item>
-                    <md-func-button func="Encode.Base64.encode">Base64 encode</md-func-button>
-                  </md-menu-item>
-                  <md-menu-item>
-                    <md-func-button func="Encode.Base64.decode">Base64 decode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.URL.decode')">URL decode</md-button>
                   </md-menu-item>
                   <md-menu-divider></md-menu-divider>
                   <md-menu-item>
-                    <md-func-button func="Encode.Hexadecimal.encode">Hexadecimal encode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Base64.encode')">Base64 encode</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Encode.Hexadecimal.decode">Hexadecimal decode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Base64.decode')">Base64 decode</md-button>
                   </md-menu-item>
                   <md-menu-divider></md-menu-divider>
                   <md-menu-item>
-                    <md-func-button func="Encode.Unicode.encode">Unicode encode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Hexadecimal.encode')">Hexadecimal encode</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Encode.Unicode.decode">Unicode decode</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Hexadecimal.decode')">Hexadecimal decode</md-button>
+                  </md-menu-item>
+                  <md-menu-divider></md-menu-divider>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Unicode.encode')">Unicode encode</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Unicode.decode')">Unicode decode</md-button>
                   </md-menu-item>
                 </md-menu-content>
               </md-menu>
@@ -52,16 +52,16 @@
                 <md-button ng-click="$mdMenu.open()">Hashing</md-button>
                 <md-menu-content>
                   <md-menu-item>
-                    <md-func-button func="Hash.MD5.digest">MD5</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Hash.MD5.digest')">MD5</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Hash.SHA1.digest">SHA1</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Hash.SHA1.digest')">SHA1</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Hash.SHA256.digest">SHA256</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Hash.SHA256.digest')">SHA256</md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-func-button func="Hash.SHA512.digest">SHA512</md-func-button>
+                    <md-button ng-click="ctrl.executeFunction('Hash.SHA512.digest')">SHA512</md-button>
                   </md-menu-item>
                 </md-menu-content>
               </md-menu>
@@ -89,17 +89,17 @@
           <div flex>
             <md-content layout-padding>
               <div layout="row">
-                <md-button ng-click="ctrl.addHeader()" class="md-raised">Add</md-button>
+                <md-button ng-click="ctrl.addHeader()" class="md-raised">Add Header</md-button>
               </div>
               <div ng-repeat="header in request.headers" layout="row">
                 <md-checkbox ng-model="header.enabled" class="md-header-ctrl md-primary"></md-checkbox>
                 <md-input-container class="md-block md-no-error" flex>
                   <label>Name</label>
-                  <input ng-model="header.name" />
+                  <input ng-model="header.name" ng-focus="ctrl.onFocus($event)" />
                 </md-input-container>
                 <md-input-container class="md-block md-no-error" flex>
                   <label>Value</label>
-                  <input ng-model="header.value" />
+                  <input ng-model="header.value" ng-focus="ctrl.onFocus($event)" />
                 </md-input-container>
                 <md-button ng-click="ctrl.deleteHeader($index)" class="md-icon-button md-header-ctrl">
                   <md-icon md-svg-icon="images/icon-clear.svg"></md-icon>

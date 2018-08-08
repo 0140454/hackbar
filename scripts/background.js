@@ -27,7 +27,7 @@ const handleMessage = function (message, sender, sendResponse) {
     if (message.data.body.enabled) {
       chrome.tabs.executeScript(message.tabId, {
         code: `const url = "${encodeURIComponent(message.data.url)}";
-               const body = "${escapeHtml(message.data.body.content)}";`
+                const body = "${escapeHtml(message.data.body.content)}";`
       }, function () {
         chrome.tabs.executeScript(message.tabId, {
           file: 'scripts/post-request.js'
@@ -67,7 +67,8 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
   tabData.request.url = details.url
   if (typeof details.requestBody !== 'undefined') {
     tabData.request.body = (typeof details.requestBody.formData !== 'undefined')
-      ? details.requestBody.formData : ''
+      ? details.requestBody.formData
+      : ''
   } else {
     delete tabData.request.body
   }
@@ -80,28 +81,31 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     return
   }
 
-  const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(function (header) {
-    return header.enabled === true && header.name.length > 0
-  })
+  const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(
+    function (header) {
+      return header.enabled === true && header.name.length > 0
+    })
 
   if (modifiedHeaders.length === 0) {
     return
   }
 
-  details.requestHeaders = details.requestHeaders.reduce(function (obj, header) {
-    obj[header.name] = header.value
-    return obj
-  }, {})
+  details.requestHeaders = details.requestHeaders.reduce(
+    function (obj, header) {
+      obj[header.name] = header.value
+      return obj
+    }, {})
 
-  for (const idx in modifiedHeaders) {
-    details.requestHeaders[modifiedHeaders[idx].name] = modifiedHeaders[idx].value
-  }
+  modifiedHeaders.forEach(function (header) {
+    details.requestHeaders[header.name] = header.value
+  })
 
   return {
-    requestHeaders: Object.keys(details.requestHeaders).reduce(function (obj, name) {
-      obj.push({ name: name, value: details.requestHeaders[name] })
-      return obj
-    }, [])
+    requestHeaders: Object.keys(details.requestHeaders).reduce(
+      function (obj, name) {
+        obj.push({ name: name, value: details.requestHeaders[name] })
+        return obj
+      }, [])
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestHeaders'])
 

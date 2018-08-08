@@ -10,27 +10,9 @@ app.directive('ngElementVariable', function () {
   }
 })
 
-app.directive('mdFuncButton', function ($mdCompiler) {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    template: '<div ng-transclude></div>',
-    link: function ($scope, elements, attrs) {
-      $mdCompiler.compile({
-        template: `<md-button ng-click='executeButtonFunction($event.target)'
-                    func='${attrs.func}'>${elements[0].innerHTML}</md-button>`
-      }).then(function (compileData) {
-        compileData.link($scope)
-        elements.replaceWith(compileData.element)
-      })
-    }
-  }
-})
-
 app.controller('HackBarCtrl', function ($scope, $mdDialog) {
   $scope.backgroundPageConnection = chrome.runtime.connect({ name: 'hack-bar' })
-  $scope.focusedInput = null
+  $scope.domFocusedInput = null
 
   $scope.request = {
     url: '',
@@ -51,8 +33,8 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
         const alertDialog = $mdDialog.alert({
           title: 'Unable to fetch request information',
           textContent: 'After installing extension, reloading the tab is' +
-                        ' required to allow HackBar intercept the requests.',
-          ok: 'Close'
+                        ' required to let HackBar record the requests.',
+          ok: 'OK'
         })
 
         $mdDialog.show(alertDialog)
@@ -63,16 +45,14 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
 
       $scope.request.url = request.url
       $scope.request.body.content = request.body
-      $scope.request.body.enabled = typeof request.body !== 'undefined'
+      $scope.request.body.enabled = (typeof request.body !== 'undefined')
 
       if ($scope.request.body.enabled) {
         const params = new URLSearchParams()
 
-        for (const name in request.body) {
-          request.body[name].forEach(function (value) {
-            params.append(name, value)
-          })
-        }
+        Object.entries(request.body).forEach(function ([name, value]) {
+          params.append(name, value)
+        })
 
         $scope.request.body.content = params.toString()
       }
@@ -81,61 +61,70 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
     }
   }
 
-  $scope.executeFunction = function (func, parameter) {
-    let funcClass = window
-    const funcPath = func.split('.')
+  this.getNamespaceByPath = function (path, root, returnName) {
+    let namespace = (typeof root === 'undefined') ? window : root
 
-    for (let i = 0; i < funcPath.length - 1; i++) {
-      if (typeof funcClass[funcPath[i]] !== 'undefined') {
-        funcClass = funcClass[funcPath[i]]
+    path = path.split('.')
+    for (let i = 0; i < path.length - 1; i++) {
+      if (typeof namespace[path[i]] !== 'undefined') {
+        namespace = namespace[path[i]]
       } else {
         return undefined
       }
     }
 
-    return funcClass[funcPath.slice(-1)](parameter)
+    if (returnName === true) {
+      return {
+        namespace: namespace,
+        name: path.pop()
+      }
+    } else {
+      return namespace
+    }
   }
 
-  $scope.executeButtonFunction = function (element) {
-    if ($scope.focusedInput === null) {
+  this.executeFunction = function (func, selectionRequired) {
+    func = this.getNamespaceByPath(func, window, true)
+
+    if ($scope.domFocusedInput === null || typeof func === 'undefined') {
       return
     }
 
-    const startIndex = $scope.focusedInput.selectionStart
-    const endIndex = $scope.focusedInput.selectionEnd
+    const startIndex = $scope.domFocusedInput.selectionStart
+    const endIndex = $scope.domFocusedInput.selectionEnd
 
-    let inputText = ($scope.focusedInput === $scope.domUrl)
-      ? $scope.request.url : $scope.request.body.content
+    const model = this.getNamespaceByPath(
+      $scope.domFocusedInput.attributes['ng-model'].value,
+      angular.element($scope.domFocusedInput).scope(), true)
+
+    let inputText = model.namespace[model.name]
     let selectedText = inputText.substring(startIndex, endIndex)
 
-    if (selectedText.length === 0) {
+    if (selectionRequired !== false && selectedText.length === 0) {
       return
     }
 
-    selectedText = $scope.executeFunction(element.attributes.func.value,
-      selectedText)
-    inputText = inputText.substring(0, startIndex) + selectedText +
-      inputText.substring(endIndex)
-
-    if ($scope.focusedInput === $scope.domUrl) {
-      $scope.request.url = inputText
-    } else {
-      $scope.request.body.content = inputText
-    }
+    selectedText = func.namespace[func.name](selectedText)
+    model.namespace[model.name] = inputText.substring(0, startIndex) +
+      selectedText + inputText.substring(endIndex)
 
     setTimeout(function () {
-      $scope.focusedInput.setSelectionRange(startIndex,
+      $scope.domFocusedInput.setSelectionRange(startIndex,
         startIndex + selectedText.length)
-      $scope.focusedInput.focus()
+      $scope.domFocusedInput.focus()
     }, 0)
   }
 
   this.onFocus = function (event) {
-    $scope.focusedInput = event.target
+    $scope.domFocusedInput = event.target
   }
 
   this.addHeader = function () {
-    $scope.request.headers.unshift({ enabled: true, name: '', value: '' })
+    $scope.request.headers.unshift({
+      enabled: true,
+      name: '',
+      value: ''
+    })
   }
 
   this.deleteHeader = function (index) {
@@ -150,12 +139,14 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
   }
 
   this.splitUrl = function () {
-    $scope.request.url = $scope.request.url.replace(/[^\n][?&#]/g, function (str) {
-      return str[0] + '\n' + str[1]
-    })
-    $scope.request.body.content = $scope.request.body.content.replace(/[^\n][?&#]/g, function (str) {
-      return str[0] + '\n' + str[1]
-    })
+    $scope.request.url = $scope.request.url.replace(/[^\n][?&#]/g,
+      function (str) {
+        return str[0] + '\n' + str[1]
+      })
+    $scope.request.body.content = $scope.request.body.content.replace(
+      /[^\n][?&#]/g, function (str) {
+        return str[0] + '\n' + str[1]
+      })
   }
 
   this.executeUrl = function () {
