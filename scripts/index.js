@@ -171,10 +171,13 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
       function (str) {
         return str[0] + '\n' + str[1]
       })
-    $scope.request.body.content = $scope.request.body.content.replace(
-      /[^\n][?&#]/g, function (str) {
-        return str[0] + '\n' + str[1]
-      })
+
+    if (typeof $scope.request.body.content !== 'undefined') {
+      $scope.request.body.content = $scope.request.body.content.replace(
+        /[^\n][?&#]/g, function (str) {
+          return str[0] + '\n' + str[1]
+        })
+    }
   }
 
   this.executeUrl = function () {
