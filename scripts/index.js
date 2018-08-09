@@ -83,40 +83,68 @@ app.controller('HackBarCtrl', function ($scope, $mdDialog) {
     }
   }
 
-  this.executeFunction = function (func, selectionRequired) {
+  this.executeFunction = function (func, param2) {
     func = this.getNamespaceByPath(func, window, true)
 
     if ($scope.domFocusedInput === null || typeof func === 'undefined') {
       return
     }
 
-    const startIndex = $scope.domFocusedInput.selectionStart
-    const endIndex = $scope.domFocusedInput.selectionEnd
-
     const model = this.getNamespaceByPath(
       $scope.domFocusedInput.attributes['ng-model'].value,
       angular.element($scope.domFocusedInput).scope(), true)
 
-    let inputText = model.namespace[model.name]
-    let selectedText = inputText.substring(startIndex, endIndex)
+    const startIndex = $scope.domFocusedInput.selectionStart
+    const endIndex = $scope.domFocusedInput.selectionEnd
+    const inputText = model.namespace[model.name]
 
-    if (selectionRequired !== false && selectedText.length === 0) {
-      return
+    if (typeof param2 === 'string') {
+      const promptDialog = $mdDialog.prompt({
+        title: 'HackBar',
+        textContent: param2,
+        initialValue: 1,
+        required: true,
+        ok: 'OK',
+        cancel: 'Cancel'
+      })
+
+      $mdDialog.show(promptDialog).then((result) => {
+        result = func.namespace[func.name](result)
+        model.namespace[model.name] = inputText.substring(0, startIndex) +
+          result + inputText.substring(endIndex)
+
+        this.refocusInput(startIndex + result.length,
+          startIndex + result.length)
+      }, () => {
+        this.refocusInput(startIndex, endIndex)
+      })
+    } else {
+      let selectedText = inputText.substring(startIndex, endIndex)
+
+      if (param2 !== false && selectedText.length === 0) {
+        return
+      }
+
+      selectedText = func.namespace[func.name](selectedText)
+      model.namespace[model.name] = inputText.substring(0, startIndex) +
+        selectedText + inputText.substring(endIndex)
+
+      this.refocusInput(
+        startIndex + ((param2 === false) ? selectedText.length : 0),
+        startIndex + selectedText.length
+      )
     }
-
-    selectedText = func.namespace[func.name](selectedText)
-    model.namespace[model.name] = inputText.substring(0, startIndex) +
-      selectedText + inputText.substring(endIndex)
-
-    setTimeout(function () {
-      $scope.domFocusedInput.setSelectionRange(startIndex,
-        startIndex + selectedText.length)
-      $scope.domFocusedInput.focus()
-    }, 0)
   }
 
   this.onFocus = function (event) {
     $scope.domFocusedInput = event.target
+  }
+
+  this.refocusInput = function (startIndex, endIndex) {
+    setTimeout(function () {
+      $scope.domFocusedInput.setSelectionRange(startIndex, endIndex)
+      $scope.domFocusedInput.focus()
+    }, 0)
   }
 
   this.addHeader = function () {

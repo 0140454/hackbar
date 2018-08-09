@@ -10,6 +10,10 @@ md-tabs {
   padding: 0 14px;
 }
 
+md-toolbar {
+  min-height: 0;
+}
+
 md-switch {
   font-weight: 500;
   margin: 0;

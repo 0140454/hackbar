@@ -17,6 +17,43 @@
               <md-button ng-click="ctrl.splitUrl()">Split URL</md-button>
               <md-button ng-click="ctrl.executeUrl()">Execute</md-button>
               <md-menu>
+                <md-button ng-click="$mdMenu.open()">SQLi</md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Payload.SQLi.unionSelect', 'Please enter the number of columns:')">Union select statement</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Payload.SQLi.spaceToComment')">Space to Inline comment</md-func-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+              <md-menu>
+                <md-button ng-click="$mdMenu.open()">XSS</md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Html.encode')">Html encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.Html.decode')">Html decode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-divider></md-menu-divider>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.CharCode.encode')">String.fromCharCode encode</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Encode.CharCode.decode')">String.fromCharCode decode</md-func-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+              <md-menu>
+                <md-button ng-click="$mdMenu.open()">LFI</md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Payload.LFI.phpWrapperBas64', false)">PHP wrapper - Base64</md-func-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+              <md-menu>
                 <md-button ng-click="$mdMenu.open()">Encoding</md-button>
                 <md-menu-content>
                   <md-menu-item>
@@ -123,6 +160,7 @@
     <script src="scripts/thirdparty/jshashes.min.js" type="text/javascript"></script>
     <script src="scripts/encode.js" type="text/javascript"></script>
     <script src="scripts/hash.js" type="text/javascript"></script>
+    <script src="scripts/payload.js" type="text/javascript"></script>
     <script src="scripts/index.js" type="text/javascript"></script>
   </body>
 </html>
