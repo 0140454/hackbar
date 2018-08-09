@@ -2,7 +2,9 @@
 
 HackBar for Chrome.
 
-## Required Permissions
+Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackbar/ginpbkfigcoaokgflihfhhmglmbchinc).
+
+## Requested Permissions
 
 * tabs
 * webRequest
