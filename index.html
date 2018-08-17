@@ -20,6 +20,12 @@
                 <md-button ng-click="$mdMenu.open()">SQLi</md-button>
                 <md-menu-content>
                   <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Payload.SQLi.dumpTables', 'Please enter the number of columns:')">Dump tables from database</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="ctrl.executeFunction('Payload.SQLi.dumpColumns', 'Please enter the number of columns:')">Dump columns from database</md-func-button>
+                  </md-menu-item>
+                  <md-menu-item>
                     <md-button ng-click="ctrl.executeFunction('Payload.SQLi.unionSelect', 'Please enter the number of columns:')">Union select statement</md-func-button>
                   </md-menu-item>
                   <md-menu-item>

@@ -1,6 +1,6 @@
 {
   "name": "HackBar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "HackBar for Chrome",
   "devtools_page": "devtools.html",
   "icons": {
