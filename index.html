@@ -27,6 +27,9 @@
               <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.unionSelect')">
                 <v-list-tile-title>Union select statement</v-list-tile-title>
               </v-list-tile>
+              <v-list-tile @click="applyFunction('Payload.SQLi.errorBased', true)">
+                <v-list-tile-title>Error-based injection statement</v-list-tile-title>
+              </v-list-tile>
               <v-list-tile @click="applyFunction('Payload.SQLi.spaceToComment')">
                 <v-list-tile-title>Space to Inline comment</v-list-tile-title>
               </v-list-tile>
