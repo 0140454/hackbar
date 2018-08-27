@@ -90,23 +90,19 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     return
   }
 
-  details.requestHeaders = details.requestHeaders.reduce(
-    function (obj, header) {
-      obj[header.name] = header.value
-      return obj
-    }, {})
-
   modifiedHeaders.forEach(function (header) {
-    details.requestHeaders[header.name] = header.value
+    for (const idx in details.requestHeaders) {
+      if (details.requestHeaders[idx].name.toLowerCase() ===
+          header.name.toLowerCase()) {
+        details.requestHeaders[idx].value = header.value
+        break
+      }
+    }
   })
 
-  return {
-    requestHeaders: Object.keys(details.requestHeaders).reduce(
-      function (obj, name) {
-        obj.push({ name: name, value: details.requestHeaders[name] })
-        return obj
-      }, [])
-  }
+  delete tabDB[details.tabId].modifiedHeaders
+
+  return { requestHeaders: details.requestHeaders }
 }, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestHeaders'])
 
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
