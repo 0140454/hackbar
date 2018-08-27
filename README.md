@@ -12,7 +12,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## Third-party Libraries
 
-* Angular.js
-* AngularJS Material
+* Vue.js
+* Vuetify.js
 * [jshashes](https://github.com/h2non/jshashes)
 * [utf8.js](https://github.com/mathiasbynens/utf8.js)

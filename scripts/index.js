@@ -1,196 +1,186 @@
-const app = angular.module('HackBarApp', ['ngMaterial'])
-
-app.directive('ngElementVariable', function () {
-  return {
-    restrict: 'A',
-    replace: false,
-    link: function ($scope, elements, attrs) {
-      $scope[attrs.ngElementVariable] = elements[0]
-    }
-  }
-})
-
-app.controller('HackBarCtrl', function ($scope, $mdDialog) {
-  $scope.backgroundPageConnection = chrome.runtime.connect({ name: 'hack-bar' })
-  $scope.domFocusedInput = null
-
-  $scope.request = {
-    url: '',
-    body: {
-      content: '',
-      enabled: false
-    },
-    headers: []
-  }
-
-  $scope.init = function () {
-    $scope.backgroundPageConnection.onMessage.addListener($scope.handleMessage)
-  }
-
-  $scope.handleMessage = function (message, sender, sendResponse) {
-    if (message.type === 'load') {
-      if (typeof message.data === 'undefined') {
-        const alertDialog = $mdDialog.alert({
-          title: 'Unable to fetch request information',
-          textContent: 'After installing extension, reloading the tab is' +
-                        ' required to let HackBar record the requests.',
-          ok: 'OK'
-        })
-
-        $mdDialog.show(alertDialog)
-        return
-      }
-
-      const request = message.data
-
-      $scope.request.url = request.url
-      $scope.request.body.content = request.body
-      $scope.request.body.enabled = (typeof request.body !== 'undefined')
-
-      if ($scope.request.body.enabled) {
-        const params = new URLSearchParams()
-
-        Object.entries(request.body).forEach(function ([name, value]) {
-          params.append(name, value)
-        })
-
-        $scope.request.body.content = params.toString()
-      }
-
-      $scope.domUrl.focus()
-    }
-  }
-
-  this.getNamespaceByPath = function (path, root, returnName) {
-    let namespace = (typeof root === 'undefined') ? window : root
-
-    path = path.split('.')
-    for (let i = 0; i < path.length - 1; i++) {
-      if (typeof namespace[path[i]] !== 'undefined') {
-        namespace = namespace[path[i]]
-      } else {
-        return undefined
-      }
-    }
-
-    if (returnName === true) {
-      return {
-        namespace: namespace,
-        name: path.pop()
-      }
-    } else {
-      return namespace
-    }
-  }
-
-  this.executeFunction = function (func, param2) {
-    func = this.getNamespaceByPath(func, window, true)
-
-    if ($scope.domFocusedInput === null || typeof func === 'undefined') {
-      return
-    }
-
-    const model = this.getNamespaceByPath(
-      $scope.domFocusedInput.attributes['ng-model'].value,
-      angular.element($scope.domFocusedInput).scope(), true)
-
-    const startIndex = $scope.domFocusedInput.selectionStart
-    const endIndex = $scope.domFocusedInput.selectionEnd
-    const inputText = model.namespace[model.name]
-
-    if (typeof param2 === 'string') {
-      const promptDialog = $mdDialog.prompt({
-        title: 'HackBar',
-        textContent: param2,
-        initialValue: 1,
-        required: true,
-        ok: 'OK',
-        cancel: 'Cancel'
-      })
-
-      $mdDialog.show(promptDialog).then((result) => {
-        result = func.namespace[func.name](result)
-        model.namespace[model.name] = inputText.substring(0, startIndex) +
-          result + inputText.substring(endIndex)
-
-        this.refocusInput(startIndex + result.length,
-          startIndex + result.length)
-      }, () => {
-        this.refocusInput(startIndex, endIndex)
-      })
-    } else {
-      let selectedText = inputText.substring(startIndex, endIndex)
-
-      if (param2 !== false && selectedText.length === 0) {
-        return
-      }
-
-      selectedText = func.namespace[func.name](selectedText)
-      model.namespace[model.name] = inputText.substring(0, startIndex) +
-        selectedText + inputText.substring(endIndex)
-
-      this.refocusInput(
-        startIndex + ((param2 === false) ? selectedText.length : 0),
-        startIndex + selectedText.length
-      )
-    }
-  }
-
-  this.onFocus = function (event) {
-    $scope.domFocusedInput = event.target
-  }
-
-  this.refocusInput = function (startIndex, endIndex) {
-    setTimeout(function () {
-      $scope.domFocusedInput.setSelectionRange(startIndex, endIndex)
-      $scope.domFocusedInput.focus()
-    }, 0)
-  }
-
-  this.addHeader = function () {
-    $scope.request.headers.unshift({
-      enabled: true,
-      name: '',
+new Vue({
+  el: '#app',
+  data: {
+    /* DOM element */
+    domFocusedInput: null,
+    /* Chrome */
+    backgroundPageConnection: null,
+    /* Dialog */
+    reloadDialog: false,
+    promptDialog: {
+      show: false,
+      valid: false,
+      func: '',
       value: ''
-    })
-  }
-
-  this.deleteHeader = function (index) {
-    $scope.request.headers.splice(index, 1)
-  }
-
-  this.loadUrl = function () {
-    $scope.backgroundPageConnection.postMessage({
-      tabId: chrome.devtools.inspectedWindow.tabId,
-      type: 'load'
-    })
-  }
-
-  this.splitUrl = function () {
-    $scope.request.url = $scope.request.url.replace(/[^\n][?&#]/g,
-      function (str) {
-        return str[0] + '\n' + str[1]
+    },
+    /* HTTP Request */
+    request: {
+      url: '',
+      body: {
+        content: '',
+        enabled: false
+      },
+      headers: []
+    }
+  },
+  created: function () {
+    this.backgroundPageConnection = chrome.runtime.connect({ name: 'hack-bar' })
+    this.backgroundPageConnection.onMessage.addListener(this.handleMessage)
+  },
+  methods: {
+    loadUrl: function () {
+      this.backgroundPageConnection.postMessage({
+        tabId: chrome.devtools.inspectedWindow.tabId,
+        type: 'load'
       })
+    },
 
-    if (typeof $scope.request.body.content !== 'undefined') {
-      $scope.request.body.content = $scope.request.body.content.replace(
-        /[^\n][?&#]/g, function (str) {
+    splitUrl: function () {
+      this.request.url = this.request.url.replace(/[^\n][?&#]/g,
+        function (str) {
           return str[0] + '\n' + str[1]
         })
+
+      if (typeof this.request.body.content !== 'undefined') {
+        this.request.body.content = this.request.body.content.replace(
+          /[^\n][?&#]/g, function (str) {
+            return str[0] + '\n' + str[1]
+          })
+      }
+    },
+
+    executeUrl: function () {
+      if (this.request.url.length === 0) {
+        return
+      }
+
+      this.backgroundPageConnection.postMessage({
+        tabId: chrome.devtools.inspectedWindow.tabId,
+        type: 'execute',
+        data: this.request
+      })
+    },
+
+    addHeader: function () {
+      this.request.headers.unshift({
+        enabled: true,
+        name: '',
+        value: ''
+      })
+    },
+
+    deleteHeader: function (index) {
+      this.request.headers.splice(index, 1)
+    },
+
+    getNamespaceByPath: function (path, root, returnName) {
+      let namespace = (typeof root === 'undefined') ? window : root
+
+      path = path.split('.')
+      for (let i = 0; i < path.length - 1; i++) {
+        if (typeof namespace[path[i]] !== 'undefined') {
+          namespace = namespace[path[i]]
+        } else {
+          return undefined
+        }
+      }
+
+      if (returnName === true) {
+        return {
+          namespace: namespace,
+          name: path.pop()
+        }
+      } else {
+        return namespace
+      }
+    },
+
+    applyFunction: function (func, insertWhenNoSelection, argument) {
+      func = this.getNamespaceByPath(func, window, true)
+
+      if (this.domFocusedInput === null) {
+        return
+      }
+
+      let startIndex = this.domFocusedInput.selectionStart
+      let endIndex = this.domFocusedInput.selectionEnd
+      const textSelected = endIndex - startIndex !== 0
+      const inputText = this.domFocusedInput.value
+
+      if (typeof argument === 'undefined') {
+        if (textSelected === true) {
+          argument = inputText.substring(startIndex, endIndex)
+        } else if (insertWhenNoSelection === true) {
+          argument = ''
+        } else {
+          argument = inputText
+        }
+      }
+
+      let processed = func.namespace[func.name](argument)
+
+      if (textSelected !== true && insertWhenNoSelection !== true) {
+        startIndex = 0
+        endIndex = inputText.length
+      }
+
+      this.changeInputValue(inputText.substring(0, startIndex) + processed +
+        inputText.substring(endIndex))
+      this.refocusInput(
+        startIndex + ((textSelected === true) ? 0 : processed.length),
+        startIndex + processed.length)
+    },
+
+    promptThenApplyFunction: function (func) {
+      this.promptDialog.value = '1'
+      this.promptDialog.valid = true
+      this.promptDialog.func = func
+      this.promptDialog.show = true
+      this.$nextTick(this.$refs.promptInput.focus)
+    },
+
+    onFocus: function (event) {
+      this.domFocusedInput = event.target
+    },
+
+    refocusInput: function (startIndex, endIndex) {
+      this.domFocusedInput.setSelectionRange(startIndex, endIndex)
+      this.domFocusedInput.focus()
+    },
+
+    changeInputValue: function (value) {
+      const event = new Event('input', { bubbles: true })
+      this.domFocusedInput.value = value
+      this.domFocusedInput.dispatchEvent(event)
+    },
+
+    handleMessage: function (message, sender, sendResponse) {
+      if (message.type === 'load') {
+        if (typeof message.data === 'undefined') {
+          this.reloadDialog = true
+          return
+        }
+
+        const request = message.data
+
+        this.request.url = request.url
+        this.request.body.content = request.body
+        this.request.body.enabled = (typeof request.body !== 'undefined')
+
+        if (this.request.body.enabled) {
+          const params = new URLSearchParams()
+
+          for (const name in request.body) {
+            this.request.body.content[name].forEach(function (value) {
+              params.append(name, value)
+            })
+          }
+
+          this.request.body.content = params.toString()
+        }
+
+        this.$refs.url.focus()
+      }
     }
   }
-
-  this.executeUrl = function () {
-    if ($scope.request.url.length === 0) {
-      return
-    }
-
-    $scope.backgroundPageConnection.postMessage({
-      tabId: chrome.devtools.inspectedWindow.tabId,
-      type: 'execute',
-      data: $scope.request
-    })
-  }
-
-  $scope.init()
 })

@@ -1,4 +1,4 @@
-let tabDB = {}
+const tabDB = {}
 
 const escapeHtml = function (html) {
   if (typeof html === 'undefined') {
