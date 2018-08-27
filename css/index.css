@@ -1,3 +1,8 @@
 [v-cloak] {
   display: none;
 }
+
+.ctrl-btn {
+  margin-bottom: 19px;
+  margin-top: 13px;
+}

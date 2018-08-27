@@ -30,7 +30,7 @@ const handleMessage = function (message, sender, sendResponse) {
                 const body = "${escapeHtml(message.data.body.content)}";`
       }, function () {
         chrome.tabs.executeScript(message.tabId, {
-          file: 'scripts/post-request.js'
+          file: 'scripts/lib/post-request.js'
         })
       })
     } else {
