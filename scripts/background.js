@@ -108,3 +108,17 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
   delete tabDB[tabId]
 })
+
+chrome.commands.onCommand.addListener(function (command) {
+  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    if (typeof tabDB[tabs[0].id] === 'undefined' ||
+        typeof tabDB[tabs[0].id].connection === 'undefined') {
+      return
+    }
+
+    tabDB[tabs[0].id].connection.postMessage({
+      type: 'command',
+      data: command
+    })
+  })
+})

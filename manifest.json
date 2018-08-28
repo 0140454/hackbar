@@ -16,5 +16,28 @@
   "background": {
     "page": "background.html"
   },
+  "commands": {
+    "load_url": {
+      "suggested_key": {
+        "default": "Alt+A",
+        "mac": "MacCtrl+A"
+      },
+      "description": "Trigger 'Load URL'"
+    },
+    "split_url": {
+      "suggested_key": {
+        "default": "Alt+S",
+        "mac": "MacCtrl+S"
+      },
+      "description": "Trigger 'Split URL'"
+    },
+    "execute_url": {
+      "suggested_key": {
+        "default": "Alt+X",
+        "mac": "MacCtrl+X"
+      },
+      "description": "Trigger 'Execute URL'"
+    }
+  },
   "manifest_version": 2
 }

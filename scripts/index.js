@@ -26,6 +26,10 @@ new Vue({
   created: function () {
     this.backgroundPageConnection = chrome.runtime.connect({ name: 'hack-bar' })
     this.backgroundPageConnection.onMessage.addListener(this.handleMessage)
+    this.backgroundPageConnection.postMessage({
+      tabId: chrome.devtools.inspectedWindow.tabId,
+      type: 'init'
+    })
   },
   methods: {
     loadUrl: function () {
@@ -180,6 +184,18 @@ new Vue({
         }
 
         this.$refs.url.focus()
+      } else if (message.type === 'command') {
+        switch (message.data) {
+          case 'load_url':
+            this.loadUrl()
+            break
+          case 'split_url':
+            this.splitUrl()
+            break
+          case 'execute_url':
+            this.executeUrl()
+            break
+        }
       }
     }
   }
