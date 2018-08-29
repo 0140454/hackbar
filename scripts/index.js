@@ -18,6 +18,7 @@ new Vue({
       url: '',
       body: {
         content: '',
+        enctype: 'application/x-www-form-urlencoded',
         enabled: false
       },
       headers: []
@@ -45,7 +46,8 @@ new Vue({
           return str[0] + '\n' + str[1]
         })
 
-      if (typeof this.request.body.content !== 'undefined') {
+      if (typeof this.request.body.content !== 'undefined' &&
+          this.request.body.enctype !== 'multipart/form-data') {
         this.request.body.content = this.request.body.content.replace(
           /[^\n][?&#]/g, function (str) {
             return str[0] + '\n' + str[1]
@@ -168,19 +170,31 @@ new Vue({
         const request = message.data
 
         this.request.url = request.url
-        this.request.body.content = request.body
+        this.request.body.enctype = request.contentType.split(';', 1)[0].trim()
         this.request.body.enabled = (typeof request.body !== 'undefined')
 
         if (this.request.body.enabled) {
-          const params = new URLSearchParams()
+          if (typeof request.body.formData !== 'undefined') {
+            const params = new URLSearchParams()
 
-          for (const name in request.body) {
-            this.request.body.content[name].forEach(function (value) {
-              params.append(name, value)
+            for (const name in request.body.formData) {
+              request.body.formData[name].forEach(function (value) {
+                params.append(name, value)
+              })
+            }
+
+            this.request.body.content = params.toString()
+          } else {
+            this.request.body.content = ''
+
+            request.body.raw.forEach((data) => {
+              if (typeof data.file !== 'undefined') {
+                this.request.body.content += `[Content of '${data.file}']`
+              } else {
+                this.request.body.content += data.bytes
+              }
             })
           }
-
-          this.request.body.content = params.toString()
         }
 
         this.$refs.url.focus()

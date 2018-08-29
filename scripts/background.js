@@ -1,19 +1,5 @@
 const tabDB = {}
-
-const escapeHtml = function (html) {
-  if (typeof html === 'undefined') {
-    return undefined
-  }
-
-  return html
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\n/g, '&#10;')
-    .replace(/\r/g, '&#13;')
-}
+const decoder = new TextDecoder()
 
 const handleMessage = function (message, sender, sendResponse) {
   if (message.type === 'load') {
@@ -27,10 +13,11 @@ const handleMessage = function (message, sender, sendResponse) {
     if (message.data.body.enabled) {
       chrome.tabs.executeScript(message.tabId, {
         code: `const url = "${encodeURIComponent(message.data.url)}";
-                const body = "${escapeHtml(message.data.body.content)}";`
+                const body = "${encodeURIComponent(message.data.body.content)}";
+                const enctype = "${message.data.body.enctype}"`
       }, function () {
         chrome.tabs.executeScript(message.tabId, {
-          file: 'scripts/lib/post-request.js'
+          file: 'scripts/lib/post.js'
         })
       })
     } else {
@@ -66,17 +53,33 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
 
   tabData.request.url = details.url
   if (typeof details.requestBody !== 'undefined') {
-    tabData.request.body = (typeof details.requestBody.formData !== 'undefined')
-      ? details.requestBody.formData
-      : ''
+    tabData.request.body = details.requestBody
+
+    if (typeof tabData.request.body.raw !== 'undefined') {
+      for (const idx in tabData.request.body.raw) {
+        if (typeof tabData.request.body.raw[idx].bytes === 'undefined') {
+          continue
+        }
+
+        tabData.request.body.raw[idx].bytes = decoder.decode(
+          tabData.request.body.raw[idx].bytes)
+      }
+    }
   } else {
     delete tabData.request.body
   }
 
   tabDB[details.tabId] = tabData
-}, { urls: ['<all_urls>'], types: ['main_frame'] }, ['requestBody'])
+}, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestBody'])
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
+  for (const idx in details.requestHeaders) {
+    if (details.requestHeaders[idx].name.toLowerCase() === 'content-type') {
+      tabDB[details.tabId].request.contentType = details.requestHeaders[idx].value
+      break
+    }
+  }
+
   if (typeof tabDB[details.tabId].modifiedHeaders === 'undefined') {
     return
   }
