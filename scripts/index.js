@@ -128,13 +128,16 @@ new Vue({
       if (textSelected !== true && insertWhenNoSelection !== true) {
         startIndex = 0
         endIndex = inputText.length
+
+        document.execCommand('selectAll')
       }
 
-      this.changeInputValue(inputText.substring(0, startIndex) + processed +
-        inputText.substring(endIndex))
-      this.refocusInput(
+      document.execCommand('insertText', false, processed)
+
+      this.domFocusedInput.setSelectionRange(
         startIndex + ((textSelected === true) ? 0 : processed.length),
         startIndex + processed.length)
+      this.domFocusedInput.focus()
     },
 
     promptThenApplyFunction: function (func) {
@@ -149,17 +152,6 @@ new Vue({
       this.domFocusedInput = event.target
     },
 
-    refocusInput: function (startIndex, endIndex) {
-      this.domFocusedInput.setSelectionRange(startIndex, endIndex)
-      this.domFocusedInput.focus()
-    },
-
-    changeInputValue: function (value) {
-      const event = new Event('input', { bubbles: true })
-      this.domFocusedInput.value = value
-      this.domFocusedInput.dispatchEvent(event)
-    },
-
     handleMessage: function (message, sender, sendResponse) {
       if (message.type === 'load') {
         if (typeof message.data === 'undefined') {
@@ -170,8 +162,10 @@ new Vue({
         const request = message.data
 
         this.request.url = request.url
-        this.request.body.enctype = request.contentType.split(';', 1)[0].trim()
         this.request.body.enabled = (typeof request.body !== 'undefined')
+        if (typeof request.contentType !== 'undefined') {
+          this.request.body.enctype = request.contentType.split(';', 1)[0].trim()
+        }
 
         if (this.request.body.enabled) {
           if (typeof request.body.formData !== 'undefined') {

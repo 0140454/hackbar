@@ -73,6 +73,8 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
 }, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestBody'])
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
+  delete tabDB[details.tabId].request.contentType
+
   for (const idx in details.requestHeaders) {
     if (details.requestHeaders[idx].name.toLowerCase() === 'content-type') {
       tabDB[details.tabId].request.contentType = details.requestHeaders[idx].value
