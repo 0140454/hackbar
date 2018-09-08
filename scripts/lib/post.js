@@ -68,14 +68,14 @@ parseBody(decodeURIComponent(body), form.enctype).forEach(function (field) {
 
   input.setAttribute('name', field.name)
   if (field.type === 'file') {
-    const dataTranser = new DataTransfer()
+    const dataTransfer = new DataTransfer()
 
-    dataTranser.items.add(new File([field.file.data], field.file.name, {
+    dataTransfer.items.add(new File([field.file.data], field.file.name, {
       type: field.file.type
     }))
 
     input.setAttribute('type', 'file')
-    input.files = dataTranser.files
+    input.files = dataTransfer.files
   } else {
     input.textContent = field.value
   }
