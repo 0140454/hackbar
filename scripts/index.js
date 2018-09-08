@@ -13,6 +13,11 @@ new Vue({
       func: '',
       value: ''
     },
+    /* Error handling */
+    snackbar: {
+      show: false,
+      text: ''
+    },
     /* HTTP Request */
     request: {
       url: '',
@@ -31,6 +36,8 @@ new Vue({
       tabId: chrome.devtools.inspectedWindow.tabId,
       type: 'init'
     })
+
+    window.onerror = this.errorHandler
   },
   methods: {
     loadUrl: function () {
@@ -205,6 +212,11 @@ new Vue({
             break
         }
       }
+    },
+
+    errorHandler: function (message, source, lineno, colno, error) {
+      this.snackbar.text = `${message}`
+      this.snackbar.show = true
     }
   }
 })
