@@ -90,9 +90,9 @@ new Vue({
       let namespace = (typeof root === 'undefined') ? window : root
 
       path = path.split('.')
-      for (let i = 0; i < path.length - 1; i++) {
-        if (typeof namespace[path[i]] !== 'undefined') {
-          namespace = namespace[path[i]]
+      for (let idx = 0; idx < path.length - 1; idx++) {
+        if (typeof namespace[path[idx]] !== 'undefined') {
+          namespace = namespace[path[idx]]
         } else {
           return undefined
         }

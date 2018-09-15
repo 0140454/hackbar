@@ -96,12 +96,20 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   }
 
   modifiedHeaders.forEach(function (header) {
-    for (const idx in details.requestHeaders) {
+    let idx = 0
+    for (; idx < details.requestHeaders.length; idx++) {
       if (details.requestHeaders[idx].name.toLowerCase() ===
           header.name.toLowerCase()) {
         details.requestHeaders[idx].value = header.value
         break
       }
+    }
+
+    if (idx === details.requestHeaders.length) {
+      details.requestHeaders.push({
+        name: header.name,
+        value: header.value
+      })
     }
   })
 
