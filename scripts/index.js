@@ -132,6 +132,7 @@ new Vue({
 
       let processed = func.namespace[func.name](argument)
 
+      this.domFocusedInput.focus()
       if (textSelected !== true && insertWhenNoSelection !== true) {
         startIndex = 0
         endIndex = inputText.length
@@ -144,7 +145,6 @@ new Vue({
       this.domFocusedInput.setSelectionRange(
         startIndex + ((textSelected === true) ? 0 : processed.length),
         startIndex + processed.length)
-      this.domFocusedInput.focus()
     },
 
     promptThenApplyFunction: function (func) {
