@@ -18,18 +18,53 @@
           <v-menu offset-y>
             <v-btn flat slot="activator">SQLi</v-btn>
             <v-list dense>
-              <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.dumpTables')">
-                <v-list-tile-title>Dump tables from database</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.dumpColumns')">
-                <v-list-tile-title>Dump columns from database</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.unionSelect')">
-                <v-list-tile-title>Union select statement</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="applyFunction('Payload.SQLi.errorBased', true)">
-                <v-list-tile-title>Error-based injection statement</v-list-tile-title>
-              </v-list-tile>
+              <v-menu offset-x full-width open-on-hover>
+                <v-list-tile slot="activator" @click=""> 
+                  <v-list-tile-title>MySQL</v-list-tile-title>
+                  <v-list-tile-action class="justify-end">
+                    <v-icon>play_arrow</v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-list dense>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpDatabases')">
+                    <v-list-tile-title>Dump all database names</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpTables')">
+                    <v-list-tile-title>Dump tables from database</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpColumns')">
+                    <v-list-tile-title>Dump columns from database</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.unionSelect')">
+                    <v-list-tile-title>Union select statement</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="applyFunction('Payload.SQLi.MySQL.errorBased', true)">
+                    <v-list-tile-title>Error-based injection statement</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+              <v-menu offset-x full-width open-on-hover>
+                <v-list-tile slot="activator" @click=""> 
+                  <v-list-tile-title>PostgreSQL</v-list-tile-title>
+                  <v-list-tile-action class="justify-end">
+                    <v-icon>play_arrow</v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-list dense>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpDatabases')">
+                    <v-list-tile-title>Dump all database names</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpTables')">
+                    <v-list-tile-title>Dump tables from database</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpColumns')">
+                    <v-list-tile-title>Dump columns from database</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.unionSelect')">
+                    <v-list-tile-title>Union select statement</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
               <v-list-tile @click="applyFunction('Payload.SQLi.spaceToComment')">
                 <v-list-tile-title>Space to Inline comment</v-list-tile-title>
               </v-list-tile>

@@ -15,10 +15,11 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 * Support GET and POST (including [multipart/form-data](#multipartform-data)) method.
 
 * SQLi
-  * Dump tables from database
-  * Dump columns from database
-  * Union select statement
-  * Error-based injection statement
+  * Dump all database names (MySQL, PostgreSQL)
+  * Dump tables from database (MySQL, PostgreSQL)
+  * Dump columns from database (MySQL, PostgreSQL)
+  * Union select statement (MySQL, PostgreSQL)
+  * Error-based injection statement (MySQL)
   * Space to Inline comment
 
 * XSS
