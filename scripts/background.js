@@ -11,10 +11,18 @@ const handleMessage = function (message, sender, sendResponse) {
     tabDB[message.tabId].modifiedHeaders = message.data.headers
 
     if (message.data.body.enabled) {
+      if (message.data.body.enctype === 'application/json') {
+        tabDB[message.tabId].modifiedHeaders.unshift({
+          enabled: true,
+          name: 'content-type',
+          value: 'application/json'
+        })
+      }
+
       chrome.tabs.executeScript(message.tabId, {
-        code: `const url = "${encodeURIComponent(message.data.url)}";
-                const body = "${encodeURIComponent(message.data.body.content)}";
-                const enctype = "${message.data.body.enctype}"`
+        code: `let url = "${encodeURIComponent(message.data.url)}";
+                let body = "${encodeURIComponent(message.data.body.content)}";
+                let enctype = "${message.data.body.enctype}";`
       }, function () {
         chrome.tabs.executeScript(message.tabId, {
           file: 'scripts/lib/post.js'
@@ -110,6 +118,10 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
         name: header.name,
         value: header.value
       })
+    }
+
+    if (header.name.toLowerCase() === 'content-type') {
+      tabDB[details.tabId].request.contentType = header.value
     }
   })
 

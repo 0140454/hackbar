@@ -117,7 +117,7 @@ new Vue({
 
       let startIndex = this.domFocusedInput.selectionStart
       let endIndex = this.domFocusedInput.selectionEnd
-      const textSelected = endIndex - startIndex !== 0
+      const textSelected = (endIndex - startIndex !== 0)
       const inputText = this.domFocusedInput.value
 
       if (typeof argument === 'undefined') {

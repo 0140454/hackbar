@@ -12,7 +12,12 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## Features
 
-* Support GET and POST (including [multipart/form-data](#multipartform-data)) method.
+* Supported methods
+  * GET
+  * POST
+    * application/x-www-form-urlencoded
+    * [multipart/form-data](#multipartform-data)
+    * [application/json](#applicationjson)
 
 * SQLi
   * Dump all database names (MySQL, PostgreSQL)
@@ -51,7 +56,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## multipart/form-data
 
-After changing **enctype** field to ```multipart/form-data```, you can put your request payload into **Body** field such as the following:
+After changing **enctype** field to ```multipart/form-data```, you can put your payload into **Body** field such as the following:
 
 ```
 ------WebKitFormBoundarydbJBATDXCC6CL0lZ
@@ -69,6 +74,25 @@ Content-Type: application/x-httpd-php
 We will consider the first line as boundary, and reconstruct a form element to send your request.
 
 Therefore, sent boundary will not be the same as your typed.
+
+## application/json
+
+After changing **enctype** field to ```application/json```, you can put your payload into **Body** field such as the following:
+
+```
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+In order to post JSON data, we will insert a dummy field or object to your JSON such as the following:
+
+```
+{"username":"admin","password":"admin","4dxnzjzd5mi":"="}
+```
+
+For more details, please visit "[Posting JSON with an HTML Form](https://systemoverlord.com/2016/08/24/posting-json-with-an-html-form.html)".
 
 ## Third-party Libraries
 

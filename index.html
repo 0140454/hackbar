@@ -154,7 +154,7 @@
                 <v-layout align-center>
                   <v-switch label="Enable POST" v-model="request.body.enabled"></v-switch>
                   <v-spacer></v-spacer>
-                  <v-select v-model="request.body.enctype" :items="['application/x-www-form-urlencoded', 'multipart/form-data']" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
+                  <v-select v-model="request.body.enctype" :items="['application/x-www-form-urlencoded', 'multipart/form-data', 'application/json']" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
                 </v-layout>
                 <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)"></v-textarea>
               </v-flex>
