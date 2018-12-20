@@ -217,6 +217,72 @@ new Vue({
     errorHandler: function (message, source, lineno, colno, error) {
       this.snackbar.text = `${message}`
       this.snackbar.show = true
+    },
+
+    supportedEnctype: function () {
+      return [
+        'application/x-www-form-urlencoded',
+        'multipart/form-data',
+        'application/json'
+      ]
+    },
+
+    commonRequestHeaders: function () {
+      return [
+        'Accept',
+        'Accept-Charset',
+        'Accept-Datetime',
+        'Accept-Encoding',
+        'Accept-Language',
+        'Access-Control-Request-Headers',
+        'Access-Control-Request-Method',
+        'A-IM',
+        'Authorization',
+        'Cache-Control',
+        'Connection',
+        'Content-Length',
+        'Content-MD5',
+        'Content-Type',
+        'Cookie',
+        'Date',
+        'DNT',
+        'Expect',
+        'Forwarded',
+        'From',
+        'Front-End-Https',
+        'Host',
+        'HTTP2-Settings',
+        'If-Match',
+        'If-Modified-Since',
+        'If-None-Match',
+        'If-Range',
+        'If-Unmodified-Since',
+        'Max-Forwards',
+        'Origin[8]',
+        'Pragma',
+        'Proxy-Authorization',
+        'Proxy-Connection',
+        'Range',
+        'Referer',
+        'Save-Data',
+        'TE',
+        'Upgrade',
+        'Upgrade-Insecure-Requests',
+        'User-Agent',
+        'Via',
+        'Warning',
+        'X-ATT-DeviceId',
+        'X-Correlation-ID',
+        'X-Csrf-Token',
+        'X-Forwarded-For',
+        'X-Forwarded-Host',
+        'X-Forwarded-Proto',
+        'X-Http-Method-Override',
+        'X-Requested-With',
+        'X-Request-ID',
+        'X-UIDH',
+        'X-Wap-Profile'
+      ]
     }
   }
 })

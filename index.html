@@ -154,7 +154,7 @@
                 <v-layout align-center>
                   <v-switch label="Enable POST" v-model="request.body.enabled"></v-switch>
                   <v-spacer></v-spacer>
-                  <v-select v-model="request.body.enctype" :items="['application/x-www-form-urlencoded', 'multipart/form-data', 'application/json']" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
+                  <v-select v-model="request.body.enctype" :items="supportedEnctype()" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
                 </v-layout>
                 <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)"></v-textarea>
               </v-flex>
@@ -162,7 +162,7 @@
                 <v-btn class="ctrl-btn" @click="addHeader()">Add Header</v-btn>
                 <v-layout align-center v-for="(header, index) in request.headers" :key="index">
                   <v-checkbox class="shrink" v-model="header.enabled"></v-checkbox>
-                  <v-text-field label="Name" class="px-1" v-model="header.name" @focus="onFocus($event)"></v-text-field>
+                  <v-combobox  label="Name" class="px-1" v-model="header.name" :items="commonRequestHeaders()" @focus="onFocus($event)" :menu-props='{ "maxHeight": 200 }'></v-combobox>
                   <v-text-field label="Value" class="px-1" v-model="header.value" @focus="onFocus($event)"></v-text-field>
                   <v-btn icon flat @click="deleteHeader(index)">
                     <v-icon>clear</v-icon>
