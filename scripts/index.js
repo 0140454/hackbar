@@ -258,7 +258,7 @@ new Vue({
         'If-Range',
         'If-Unmodified-Since',
         'Max-Forwards',
-        'Origin[8]',
+        'Origin',
         'Pragma',
         'Proxy-Authorization',
         'Proxy-Connection',
