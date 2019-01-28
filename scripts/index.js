@@ -36,8 +36,6 @@ new Vue({
       tabId: chrome.devtools.inspectedWindow.tabId,
       type: 'init'
     })
-
-    window.onerror = this.errorHandler
   },
   methods: {
     loadUrl: function () {
@@ -130,7 +128,13 @@ new Vue({
         }
       }
 
-      let processed = func.namespace[func.name](argument)
+      let processed = argument
+      try {
+        processed = func.namespace[func.name](argument)
+      } catch (error) {
+        this.snackbar.text = error.message
+        this.snackbar.show = true
+      }
 
       this.domFocusedInput.focus()
       if (textSelected !== true && insertWhenNoSelection !== true) {
@@ -212,11 +216,6 @@ new Vue({
             break
         }
       }
-    },
-
-    errorHandler: function (message, source, lineno, colno, error) {
-      this.snackbar.text = `${message}`
-      this.snackbar.show = true
     },
 
     supportedEnctype: function () {
