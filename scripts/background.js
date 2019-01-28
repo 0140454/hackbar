@@ -128,7 +128,17 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   delete tabDB[details.tabId].modifiedHeaders
 
   return { requestHeaders: details.requestHeaders }
-}, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestHeaders'])
+}, {
+  urls: ['<all_urls>'],
+  types: ['main_frame']
+}, (parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1]) >= 72) ? [
+  'blocking',
+  'extraHeaders',
+  'requestHeaders'
+] : [
+  'blocking',
+  'requestHeaders'
+])
 
 chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
   delete tabDB[tabId]
