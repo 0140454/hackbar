@@ -148,7 +148,7 @@
         </v-toolbar>
         <v-content>
           <v-container fluid>
-            <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)"></v-textarea>
+            <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)" @keydown.stop></v-textarea>
             <v-layout row>
               <v-flex md6>
                 <v-layout align-center>
@@ -156,14 +156,14 @@
                   <v-spacer></v-spacer>
                   <v-select v-model="request.body.enctype" :items="supportedEnctype()" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
                 </v-layout>
-                <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)"></v-textarea>
+                <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)" @keydown.stop></v-textarea>
               </v-flex>
               <v-flex md6>
                 <v-btn class="ctrl-btn" @click="addHeader()">Add Header</v-btn>
                 <v-layout align-center v-for="(header, index) in request.headers" :key="index">
                   <v-checkbox class="shrink" v-model="header.enabled"></v-checkbox>
                   <v-combobox  label="Name" class="px-1" v-model="header.name" :items="commonRequestHeaders()" @focus="onFocus($event)" :menu-props='{ "maxHeight": 200 }'></v-combobox>
-                  <v-text-field label="Value" class="px-1" v-model="header.value" @focus="onFocus($event)"></v-text-field>
+                  <v-text-field label="Value" class="px-1" v-model="header.value" @focus="onFocus($event)" @keydown.stop></v-text-field>
                   <v-btn icon flat @click="deleteHeader(index)">
                     <v-icon>clear</v-icon>
                   </v-btn>
@@ -195,7 +195,7 @@
               </v-card-title>
               <v-card-text class="body-1">
                 <p>Please enter the number of columns:</p>
-                <v-text-field required ref="promptInput" :rules="[v => /^[0-9]+$/.test(v) || 'Invalid input']" v-model="promptDialog.value"></v-text-field>
+                <v-text-field required ref="promptInput" :rules="[v => /^[0-9]+$/.test(v) || 'Invalid input']" v-model="promptDialog.value" @keydown.stop></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
