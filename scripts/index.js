@@ -7,11 +7,12 @@ new Vue({
     backgroundPageConnection: null,
     /* Dialog */
     reloadDialog: false,
-    promptDialog: {
+    sqlInjectionDialog: {
       show: false,
-      valid: false,
+      valid: true,
       func: '',
-      value: ''
+      columns: '1',
+      position: '1'
     },
     /* Error handling */
     snackbar: {
@@ -151,12 +152,10 @@ new Vue({
         startIndex + processed.length)
     },
 
-    promptThenApplyFunction: function (func) {
-      this.promptDialog.value = '1'
-      this.promptDialog.valid = true
-      this.promptDialog.func = func
-      this.promptDialog.show = true
-      this.$nextTick(this.$refs.promptInput.focus)
+    sqlInjectionPrompt: function (func) {
+      this.sqlInjectionDialog.func = func
+      this.sqlInjectionDialog.show = true
+      this.$nextTick(this.$refs.sqlInjectionInput.focus)
     },
 
     onFocus: function (event) {

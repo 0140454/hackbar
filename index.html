@@ -26,16 +26,16 @@
                   </v-list-tile-action>
                 </v-list-tile>
                 <v-list dense>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpDatabases')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpDatabases')">
                     <v-list-tile-title>Dump all database names</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpTables')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpTables')">
                     <v-list-tile-title>Dump tables from database</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.dumpColumns')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpColumns')">
                     <v-list-tile-title>Dump columns from database</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.MySQL.unionSelect')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect')">
                     <v-list-tile-title>Union select statement</v-list-tile-title>
                   </v-list-tile>
                   <v-list-tile @click="applyFunction('Payload.SQLi.MySQL.errorBased', true)">
@@ -51,16 +51,16 @@
                   </v-list-tile-action>
                 </v-list-tile>
                 <v-list dense>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpDatabases')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpDatabases')">
                     <v-list-tile-title>Dump all database names</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpTables')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpTables')">
                     <v-list-tile-title>Dump tables from database</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.dumpColumns')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpColumns')">
                     <v-list-tile-title>Dump columns from database</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile @click="promptThenApplyFunction('Payload.SQLi.PostgreSQL.unionSelect')">
+                  <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.unionSelect')">
                     <v-list-tile-title>Union select statement</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
@@ -187,20 +187,21 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog max-width="35%" persistent v-model="promptDialog.show">
-          <v-form @submit.prevent="promptDialog.show = false; applyFunction(promptDialog.func, true, promptDialog.value)" v-model="promptDialog.valid">
+        <v-dialog max-width="35%" persistent v-model="sqlInjectionDialog.show">
+          <v-form @submit.prevent="sqlInjectionDialog.show = false; applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)" v-model="sqlInjectionDialog.valid">
             <v-card>
               <v-card-title class="headline">
                 HackBar
               </v-card-title>
               <v-card-text class="body-1">
-                <p>Please enter the number of columns:</p>
-                <v-text-field required ref="promptInput" :rules="[v => /^[0-9]+$/.test(v) || 'Invalid input']" v-model="promptDialog.value" @keydown.stop></v-text-field>
+                <p>The number of columns must be <strong>larger than</strong> or <strong>equal to</strong> output position.</p>
+                <v-text-field type="number" label="The number of columns" ref="sqlInjectionInput" :rules="[v => /^[0-9]+$/.test(v) || 'Empty value']" v-model="sqlInjectionDialog.columns" @keydown.stop required></v-text-field>
+                <v-text-field type="number" label="Output position" :rules="[v => /^[0-9]+$/.test(v) || 'Empty value']" v-model="sqlInjectionDialog.position" @keydown.stop required></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="promptDialog.show = false">Cancel</v-btn>
-                <v-btn flat type="submit" :disabled="!promptDialog.valid">OK</v-btn>
+                <v-btn flat @click="sqlInjectionDialog.show = false">Cancel</v-btn>
+                <v-btn flat type="submit" :disabled="!sqlInjectionDialog.valid">OK</v-btn>
               </v-card-actions>
             </v-card>
           </v-form>
