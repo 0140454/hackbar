@@ -46,7 +46,15 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * SHA256
   * SHA512
 
-## Shortcuts
+## Usage
+
+### How to open it?
+
+1. Open **Developer tools** (Press ```F12``` or ```Ctrl + Shift + I```)
+2. Switch to **HackBar** tab
+3. Enjoy it
+
+### Shortcuts
 
 | Description | Default   | Mac           |
 | ----------- | --------- | ------------- |
@@ -54,7 +62,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 | Split URL   | `Alt + S` | `Control + S` |
 | Execute URL | `Alt + X` | `Control + X` |
 
-## multipart/form-data
+### Supported enctype
+
+#### multipart/form-data
 
 After changing **enctype** field to ```multipart/form-data```, you can put your payload into **Body** field such as the following:
 
@@ -75,7 +85,7 @@ We will consider the first line as boundary, and reconstruct a form element to s
 
 Therefore, sent boundary will not be the same as your typed.
 
-## application/json
+#### application/json
 
 After changing **enctype** field to ```application/json```, you can put your payload into **Body** field such as the following:
 
