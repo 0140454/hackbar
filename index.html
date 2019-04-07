@@ -191,12 +191,18 @@
           <v-form @submit.prevent="sqlInjectionDialog.show = false; applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)" v-model="sqlInjectionDialog.valid">
             <v-card>
               <v-card-title class="headline">
-                HackBar
+                SQL Injection
               </v-card-title>
               <v-card-text class="body-1">
                 <p>The number of columns must be <strong>larger than</strong> or <strong>equal to</strong> output position.</p>
-                <v-text-field type="number" label="The number of columns" ref="sqlInjectionInput" :rules="[v => /^[0-9]+$/.test(v) || 'Empty value']" v-model="sqlInjectionDialog.columns" @keydown.stop required></v-text-field>
-                <v-text-field type="number" label="Output position" :rules="[v => /^[0-9]+$/.test(v) || 'Empty value']" v-model="sqlInjectionDialog.position" @keydown.stop required></v-text-field>
+                <v-layout row>
+                  <v-flex md6 class="pa-1">
+                    <v-text-field type="number" min="1" label="The number of columns" ref="sqlInjectionInput" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.columns" @keydown.stop required></v-text-field>
+                  </v-flex>
+                  <v-flex md6 class="pa-1">
+                    <v-text-field type="number" min="1" :max="sqlInjectionDialog.columns" label="Output position" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.position" @keydown.stop required></v-text-field>
+                  </v-flex>
+                </v-layout>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
