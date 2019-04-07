@@ -108,5 +108,4 @@ For more details, please visit "[Posting JSON with an HTML Form](https://systemo
 
 * Vue.js
 * Vuetify.js
-* [jshashes](https://github.com/h2non/jshashes)
-* [utf8.js](https://github.com/mathiasbynens/utf8.js)
+* [crypto-js](https://github.com/brix/crypto-js)

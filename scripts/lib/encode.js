@@ -12,25 +12,39 @@ Encode.URL = class {
 
 Encode.Base64 = class {
   static encode (value) {
-    return window.btoa(utf8.encode(value))
+    return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(value))
   }
 
   static decode (value) {
-    return utf8.decode(window.atob(value))
+    const wordArray = CryptoJS.enc.Base64.parse(value)
+
+    let result = null
+    try {
+      result = CryptoJS.enc.Utf8.stringify(wordArray)
+    } catch (error) {
+      result = CryptoJS.enc.Latin1.stringify(wordArray)
+    }
+
+    return result
   }
 }
 
 Encode.Hexadecimal = class {
   static encode (value) {
-    return utf8.encode(value).replace(/./gs, function (char) {
-      return ('0' + char.charCodeAt().toString(16)).slice(-2)
-    })
+    return CryptoJS.enc.Hex.stringify(CryptoJS.enc.Utf8.parse(value))
   }
 
   static decode (value) {
-    return utf8.decode(value.replace(/.{2}/g, function (str) {
-      return String.fromCharCode(parseInt(str, 16))
-    }))
+    const wordArray = CryptoJS.enc.Hex.parse(value)
+
+    let result = null
+    try {
+      result = CryptoJS.enc.Utf8.stringify(wordArray)
+    } catch (error) {
+      result = CryptoJS.enc.Latin1.stringify(wordArray)
+    }
+
+    return result
   }
 }
 
