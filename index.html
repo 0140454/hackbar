@@ -188,7 +188,7 @@
           </v-card>
         </v-dialog>
         <v-dialog max-width="35%" persistent v-model="sqlInjectionDialog.show">
-          <v-form @submit.prevent="sqlInjectionDialog.show = false; $nextTick(function () { applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog) })" v-model="sqlInjectionDialog.valid">
+          <v-form @submit.prevent="sqlInjectionDialog.show = false; applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)" v-model="sqlInjectionDialog.valid">
             <v-card>
               <v-card-title class="headline">
                 SQL Injection
