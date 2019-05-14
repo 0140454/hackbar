@@ -10,3 +10,20 @@
 .full-width {
   width: 100%;
 }
+
+.v-menu__content {
+  max-height: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(27, 27, 27, .4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track{
+  background: white;
+}
