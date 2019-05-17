@@ -131,9 +131,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
 }, {
   urls: ['<all_urls>'],
   types: ['main_frame']
-}, [
+}, (parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1]) >= 72) ? [
   'blocking',
   'extraHeaders',
+  'requestHeaders'
+] : [
+  'blocking',
   'requestHeaders'
 ])
 
