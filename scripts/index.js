@@ -142,12 +142,12 @@ new Vue({
         if (textSelected !== true && insertWhenNoSelection !== true) {
           startIndex = 0
           endIndex = inputText.length
-          
+
           document.execCommand('selectAll')
         }
-        
+
         document.execCommand('insertText', false, processed)
-        
+
         this.domFocusedInput.setSelectionRange(
           startIndex + ((textSelected === true) ? 0 : processed.length),
           startIndex + processed.length)
