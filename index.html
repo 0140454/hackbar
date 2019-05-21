@@ -66,6 +66,9 @@
                   </v-list-tile>
                 </v-list>
               </v-menu>
+              <v-list-tile @click="applyFunction('Payload.SQLi.polyglot')">
+                <v-list-tile-title>Polyglot</v-list-tile-title>
+              </v-list-tile>
               <v-list-tile @click="applyFunction('Payload.SQLi.spaceToComment')">
                 <v-list-tile-title>Space to Inline comment</v-list-tile-title>
               </v-list-tile>
@@ -74,6 +77,10 @@
           <v-menu offset-y>
             <v-btn flat slot="activator">XSS</v-btn>
             <v-list dense>
+              <v-list-tile @click="applyFunction('Payload.XSS.polyglot')">
+                <v-list-tile-title>Polyglot</v-list-tile-title>
+              </v-list-tile>
+              <v-divider></v-divider>
               <v-list-tile @click="applyFunction('Encode.Html.encode')">
                 <v-list-tile-title>Html encode</v-list-tile-title>
               </v-list-tile>
