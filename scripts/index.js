@@ -216,6 +216,9 @@ new Vue({
             this.executeUrl()
             break
         }
+      } else if (message.type === 'error') {
+        this.snackbar.text = message.data
+        this.snackbar.show = true
       }
     },
 

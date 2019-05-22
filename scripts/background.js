@@ -20,12 +20,17 @@ const handleMessage = function (message, sender, sendResponse) {
       }
 
       chrome.tabs.executeScript(message.tabId, {
-        code: `let url = "${encodeURIComponent(message.data.url)}";
-                let body = "${encodeURIComponent(message.data.body.content)}";
-                let enctype = "${message.data.body.enctype}";`
+        file: 'scripts/lib/post.js'
       }, function () {
-        chrome.tabs.executeScript(message.tabId, {
-          file: 'scripts/lib/post.js'
+        chrome.tabs.sendMessage(message.tabId, message.data, (response) => {
+          if (response === null) {
+            return
+          }
+
+          tabDB[message.tabId].connection.postMessage({
+            type: 'error',
+            data: response
+          })
         })
       })
     } else {
