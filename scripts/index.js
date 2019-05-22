@@ -31,7 +31,7 @@ new Vue({
     }
   },
   created: function () {
-    this.backgroundPageConnection = chrome.runtime.connect({ name: 'hack-bar' })
+    this.backgroundPageConnection = chrome.runtime.connect()
     this.backgroundPageConnection.onMessage.addListener(this.handleMessage)
     this.backgroundPageConnection.postMessage({
       tabId: chrome.devtools.inspectedWindow.tabId,
