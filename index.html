@@ -64,6 +64,9 @@
                   <v-list-tile @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.unionSelect')">
                     <v-list-tile-title>Union select statement</v-list-tile-title>
                   </v-list-tile>
+                  <v-list-tile @click="applyFunction('Payload.SQLi.PostgreSQL.errorBased', true)">
+                    <v-list-tile-title>Error-based injection statement</v-list-tile-title>
+                  </v-list-tile>
                 </v-list>
               </v-menu>
               <v-list-tile @click="applyFunction('Payload.SQLi.polyglot', true)">

