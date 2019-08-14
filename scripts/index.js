@@ -39,6 +39,8 @@ chrome.storage.local.get({
       }
     },
     created: function () {
+      this.redrawScrollbar()
+
       this.backgroundPageConnection = chrome.runtime.connect()
       this.backgroundPageConnection.onMessage.addListener(this.handleMessage)
       this.backgroundPageConnection.postMessage({
@@ -48,6 +50,7 @@ chrome.storage.local.get({
 
       chrome.storage.onChanged.addListener((changes) => {
         this.$vuetify.theme.dark = changes.darkThemeEnabled.newValue
+        this.redrawScrollbar()
       })
     },
     methods: {
@@ -101,6 +104,16 @@ chrome.storage.local.get({
         chrome.storage.local.set({
           darkThemeEnabled: enabled
         })
+      },
+
+      redrawScrollbar: function () {
+        document.documentElement.className = this.$vuetify.theme.dark
+          ? 'theme--dark'
+          : 'theme--light'
+        /* force to redraw scrollbar */
+        document.documentElement.style.overflowY = 'hidden'
+        document.documentElement.clientHeight.toString()
+        document.documentElement.style.overflowY = 'scroll'
       },
 
       getNamespaceByPath: function (path, root, returnName) {

@@ -21,10 +21,29 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(27, 27, 27, .4);
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
-::-webkit-scrollbar-track{
-  background: white;
+.theme--light ::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.theme--light ::-webkit-scrollbar-thumb {
+  background: #757575;
+}
+
+html.theme--light > body::-webkit-scrollbar-track {
+  background: linear-gradient(#ffffff, #ffffff 48px, #fafafa 48px, #fafafa);
+}
+
+.theme--dark ::-webkit-scrollbar-track {
+  background: #424242;
+}
+
+.theme--dark ::-webkit-scrollbar-thumb {
+  background: #9e9e9e;
+}
+
+html.theme--dark > body::-webkit-scrollbar-track {
+  background: linear-gradient(#424242, #424242 48px, #303030 48px, #303030);
 }
