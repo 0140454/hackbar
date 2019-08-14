@@ -188,6 +188,25 @@
               </v-list>
             </v-menu>
           </v-toolbar-items>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">
+                  Theme
+                  <v-icon small right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item @click="enableDarkTheme(false)">
+                  <v-list-item-title>Light</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="enableDarkTheme(true)">
+                  <v-list-item-title>Dark</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-toolbar-items>
         </v-app-bar>
         <v-content>
           <v-container fluid px-4>
