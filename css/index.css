@@ -2,17 +2,18 @@
   display: none;
 }
 
-.ctrl-btn {
+#add-header-button {
   margin-bottom: 19px;
   margin-top: 13px;
 }
 
-.full-width {
-  width: 100%;
+.header-settings {
+  padding-bottom: 2px;
+  padding-top: 2px;
 }
 
 .v-menu__content {
-  max-height: 100%;
+  max-height: calc(100vh - 58px);
 }
 
 ::-webkit-scrollbar {
