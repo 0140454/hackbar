@@ -45,7 +45,7 @@
                     <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpColumns')">
                       <v-list-item-title>Dump columns from database</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect')">
+                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect', false)">
                       <v-list-item-title>Union select statement</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SQLi.MySQL.errorBased', true)">
@@ -72,7 +72,7 @@
                     <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpColumns')">
                       <v-list-item-title>Dump columns from database</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.unionSelect')">
+                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.unionSelect', false)">
                       <v-list-item-title>Union select statement</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SQLi.PostgreSQL.errorBased', true)">
@@ -211,16 +211,16 @@
         <v-content>
           <v-container fluid px-4>
             <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)" @keydown.stop></v-textarea>
-            <v-layout>
-              <v-flex md6 px-1>
+            <v-row>
+              <v-col>
                 <v-layout align-center>
                   <v-switch label="Enable POST" v-model="request.body.enabled"></v-switch>
                   <v-spacer></v-spacer>
                   <v-select v-model="request.body.enctype" :items="supportedEnctype()" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
                 </v-layout>
                 <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)" @keydown.stop></v-textarea>
-              </v-flex>
-              <v-flex md6 px-1>
+              </v-col>
+              <v-col>
                 <v-btn id="add-header-button" @click="addHeader()">Add Header</v-btn>
                 <v-layout class="header-settings" align-center v-for="(header, index) in request.headers" :key="index">
                   <v-checkbox  v-model="header.enabled"></v-checkbox>
@@ -230,8 +230,8 @@
                     <v-icon small>mdi-close</v-icon>
                   </v-btn>
                 </v-layout>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
         </v-content>
         <v-dialog max-width="32%" v-model="reloadDialog">
@@ -255,15 +255,16 @@
                 SQL Injection
               </v-card-title>
               <v-card-text class="body-1">
-                <p>The number of columns must be <strong>larger than</strong> or <strong>equal to</strong> output position.</p>
-                <v-layout>
-                  <v-flex md6 px-1>
+                <p v-if="sqlInjectionDialog.positionRequired">The number of columns must be <strong>larger than</strong> or <strong>equal to</strong> output position.</p>
+                <p v-else>The number of columns to use in UNION SELECT statement.</p>
+                <v-row>
+                  <v-col>
                     <v-text-field type="number" min="1" label="The number of columns" ref="sqlInjectionInput" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.columns" @keydown.stop required></v-text-field>
-                  </v-flex>
-                  <v-flex md6 px-1>
+                  </v-col>
+                  <v-col v-show="sqlInjectionDialog.positionRequired">
                     <v-text-field type="number" min="1" :max="sqlInjectionDialog.columns" label="Output position" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.position" @keydown.stop required></v-text-field>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>

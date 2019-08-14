@@ -18,6 +18,7 @@ chrome.storage.local.get({
       sqlInjectionDialog: {
         show: false,
         valid: true,
+        positionRequired: true,
         func: '',
         columns: '1',
         position: '1'
@@ -185,9 +186,12 @@ chrome.storage.local.get({
         })
       },
 
-      sqlInjectionPrompt: function (func) {
+      sqlInjectionPrompt: function (func, positionRequired) {
         this.sqlInjectionDialog.func = func
         this.sqlInjectionDialog.show = true
+        this.sqlInjectionDialog.positionRequired = (positionRequired === false)
+          ? false
+          : true
         this.$nextTick(this.$refs.sqlInjectionInput.focus)
       },
 
