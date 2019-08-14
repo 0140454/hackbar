@@ -24,7 +24,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * Dump tables from database (MySQL, PostgreSQL)
   * Dump columns from database (MySQL, PostgreSQL)
   * Union select statement (MySQL, PostgreSQL)
-  * Error-based injection statement (MySQL)
+  * Error-based injection statement (MySQL, PostgreSQL)
   * Space to Inline comment
 
 * XSS
