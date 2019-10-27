@@ -34,6 +34,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 * LFI
   * PHP wrapper - Base64
 
+* SSTI
+  * Flask RCE ([Reference](https://twitter.com/realgam3/status/1184747565415358469))
+
 * Encoding
   * URL encode/decode
   * Base64 encode/decode
