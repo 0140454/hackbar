@@ -1,6 +1,6 @@
 {
   "name": "HackBar",
-  "version": "0.2.20",
+  "version": "0.2.21",
   "description": "HackBar for Chrome",
   "devtools_page": "devtools.html",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
