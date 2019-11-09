@@ -139,7 +139,7 @@ chrome.storage.local.get({
         }
       },
 
-      applyFunction: function (func, insertWhenNoSelection, argument) {
+      applyFunction: function (func, insertWhenNoSelection = false, argument = undefined) {
         func = this.getNamespaceByPath(func, window, true)
 
         if (this.domFocusedInput === null) {
@@ -186,7 +186,7 @@ chrome.storage.local.get({
         })
       },
 
-      sqlInjectionPrompt: function (func, positionRequired) {
+      sqlInjectionPrompt: function (func, positionRequired = true) {
         this.sqlInjectionDialog.func = func
         this.sqlInjectionDialog.show = true
         this.sqlInjectionDialog.positionRequired = positionRequired !== false
