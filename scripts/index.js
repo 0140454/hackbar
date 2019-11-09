@@ -55,14 +55,14 @@ chrome.storage.local.get({
       })
     },
     methods: {
-      loadUrl: function () {
+      load: function () {
         this.backgroundPageConnection.postMessage({
           tabId: chrome.devtools.inspectedWindow.tabId,
           type: 'load'
         })
       },
 
-      splitUrl: function () {
+      split: function () {
         this.request.url = this.request.url.replace(/[^\n][?&#]/g,
           function (str) {
             return str[0] + '\n' + str[1]
@@ -77,7 +77,7 @@ chrome.storage.local.get({
         }
       },
 
-      executeUrl: function () {
+      execute: function () {
         if (this.request.url.length === 0) {
           return
         }
@@ -242,13 +242,13 @@ chrome.storage.local.get({
         } else if (message.type === 'command') {
           switch (message.data) {
             case 'load_url':
-              this.loadUrl()
+              this.load()
               break
             case 'split_url':
-              this.splitUrl()
+              this.split()
               break
             case 'execute_url':
-              this.executeUrl()
+              this.execute()
               break
           }
         } else if (message.type === 'error') {

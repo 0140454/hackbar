@@ -14,9 +14,9 @@
       <v-app>
         <v-app-bar app dense flat>
           <v-toolbar-items>
-            <v-btn text @click="loadUrl()">Load URL</v-btn>
-            <v-btn text @click="splitUrl()">Split URL</v-btn>
-            <v-btn text @click="executeUrl()">Execute URL</v-btn>
+            <v-btn text @click="load()">Load</v-btn>
+            <v-btn text @click="split()">Split</v-btn>
+            <v-btn text @click="execute()">Execute</v-btn>
             <v-divider inset vertical></v-divider>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
