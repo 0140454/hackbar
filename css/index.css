@@ -16,6 +16,10 @@
   max-height: calc(100vh - 58px);
 }
 
+.v-input--dense > .v-input__control > .v-input__slot > .v-select__slot > input {
+  padding-top: 8px;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
