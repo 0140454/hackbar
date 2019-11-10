@@ -131,8 +131,10 @@
 
   /* Message listener */
 
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const messageListener = function (message, sender, sendResponse) {
     let response = null
+
+    chrome.runtime.onMessage.removeListener(messageListener)
 
     try {
       const form = buildForm(message.url, message.body.content, message.body.enctype)
@@ -144,5 +146,7 @@
     } finally {
       sendResponse(response)
     }
-  })
+  }
+
+  chrome.runtime.onMessage.addListener(messageListener)
 })()
