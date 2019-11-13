@@ -17,6 +17,9 @@
   "background": {
     "scripts": ["scripts/background.js"]
   },
+  "web_accessible_resources": [
+    "payloads/*"
+  ],
   "commands": {
     "load_url": {
       "suggested_key": {

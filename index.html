@@ -17,6 +17,19 @@
             <v-btn text @click="load()">Load</v-btn>
             <v-btn text @click="split()">Split</v-btn>
             <v-btn text @click="execute()">Execute</v-btn>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">
+                  Test
+                  <v-icon small right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item @click="controlTest('start', 'scripts/test/paths.js', chrome.runtime.getURL('payloads/paths.txt'))">
+                  <v-list-item-title>Common paths</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
             <v-divider inset vertical></v-divider>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
@@ -288,6 +301,25 @@
               </v-card-actions>
             </v-card>
           </v-form>
+        </v-dialog>
+        <v-dialog max-width="32%" persistent v-model="testProgressDialog.show">
+          <v-card>
+            <v-card-title class="headline">
+              Test Progress
+            </v-card-title>
+            <v-card-text class="body-1">
+              <p v-if="!testProgressDialog.status">Waiting response from test script...</p>
+              <p v-else>Status: {{testProgressDialog.status}}</p>
+              <v-progress-linear v-if="!testProgressDialog.result" :indeterminate="!testProgressDialog.percentage" :value="testProgressDialog.percentage"></v-progress-linear>
+              <v-data-table v-if="testProgressDialog.result" :headers="testProgressDialog.result.header" :items="testProgressDialog.result.data"></v-data-table>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text v-if="!testProgressDialog.result" @click="controlTest('toggle')">Pause/Resume</v-btn>
+              <v-btn text v-if="!testProgressDialog.result" @click="controlTest('stop')">Stop</v-btn>
+              <v-btn text v-if="testProgressDialog.result" @click="testProgressDialog.show = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar.show" color="error" timeout="3000" bottom>
           {{ snackbar.text }}

@@ -19,6 +19,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
     * [multipart/form-data](#multipartform-data)
     * [application/json](#applicationjson)
 
+* Auto Test
+  * Common paths (Wordlist from [dirsearch](https://github.com/maurosoria/dirsearch/blob/master/db/dicc.txt) included)
+
 * SQLi
   * Dump all database names (MySQL, PostgreSQL)
   * Dump tables from database (MySQL, PostgreSQL)

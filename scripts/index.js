@@ -23,6 +23,13 @@ chrome.storage.local.get({
         columns: '1',
         position: '1'
       },
+      testProgressDialog: {
+        show: false,
+        percentage: null,
+        status: null,
+        error: null,
+        result: null
+      },
       /* Error handling */
       snackbar: {
         show: false,
@@ -86,6 +93,22 @@ chrome.storage.local.get({
           tabId: chrome.devtools.inspectedWindow.tabId,
           type: 'execute',
           data: this.request
+        })
+      },
+
+      controlTest: function (action, script = undefined, argument = undefined) {
+        if (action === 'start') {
+          this.testProgressDialog.percentage = null
+          this.testProgressDialog.status = null
+          this.testProgressDialog.result = null
+          this.testProgressDialog.error = null
+          this.testProgressDialog.show = true
+        }
+
+        this.backgroundPageConnection.postMessage({
+          tabId: chrome.devtools.inspectedWindow.tabId,
+          type: 'test',
+          data: { action, script, argument }
         })
       },
 
@@ -252,6 +275,32 @@ chrome.storage.local.get({
         } else if (message.type === 'error') {
           this.snackbar.text = message.data
           this.snackbar.show = true
+        } else if (message.type === 'test') {
+          const report = message.data
+
+          switch (report.type) {
+            case 'progress':
+              this.testProgressDialog.status = report.data.status ||
+                                               this.testProgressDialog.status
+              this.testProgressDialog.percentage = report.data.percentage ||
+                                                   this.testProgressDialog.percentage
+              break
+            case 'finished':
+              if (this.testProgressDialog.error === null) {
+                this.testProgressDialog.status = 'Finished'
+              } else if (this.testProgressDialog.status !== null) {
+                this.testProgressDialog.status += ` (${this.testProgressDialog.error})`
+              } else {
+                this.testProgressDialog.status = this.testProgressDialog.error
+              }
+              this.testProgressDialog.result = report.data
+              break
+            case 'error':
+              this.testProgressDialog.error = report.data
+              this.snackbar.text = report.data
+              this.snackbar.show = true
+              break
+          }
         }
       },
 

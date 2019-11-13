@@ -38,6 +38,16 @@ const handleMessage = function (message, sender, sendResponse) {
         url: message.data.url
       })
     }
+  } else if (message.type === 'test') {
+    if (message.data.action === 'start') {
+      chrome.tabs.executeScript(message.tabId, {
+        file: message.data.script
+      }, function () {
+        chrome.tabs.sendMessage(message.tabId, message.data)
+      })
+    } else {
+      chrome.tabs.sendMessage(message.tabId, message.data)
+    }
   }
 }
 
@@ -55,6 +65,15 @@ chrome.runtime.onConnect.addListener(function (devToolsConnection) {
   devToolsConnection.onDisconnect.addListener(function () {
     devToolsConnection.onMessage.removeListener(devToolsListener)
   })
+})
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (sender.tab) {
+    tabDB[sender.tab.id].connection.postMessage({
+      type: 'test',
+      data: message
+    })
+  }
 })
 
 chrome.webRequest.onBeforeRequest.addListener(function (details) {
