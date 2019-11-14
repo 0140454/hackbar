@@ -15,7 +15,7 @@
     "<all_urls>"
   ],
   "background": {
-    "page": "background.html"
+    "scripts": ["scripts/background.js"]
   },
   "commands": {
     "load_url": {
