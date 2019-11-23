@@ -1,7 +1,7 @@
 const tabDB = {}
 const decoder = new TextDecoder()
 
-const handleMessage = function (message, sender, sendResponse) {
+const handleMessage = (message, sender, sendResponse) => {
   if (message.type === 'load') {
     tabDB[message.tabId].connection.postMessage({
       type: 'load',
@@ -21,8 +21,8 @@ const handleMessage = function (message, sender, sendResponse) {
 
       chrome.tabs.executeScript(message.tabId, {
         file: 'scripts/lib/post.js'
-      }, function () {
-        chrome.tabs.sendMessage(message.tabId, message.data, (response) => {
+      }, () => {
+        chrome.tabs.sendMessage(message.tabId, message.data, response => {
           if (response === null) {
             return
           }
@@ -42,7 +42,7 @@ const handleMessage = function (message, sender, sendResponse) {
     if (message.data.action === 'start') {
       chrome.tabs.executeScript(message.tabId, {
         file: message.data.script
-      }, function () {
+      }, () => {
         chrome.tabs.sendMessage(message.tabId, message.data)
       })
     } else {
@@ -51,8 +51,8 @@ const handleMessage = function (message, sender, sendResponse) {
   }
 }
 
-chrome.runtime.onConnect.addListener(function (devToolsConnection) {
-  const devToolsListener = function (message, sender, sendResponse) {
+chrome.runtime.onConnect.addListener(devToolsConnection => {
+  const devToolsListener = (message, sender, sendResponse) => {
     let tabData = tabDB[message.tabId] || {}
 
     tabData.connection = devToolsConnection
@@ -62,12 +62,12 @@ chrome.runtime.onConnect.addListener(function (devToolsConnection) {
   }
 
   devToolsConnection.onMessage.addListener(devToolsListener)
-  devToolsConnection.onDisconnect.addListener(function () {
+  devToolsConnection.onDisconnect.addListener(() => {
     devToolsConnection.onMessage.removeListener(devToolsListener)
   })
 })
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (sender.tab) {
     tabDB[sender.tab.id].connection.postMessage({
       type: 'test',
@@ -76,7 +76,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   }
 })
 
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
+chrome.webRequest.onBeforeRequest.addListener(details => {
   let tabData = tabDB[details.tabId] || {}
 
   if (typeof tabData.request === 'undefined') {
@@ -104,7 +104,7 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
   tabDB[details.tabId] = tabData
 }, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestBody'])
 
-chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
+chrome.webRequest.onBeforeSendHeaders.addListener(details => {
   delete tabDB[details.tabId].request.contentType
 
   for (const idx in details.requestHeaders) {
@@ -118,16 +118,15 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     return
   }
 
-  const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(
-    function (header) {
-      return header.enabled === true && header.name.length > 0
-    })
+  const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(header => {
+    return header.enabled === true && header.name.length > 0
+  })
 
   if (modifiedHeaders.length === 0) {
     return
   }
 
-  modifiedHeaders.forEach(function (header) {
+  modifiedHeaders.forEach(header => {
     let idx = 0
     for (; idx < details.requestHeaders.length; idx++) {
       if (details.requestHeaders[idx].name.toLowerCase() ===
@@ -164,12 +163,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
   'requestHeaders'
 ])
 
-chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   delete tabDB[tabId]
 })
 
-chrome.commands.onCommand.addListener(function (command) {
-  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+chrome.commands.onCommand.addListener(command => {
+  chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
     if (typeof tabDB[tabs[0].id] === 'undefined' ||
         typeof tabDB[tabs[0].id].connection === 'undefined') {
       return

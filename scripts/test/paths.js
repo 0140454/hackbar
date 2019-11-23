@@ -67,17 +67,17 @@
 
   /* Helpers */
 
-  const sleep = function (ms) {
+  const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  const wait = async function () {
+  const wait = async () => {
     do {
       await sleep(50)
     } while (state === PAUSED)
   }
 
-  const sendRequest = async function (url, prompt = undefined) {
+  const sendRequest = async (url, prompt = undefined) => {
     let resp = null
 
     do {
@@ -115,25 +115,25 @@
 
   /* Functions */
 
-  const generateNotFoundUrl = function () {
+  const generateNotFoundUrl = () => {
     const nonce = Math.floor(1 + Math.random() * 1000000)
     return `${window.origin}/01234_${nonce}_cjtnd`
   }
 
-  const generateTestUrl = function (path) {
-    return `${window.origin}/${path}`
-  }
+  const generateTestUrl = path => `${window.origin}/${path}`
 
-  const loadWordlist = async function (url) {
+  const loadWordlist = async (url) => {
     const commonExtensions = ['asp', 'aspx', 'php', 'jsp']
     const resp = await fetch(url)
     const text = await resp.text()
 
-    return text.replace(/(.*\.?)%EXT%/g, '$1' + commonExtensions.join('\n$1')).split('\n')
+    return text.replace(/(.*\.?)%EXT%/g, '$1' +
+      commonExtensions.join('\n$1')).split('\n')
   }
 
-  const test = async function (wordlist) {
-    const checkResponse = await sendRequest(generateNotFoundUrl(), GETTING_NOT_FOUND_STATUS)
+  const test = async (wordlist) => {
+    const checkResponse = await sendRequest(
+      generateNotFoundUrl(), GETTING_NOT_FOUND_STATUS)
     if (checkResponse === null) {
       return
     }
@@ -167,7 +167,7 @@
 
   /* Message listener */
 
-  const messageListener = async function (message, sender, sendResponse) {
+  const messageListener = async (message, sender, sendResponse) => {
     if (message.action === 'start') {
       try {
         controller = new AbortController()

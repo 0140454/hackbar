@@ -1,6 +1,6 @@
 chrome.storage.local.get({
   darkThemeEnabled: false
-}, function ({ darkThemeEnabled }) {
+}, ({ darkThemeEnabled }) => {
   new Vue({
     el: '#app',
     vuetify: new Vuetify({
@@ -56,7 +56,7 @@ chrome.storage.local.get({
         type: 'init'
       })
 
-      chrome.storage.onChanged.addListener((changes) => {
+      chrome.storage.onChanged.addListener(changes => {
         this.$vuetify.theme.dark = changes.darkThemeEnabled.newValue
         this.redrawScrollbar()
       })
@@ -70,15 +70,14 @@ chrome.storage.local.get({
       },
 
       split: function () {
-        this.request.url = this.request.url.replace(/[^\n][?&#]/g,
-          function (str) {
-            return str[0] + '\n' + str[1]
-          })
+        this.request.url = this.request.url.replace(/[^\n][?&#]/g, str => {
+          return str[0] + '\n' + str[1]
+        })
 
         if (typeof this.request.body.content !== 'undefined' &&
           this.request.body.enctype !== 'multipart/form-data') {
           this.request.body.content = this.request.body.content.replace(
-            /[^\n][?&#]/g, function (str) {
+            /[^\n][?&#]/g, str => {
               return str[0] + '\n' + str[1]
             })
         }
@@ -192,7 +191,7 @@ chrome.storage.local.get({
           this.snackbar.show = true
         }
 
-        this.$nextTick(function () {
+        this.$nextTick(() => {
           this.domFocusedInput.focus()
           if (textSelected !== true && insertWhenNoSelection !== true) {
             startIndex = 0
@@ -240,7 +239,7 @@ chrome.storage.local.get({
               const params = new URLSearchParams()
 
               for (const name in request.body.formData) {
-                request.body.formData[name].forEach(function (value) {
+                request.body.formData[name].forEach(value => {
                   params.append(name, value)
                 })
               }
@@ -249,7 +248,7 @@ chrome.storage.local.get({
             } else {
               this.request.body.content = ''
 
-              request.body.raw.forEach((data) => {
+              request.body.raw.forEach(data => {
                 if (typeof data.file !== 'undefined') {
                   this.request.body.content += `[Content of '${data.file}']`
                 } else {

