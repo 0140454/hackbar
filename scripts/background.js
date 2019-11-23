@@ -1,6 +1,8 @@
 const tabDB = {}
 const decoder = new TextDecoder()
 
+const getChromeVersion = () => parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1])
+
 const handleMessage = (message, sender, sendResponse) => {
   if (message.type === 'load') {
     tabDB[message.tabId].connection.postMessage({
@@ -102,7 +104,17 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
   }
 
   tabDB[details.tabId] = tabData
-}, { urls: ['<all_urls>'], types: ['main_frame'] }, ['blocking', 'requestBody'])
+}, {
+  urls: ['<all_urls>'],
+  types: ['main_frame']
+}, (getChromeVersion() >= 79) ? [
+  'blocking',
+  'extraHeaders',
+  'requestBody'
+] : [
+  'blocking',
+  'requestBody'
+])
 
 chrome.webRequest.onBeforeSendHeaders.addListener(details => {
   delete tabDB[details.tabId].request.contentType
@@ -154,7 +166,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(details => {
 }, {
   urls: ['<all_urls>'],
   types: ['main_frame']
-}, (parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1]) >= 72) ? [
+}, (getChromeVersion() >= 72) ? [
   'blocking',
   'extraHeaders',
   'requestHeaders'
