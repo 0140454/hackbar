@@ -64,9 +64,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 | Description | Default   | Mac           |
 | ----------- | --------- | ------------- |
-| Load URL    | `Alt + A` | `Control + A` |
-| Split URL   | `Alt + S` | `Control + S` |
-| Execute URL | `Alt + X` | `Control + X` |
+| Load        | `Alt + A` | `Control + A` |
+| Split       | `Alt + S` | `Control + S` |
+| Execute     | `Alt + X` | `Control + X` |
 
 ### Supported enctype
 

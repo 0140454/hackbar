@@ -42,7 +42,7 @@
       const content = parts[idx].substring(delimiterIndex + ((crlf) ? 4 : 2))
 
       let matched = null
-      let regex = RegExp('(name|filename)=(?:"([^"]+)"|([^;]+))', 'gi')
+      const regex = RegExp('(name|filename)=(?:"([^"]+)"|([^;]+))', 'gi')
       while ((matched = regex.exec(header)) !== null) {
         if (matched[1].toLowerCase() === 'name') {
           data.name = matched[2] || matched[3]

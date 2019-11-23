@@ -122,7 +122,7 @@
 
   const generateTestUrl = path => `${window.origin}/${path}`
 
-  const loadWordlist = async (url) => {
+  const loadWordlist = async url => {
     const commonExtensions = ['asp', 'aspx', 'php', 'jsp']
     const resp = await fetch(url)
     const text = await resp.text()
@@ -131,7 +131,7 @@
       commonExtensions.join('\n$1')).split('\n')
   }
 
-  const test = async (wordlist) => {
+  const test = async wordlist => {
     const checkResponse = await sendRequest(
       generateNotFoundUrl(), GETTING_NOT_FOUND_STATUS)
     if (checkResponse === null) {
@@ -143,7 +143,7 @@
     }
 
     wordlist = await loadWordlist(wordlist)
-    for (let idx in wordlist) {
+    for (const idx in wordlist) {
       chrome.runtime.sendMessage({
         type: 'progress',
         data: {

@@ -55,7 +55,7 @@ const handleMessage = (message, sender, sendResponse) => {
 
 chrome.runtime.onConnect.addListener(devToolsConnection => {
   const devToolsListener = (message, sender, sendResponse) => {
-    let tabData = tabDB[message.tabId] || {}
+    const tabData = tabDB[message.tabId] || {}
 
     tabData.connection = devToolsConnection
     tabDB[message.tabId] = tabData
@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.webRequest.onBeforeRequest.addListener(details => {
-  let tabData = tabDB[details.tabId] || {}
+  const tabData = tabDB[details.tabId] || {}
 
   if (typeof tabData.request === 'undefined') {
     tabData.request = {}
