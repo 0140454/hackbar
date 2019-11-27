@@ -62,6 +62,7 @@
   /* Variables */
 
   const result = []
+  let baseDirectory = '/'
   let state = RUNNING
   let controller = null
 
@@ -117,10 +118,10 @@
 
   const generateNotFoundUrl = () => {
     const nonce = Math.floor(1 + Math.random() * 1000000)
-    return `${window.origin}/01234_${nonce}_cjtnd`
+    return `${window.origin}${baseDirectory}01234_${nonce}_cjtnd`
   }
 
-  const generateTestUrl = path => `${window.origin}/${path}`
+  const generateTestUrl = path => `${window.origin}${baseDirectory}${path}`
 
   const loadWordlist = async url => {
     const commonExtensions = ['asp', 'aspx', 'php', 'jsp']
@@ -171,7 +172,12 @@
     if (message.action === 'start') {
       try {
         controller = new AbortController()
-        await test(message.argument)
+        if (message.argument.againstWebRoot === false) {
+          baseDirectory = window.location.pathname.substr(
+            0, window.location.pathname.lastIndexOf('/')) + '/'
+        }
+
+        await test(message.argument.payloadsPath)
       } catch (error) {
         chrome.runtime.sendMessage({
           type: 'error',

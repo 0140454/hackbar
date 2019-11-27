@@ -25,9 +25,24 @@
                 </v-btn>
               </template>
               <v-list dense>
-                <v-list-item @click="controlTest('start', 'scripts/test/paths.js', chrome.runtime.getURL('payloads/paths.txt'))">
-                  <v-list-item-title>Common paths</v-list-item-title>
-                </v-list-item>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>Common paths</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="controlTest('start', 'scripts/test/paths.js', { payloadsPath: chrome.runtime.getURL('payloads/paths.txt'), againstWebRoot: true })">
+                      <v-list-item-title>Against web root directory</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="controlTest('start', 'scripts/test/paths.js', { payloadsPath: chrome.runtime.getURL('payloads/paths.txt'), againstWebRoot: false })">
+                      <v-list-item-title>Against current directory</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-list>
             </v-menu>
             <v-divider inset vertical></v-divider>
