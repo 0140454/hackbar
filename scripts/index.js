@@ -1,12 +1,16 @@
-chrome.storage.local.get({
-  darkThemeEnabled: false
-}, ({ darkThemeEnabled }) => {
-  new Vue({
+(async () => {
+  const isDarkThemEnabled = async () => {
+    return new Promise(resolve => {
+      chrome.storage.local.get(
+        { darkThemeEnabled: false },
+        ({ darkThemeEnabled }) => resolve(darkThemeEnabled))
+    })
+  }
+
+  return new Vue({
     el: '#app',
     vuetify: new Vuetify({
-      theme: {
-        dark: darkThemeEnabled
-      }
+      theme: { dark: await isDarkThemEnabled() }
     }),
     data: {
     /* DOM element */
@@ -370,4 +374,4 @@ chrome.storage.local.get({
       }
     }
   })
-})
+})()
