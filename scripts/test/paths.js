@@ -174,7 +174,7 @@
       if (testResponse.status !== checkResponse.status) {
         result.push({
           url: testUrl,
-          code: testResponse.status
+          code: testResponse.status + (testResponse.redirected ? ' (Redirected)' : '')
         })
       }
     }
