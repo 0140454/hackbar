@@ -62,6 +62,30 @@
   /* Variables */
 
   const result = []
+  const reporter = new class {
+    constructor () {
+      this.data = { status: null, percentage: null }
+      this.timer = setInterval(() => {
+        chrome.runtime.sendMessage({
+          type: 'progress',
+          data: this.data
+        })
+      }, 256)
+    }
+
+    setStatus (status) {
+      this.data.status = status
+    }
+
+    setPercentage (percentage) {
+      this.data.percentage = percentage
+    }
+
+    stop () {
+      clearInterval(this.timer)
+    }
+  }()
+
   let baseDirectory = '/'
   let state = RUNNING
   let controller = null
@@ -82,10 +106,7 @@
     let resp = null
 
     do {
-      chrome.runtime.sendMessage({
-        type: 'progress',
-        data: { status: prompt || url }
-      })
+      reporter.setStatus(prompt || url)
 
       try {
         resp = await fetch(url, {
@@ -96,10 +117,7 @@
       } catch (error) {
         if (error.name === 'AbortError') {
           if (state === PAUSED) {
-            chrome.runtime.sendMessage({
-              type: 'progress',
-              data: { status: 'Paused' }
-            })
+            reporter.setStatus('Paused')
 
             await wait()
           } else if (state === STOPPED) {
@@ -145,21 +163,17 @@
 
     wordlist = await loadWordlist(wordlist)
     for (const idx in wordlist) {
-      chrome.runtime.sendMessage({
-        type: 'progress',
-        data: {
-          percentage: idx / wordlist.length * 100
-        }
-      })
+      reporter.setPercentage(idx / wordlist.length * 100)
 
-      const testResponse = await sendRequest(generateTestUrl(wordlist[idx]))
+      const testUrl = generateTestUrl(wordlist[idx])
+      const testResponse = await sendRequest(testUrl)
       if (testResponse === null) {
         break
       }
 
       if (testResponse.status !== checkResponse.status) {
         result.push({
-          url: testResponse.url,
+          url: testUrl,
           code: testResponse.status
         })
       }
@@ -195,6 +209,7 @@
           }
         })
 
+        reporter.stop()
         chrome.runtime.onMessage.removeListener(messageListener)
       }
     } else if (message.action === 'toggle') {
