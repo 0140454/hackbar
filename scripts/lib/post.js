@@ -2,7 +2,10 @@
   /* Body parser */
 
   const jsonParser = body => {
-    const result = []
+    const result = {
+      enctype: 'text/plain',
+      fields: []
+    }
 
     const trashName = Math.random().toString(36).slice(2)
     const json = JSON.parse(body)
@@ -18,7 +21,7 @@
     const name = stringified.substring(0, delimiterIndex + trashName.length + 4)
     const value = stringified.substring(delimiterIndex + trashName.length + 5)
 
-    result.push({
+    result.fields.push({
       type: 'input',
       name: name,
       value: value
@@ -28,7 +31,10 @@
   }
 
   const multipartParser = body => {
-    const result = []
+    const result = {
+      enctype: 'multipart/form-data',
+      fields: []
+    }
 
     const boundary = body.split('\n', 1)[0].trim()
     const parts = body.split(boundary)
@@ -63,27 +69,32 @@
           [content.substring(0, content.length - 1 - crlf)])
       }
 
-      result.push(data)
+      result.fields.push(data)
     }
 
     return result
   }
 
   const urlencodedParser = body => {
-    const result = []
+    const result = {
+      enctype: 'text/plain',
+      fields: []
+    }
 
+    const tempFields = []
     body.split('&').forEach(field => {
-      field = field.replace(/[\r\n]/g, '')
+      tempFields.push(field.replace(/[\r\n]/g, ''))
+    })
 
-      const delimiterIndex = field.indexOf('=')
-      const name = field.substring(0, delimiterIndex).replace(/\+/g, ' ')
-      const value = field.substring(delimiterIndex + 1).replace(/\+/g, ' ')
+    const finalBody = tempFields.join('&')
+    const delimiterIndex = finalBody.indexOf('=')
+    const name = finalBody.substring(0, delimiterIndex)
+    const value = finalBody.substring(delimiterIndex + 1)
 
-      result.push({
-        type: 'input',
-        name: decodeURIComponent(name),
-        value: decodeURIComponent(value)
-      })
+    result.fields.push({
+      type: 'input',
+      name: name,
+      value: value
     })
 
     return result
@@ -97,15 +108,16 @@
 
   /* Form builder */
 
-  const buildForm = (url, body, enctype) => {
+  const buildForm = (url, body, selectedEnctype) => {
     const form = document.createElement('form')
+    const { enctype, fields } = parser[selectedEnctype](body)
 
     form.action = url
     form.method = 'POST'
     form.style = 'display: none;'
-    form.enctype = (enctype === 'application/json') ? 'text/plain' : enctype
+    form.enctype = enctype
 
-    parser[enctype](body).forEach(field => {
+    fields.forEach(field => {
       const input = document.createElement(
         (field.type === 'file') ? 'input' : 'textarea')
 
