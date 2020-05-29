@@ -77,24 +77,22 @@
 
   const urlencodedParser = body => {
     const result = {
-      enctype: 'text/plain',
+      enctype: 'application/x-www-form-urlencoded',
       fields: []
     }
 
-    const tempFields = []
     body.split('&').forEach(field => {
-      tempFields.push(field.replace(/[\r\n]/g, ''))
-    })
+      field = field.replace(/[\r\n]/g, '')
 
-    const finalBody = tempFields.join('&')
-    const delimiterIndex = finalBody.indexOf('=')
-    const name = finalBody.substring(0, delimiterIndex)
-    const value = finalBody.substring(delimiterIndex + 1)
+      const delimiterIndex = field.indexOf('=')
+      const name = field.substring(0, delimiterIndex).replace(/\+/g, ' ')
+      const value = field.substring(delimiterIndex + 1).replace(/\+/g, ' ')
 
-    result.fields.push({
-      type: 'input',
-      name: name,
-      value: value
+      result.fields.push({
+        type: 'input',
+        name: decodeURIComponent(name),
+        value: decodeURIComponent(value)
+      })
     })
 
     return result
