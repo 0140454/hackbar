@@ -13,11 +13,13 @@ const handleMessage = (message, sender, sendResponse) => {
     tabDB[message.tabId].modifiedHeaders = message.data.headers
 
     if (message.data.body.enabled) {
-      tabDB[message.tabId].modifiedHeaders.unshift({
-        enabled: true,
-        name: 'content-type',
-        value: message.data.body.enctype
-      })
+      if (['application/json'].indexOf(message.data.body.enctype) >= 0) {
+        tabDB[message.tabId].modifiedHeaders.unshift({
+          enabled: true,
+          name: 'content-type',
+          value: message.data.body.enctype
+        })
+      }
 
       chrome.tabs.executeScript(message.tabId, {
         file: 'scripts/lib/post.js'
