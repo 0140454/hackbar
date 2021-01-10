@@ -310,6 +310,7 @@
       supportedEnctype: function () {
         return [
           'application/x-www-form-urlencoded',
+          'application/x-www-form-urlencoded (raw)',
           'multipart/form-data',
           'application/json'
         ]

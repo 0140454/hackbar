@@ -2,6 +2,10 @@ const tabDB = {}
 const decoder = new TextDecoder()
 
 const getChromeVersion = () => parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1])
+const enctypeNeededToOverrideHeader = [
+  'application/json',
+  'application/x-www-form-urlencoded (raw)'
+]
 
 const handleMessage = (message, sender, sendResponse) => {
   if (message.type === 'load') {
@@ -13,11 +17,11 @@ const handleMessage = (message, sender, sendResponse) => {
     tabDB[message.tabId].modifiedHeaders = message.data.headers
 
     if (message.data.body.enabled) {
-      if (['application/json'].indexOf(message.data.body.enctype) >= 0) {
+      if (enctypeNeededToOverrideHeader.indexOf(message.data.body.enctype) >= 0) {
         tabDB[message.tabId].modifiedHeaders.unshift({
           enabled: true,
           name: 'content-type',
-          value: message.data.body.enctype
+          value: message.data.body.enctype.split(' ', 1)[0]
         })
       }
 

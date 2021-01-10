@@ -98,10 +98,36 @@
     return result
   }
 
+  const urlencodedRawParser = body => {
+    const result = {
+      enctype: 'text/plain',
+      fields: []
+    }
+
+    const tempFields = []
+    body.split('&').forEach(field => {
+      tempFields.push(field.replace(/[\r\n]/g, ''))
+    })
+
+    const finalBody = tempFields.join('&')
+    const delimiterIndex = finalBody.indexOf('=')
+    const name = finalBody.substring(0, delimiterIndex)
+    const value = finalBody.substring(delimiterIndex + 1)
+
+    result.fields.push({
+      type: 'input',
+      name: name,
+      value: value
+    })
+
+    return result
+  }
+
   const parser = {
     'application/json': jsonParser,
     'multipart/form-data': multipartParser,
-    'application/x-www-form-urlencoded': urlencodedParser
+    'application/x-www-form-urlencoded': urlencodedParser,
+    'application/x-www-form-urlencoded (raw)': urlencodedRawParser
   }
 
   /* Form builder */
