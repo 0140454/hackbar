@@ -24,9 +24,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 * SQLi
   * Dump all database names (MySQL, PostgreSQL)
-  * Dump tables from database (MySQL, PostgreSQL)
-  * Dump columns from database (MySQL, PostgreSQL)
-  * Union select statement (MySQL, PostgreSQL)
+  * Dump tables from database (MySQL, PostgreSQL, SQLite)
+  * Dump columns from database (MySQL, PostgreSQL, SQLite)
+  * Union select statement (MySQL, PostgreSQL, SQLite)
   * Error-based injection statement (MySQL, PostgreSQL)
   * Space to Inline comment
 

@@ -108,6 +108,27 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>SQLite</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpTables')">
+                      <v-list-item-title>Dump tables from database</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpColumns')">
+                      <v-list-item-title>Dump columns from database (also with table name)</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.unionSelect', false)">
+                      <v-list-item-title>Union select statement</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
                 <v-list-item @click="applyFunction('Payload.SQLi.polyglot', true)">
                   <v-list-item-title>Polyglot</v-list-item-title>
                 </v-list-item>
