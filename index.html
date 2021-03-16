@@ -73,6 +73,12 @@
                     <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpColumns')">
                       <v-list-item-title>Dump columns from database</v-list-item-title>
                     </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SQLi.MySQL.dumpCurrentQueries', true)">
+                      <v-list-item-title>Dump Current Qureis</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SQLi.MySQL.dumpInOneShot', true)">
+                      <v-list-item-title>Dump in One Shot Payload</v-list-item-title>
+                    </v-list-item>
                     <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect', false)">
                       <v-list-item-title>Union select statement</v-list-item-title>
                     </v-list-item>
