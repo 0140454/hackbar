@@ -28,6 +28,8 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * Dump columns from database (MySQL, PostgreSQL, SQLite)
   * Union select statement (MySQL, PostgreSQL, SQLite)
   * Error-based injection statement (MySQL, PostgreSQL)
+  * Dump in one shot payload (MySQL)
+  * Dump current query payload (MySQL)
   * Space to Inline comment
 
 * XSS
@@ -38,7 +40,8 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * PHP wrapper - Base64
 
 * SSTI
-  * Flask RCE ([Reference](https://twitter.com/realgam3/status/1184747565415358469))
+  * Jinja2 SSTI (Python)
+  * Java SSTI
 
 * Encoding
   * URL encode/decode
@@ -115,3 +118,7 @@ For more details, please visit "[Posting JSON with an HTML Form](https://systemo
 * Vue.js
 * Vuetify.js
 * [crypto-js](https://github.com/brix/crypto-js)
+
+## Contributor
+
+- [lebr0nli](https://github.com/lebr0nli)

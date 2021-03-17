@@ -191,11 +191,53 @@
                 </v-btn>
               </template>
               <v-list dense>
-                <v-list-item @click="applyFunction('Payload.SSTI.flaskRCE', true)">
-                  <v-list-item-title>Flask RCE</v-list-item-title>
-                </v-list-item>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>Jinja2 (python)</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2Class', true)">
+                      <v-list-item-title>Access all class by tuple</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.string2Class', true)">
+                      <v-list-item-title>Access all class by string</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.list2Class', true)">
+                      <v-list-item-title>Access all class by list</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.method2Global', true)">
+                      <v-list-item-title>Access global variables by method</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.flaskRCE', true)">
+                      <v-list-item-title>Flask RCE cheet sheet</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>Java</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Java.commonRCE', true)">
+                      <v-list-item-title>Common Java Template RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Java.thymeleafRCE', true)">
+                      <v-list-item-title>Thymeleaf RCE cheet sheet</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-list>
-            </v-menu>
+          </v-menu>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
                 <v-btn text v-on="on">
