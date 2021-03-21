@@ -28,8 +28,8 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * Dump columns from database (MySQL, PostgreSQL, SQLite)
   * Union select statement (MySQL, PostgreSQL, SQLite)
   * Error-based injection statement (MySQL, PostgreSQL)
-  * Dump in one shot payload (MySQL)
-  * Dump current query payload (MySQL)
+  * [Dump in one shot payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-dios---dump-in-one-shot) (MySQL)
+  * [Dump current query payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-current-queries) (MySQL)
   * Space to Inline comment
 
 * XSS
@@ -40,7 +40,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * PHP wrapper - Base64
 
 * SSTI
-  * Jinja2 SSTI (Python)
+  * Jinja2 SSTI  ([Flask RCE Reference](https://twitter.com/realgam3/status/1184747565415358469))
   * Java SSTI
 
 * Encoding
