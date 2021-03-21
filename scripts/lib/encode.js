@@ -3,7 +3,7 @@ window.Encode = {}
 window.Encode.URL = {
   encode: value => encodeURIComponent(value),
   decode: value => decodeURIComponent(value),
-  decodePlus: value => decodeURIComponent(value.replaceAll('+',' '))
+  decodePlus: value => decodeURIComponent(value.replaceAll('+', ' '))
 }
 
 window.Encode.Base64 = {
