@@ -321,7 +321,7 @@
             </v-menu>
           </v-toolbar-items>
         </v-app-bar>
-        <v-content>
+        <v-main>
           <v-container fluid px-4>
             <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)" @keydown.stop></v-textarea>
             <v-row>
@@ -346,7 +346,7 @@
               </v-col>
             </v-row>
           </v-container>
-        </v-content>
+        </v-main>
         <v-dialog max-width="32%" v-model="reloadDialog">
           <v-card>
             <v-card-title class="headline">

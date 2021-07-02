@@ -3,13 +3,8 @@
 }
 
 #add-header-button {
-  margin-bottom: 19px;
+  margin-bottom: 18px;
   margin-top: 13px;
-}
-
-.header-settings {
-  padding-bottom: 2px;
-  padding-top: 2px;
 }
 
 .v-menu__content {
@@ -37,11 +32,11 @@
 }
 
 html.theme--light > body::-webkit-scrollbar-track {
-  background: linear-gradient(#ffffff, #ffffff 48px, #fafafa 48px, #fafafa);
+  background: linear-gradient(#f5f5f5, #f5f5f5 48px, #ffffff 48px, #ffffff);
 }
 
 .theme--dark ::-webkit-scrollbar-track {
-  background: #424242;
+  background: #1e1e1e;
 }
 
 .theme--dark ::-webkit-scrollbar-thumb {
@@ -49,5 +44,5 @@ html.theme--light > body::-webkit-scrollbar-track {
 }
 
 html.theme--dark > body::-webkit-scrollbar-track {
-  background: linear-gradient(#424242, #424242 48px, #303030 48px, #303030);
+  background: linear-gradient(#272727, #272727 48px, #121212 48px, #121212);
 }
