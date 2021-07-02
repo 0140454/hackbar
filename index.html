@@ -194,7 +194,7 @@
                 <v-menu offset-x open-on-hover>
                   <template v-slot:activator="{ on }">
                     <v-list-item v-on="on" @click.stop>
-                      <v-list-item-title>Jinja2 (python)</v-list-item-title>
+                      <v-list-item-title>Jinja2 (Python)</v-list-item-title>
                       <v-list-item-action class="justify-end">
                         <v-icon small>mdi-menu-right</v-icon>
                       </v-list-item-action>
@@ -214,7 +214,7 @@
                       <v-list-item-title>Access global variables by method</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.flaskRCE', true)">
-                      <v-list-item-title>Flask RCE cheat sheet</v-list-item-title>
+                      <v-list-item-title>Flask RCE</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -232,7 +232,7 @@
                       <v-list-item-title>Common Java Template RCE</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Java.thymeleafRCE', true)">
-                      <v-list-item-title>Thymeleaf RCE cheat sheet</v-list-item-title>
+                      <v-list-item-title>Thymeleaf RCE</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -325,7 +325,7 @@
           <v-container fluid px-4>
             <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)" @keydown.stop></v-textarea>
             <v-row>
-              <v-col>
+              <v-col cols="12" md="6">
                 <v-layout align-center>
                   <v-switch label="Enable POST" v-model="request.body.enabled"></v-switch>
                   <v-spacer></v-spacer>
@@ -333,7 +333,7 @@
                 </v-layout>
                 <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)" @keydown.stop></v-textarea>
               </v-col>
-              <v-col>
+              <v-col cols="12" md="6">
                 <v-btn id="add-header-button" @click="addHeader()">Add Header</v-btn>
                 <v-layout class="header-settings" align-center v-for="(header, index) in request.headers" :key="index">
                   <v-checkbox v-model="header.enabled"></v-checkbox>
@@ -347,7 +347,7 @@
             </v-row>
           </v-container>
         </v-main>
-        <v-dialog max-width="32%" v-model="reloadDialog">
+        <v-dialog max-width="580" v-model="reloadDialog">
           <v-card>
             <v-card-title class="headline">
               Unable to fetch request information
@@ -363,7 +363,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog max-width="32%" persistent eager v-model="sqlInjectionDialog.show">
+        <v-dialog max-width="580" persistent eager v-model="sqlInjectionDialog.show">
           <v-form @submit.prevent="sqlInjectionDialog.show = false; applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)" v-model="sqlInjectionDialog.valid">
             <v-card>
               <v-card-title class="headline">
@@ -389,7 +389,7 @@
             </v-card>
           </v-form>
         </v-dialog>
-        <v-dialog max-width="32%" persistent v-model="testProgressDialog.show">
+        <v-dialog max-width="580" persistent v-model="testProgressDialog.show">
           <v-card>
             <v-card-title class="headline">
               Test Progress
