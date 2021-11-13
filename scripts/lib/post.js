@@ -9,18 +9,19 @@
 
     if (!body.includes('=')){
       const trashName = Math.random().toString(36).slice(2)
-      const json = JSON.parse(body)
-
-      if (Array.isArray(json)) {
-        json.push(JSON.parse(`{ "${trashName}": "=" }`))
+      let trash;
+      if (body.at(-1) == "}"){
+        trash = `,"${trashName}":"="}`;
+      } else if (body.at(-1) == "]") {
+        trash = `,"${trashName}="]`;
       } else {
-        json[trashName] = '='
+        throw new Error("Your body doesn't contain `=`, we can't help you POST it as a JSON now :(");
       }
 
-      const stringified = JSON.stringify(json)
-      const delimiterIndex = stringified.indexOf(`"${trashName}":"="`)
-      const name = stringified.substring(0, delimiterIndex + trashName.length + 4)
-      const value = stringified.substring(delimiterIndex + trashName.length + 5)
+      const stringified = body.slice(0,-1) + trash
+      const delimiterIndex = stringified.indexOf(trash) + trash.indexOf('=')
+      const name = stringified.substring(0, delimiterIndex)
+      const value = stringified.substring(delimiterIndex + 1)
       result.fields.push({
         type: 'input',
         name: name,
