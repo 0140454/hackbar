@@ -7,25 +7,35 @@
       fields: []
     }
 
-    const trashName = Math.random().toString(36).slice(2)
-    const json = JSON.parse(body)
+    if (!body.includes('=')){
+      const trashName = Math.random().toString(36).slice(2)
+      const json = JSON.parse(body)
 
-    if (Array.isArray(json)) {
-      json.push(JSON.parse(`{ "${trashName}": "=" }`))
+      if (Array.isArray(json)) {
+        json.push(JSON.parse(`{ "${trashName}": "=" }`))
+      } else {
+        json[trashName] = '='
+      }
+
+      const stringified = JSON.stringify(json)
+      const delimiterIndex = stringified.indexOf(`"${trashName}":"="`)
+      const name = stringified.substring(0, delimiterIndex + trashName.length + 4)
+      const value = stringified.substring(delimiterIndex + trashName.length + 5)
+      result.fields.push({
+        type: 'input',
+        name: name,
+        value: value
+      })
     } else {
-      json[trashName] = '='
+      const delimiterIndex = body.indexOf("=")
+      const name = body.substring(0, delimiterIndex)
+      const value = body.substring(delimiterIndex + 1)
+      result.fields.push({
+        type: 'input',
+        name: name,
+        value: value
+      })
     }
-
-    const stringified = JSON.stringify(json)
-    const delimiterIndex = stringified.indexOf(`"${trashName}":"="`)
-    const name = stringified.substring(0, delimiterIndex + trashName.length + 4)
-    const value = stringified.substring(delimiterIndex + trashName.length + 5)
-
-    result.fields.push({
-      type: 'input',
-      name: name,
-      value: value
-    })
 
     return result
   }
