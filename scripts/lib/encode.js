@@ -85,3 +85,13 @@ window.Encode.CharCode = {
     }).join('')
   }
 }
+
+window.Encode.Escape = {
+  hex: value => {
+    return ([...value]).map(c => c.charCodeAt() > 0xff ? c : "\\x" + c.charCodeAt().toString(16)).join('')
+  },
+
+  oct: value => {
+    return ([...value]).map(c => c.charCodeAt() > 0xff ? c : "\\" + c.charCodeAt().toString(8)).join('')
+  }
+}

