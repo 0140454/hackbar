@@ -201,20 +201,26 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2Class', true)">
-                      <v-list-item-title>Access all class by tuple</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2AllSubclasses', true)">
+                      <v-list-item-title>Show subclasses with tuple</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.string2Class', true)">
-                      <v-list-item-title>Access all class by string</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2RCE', true)">
+                      <v-list-item-title>From Tuple to RCE</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.list2Class', true)">
-                      <v-list-item-title>Access all class by list</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.g2RCE', true)">
+                      <v-list-item-title>From Flask g to RCE</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.method2Global', true)">
-                      <v-list-item-title>Access global variables by method</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.url_for2RCE', true)">
+                      <v-list-item-title>From Flask url_for to RCE</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.flaskRCE', true)">
-                      <v-list-item-title>Flask RCE</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.application2RCE', true)">
+                      <v-list-item-title>From Flask application to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.config2RCE', true)">
+                      <v-list-item-title>From Flask config to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.add_url_rule', true)">
+                      <v-list-item-title>Add a new endpoint for RCE result</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -233,6 +239,103 @@
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Java.thymeleafRCE', true)">
                       <v-list-item-title>Thymeleaf RCE</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-list>
+            </v-menu>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">
+                  Shell
+                  <v-icon small right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>Python Reverse Shell</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.Shell.Python.py3', true)">
+                      <v-list-item-title>python3</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.Python.py', true)">
+                      <v-list-item-title>python</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>sh(bash) Reverse Shell</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.Shell.sh.with_i', true)">
+                      <v-list-item-title>sh with -i</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.sh.without_i', true)">
+                      <v-list-item-title>sh without -i</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>nc(ncat) Reverse Shell</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.Shell.nc.with_e', true)">
+                      <v-list-item-title>nc with -e</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.nc.with_c', true)">
+                      <v-list-item-title>nc with -c</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>PHP Webshell/Reverse Shell</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.reverse_shell', true)">
+                      <v-list-item-title>Reverse Shell</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_eval', true)">
+                      <v-list-item-title>with eval</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_exec', true)">
+                      <v-list-item-title>with exec</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_system', true)">
+                      <v-list-item-title>with system</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_backquote', true)">
+                      <v-list-item-title>with `</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_all_function', true)">
+                      <v-list-item-title>with any function you want</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_no_alphabets_digits', true)">
+                      <v-list-item-title>with system && without alphabets and digits (urlencode already)</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -275,6 +378,13 @@
                 </v-list-item>
                 <v-list-item @click="applyFunction('Encode.Unicode.decode')">
                   <v-list-item-title>Unicode decode</v-list-item-title>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item @click="applyFunction('Encode.Escape.hex')">
+                  <v-list-item-title>Escape ASCII with hex</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="applyFunction('Encode.Escape.oct')">
+                  <v-list-item-title>Escape ASCII with oct</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
