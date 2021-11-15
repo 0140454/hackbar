@@ -43,11 +43,18 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * Jinja2 SSTI  ([Flask RCE Reference](https://twitter.com/realgam3/status/1184747565415358469))
   * Java SSTI
 
+* Shell
+  * Python reverse shell cheatsheet
+  * bash reverse shell cheatsheet
+  * nc reverse shell cheatsheet
+  * php reverse shell/web shell cheatsheet
+
 * Encoding
   * URL encode/decode
   * Base64 encode/decode
   * Hexadecimal encode/decode
   * Unicode encode/decode
+  * Escape ASCII to hex/oct format
 
 * Hashing
   * MD5
@@ -104,6 +111,8 @@ After changing **enctype** field to ```application/json```, you can put your pay
   "password": "admin"
 }
 ```
+
+If your payload doesn't contain `=`:
 
 In order to post JSON data, we will insert a dummy field or object to your JSON such as the following:
 
