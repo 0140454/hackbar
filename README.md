@@ -33,7 +33,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   * Space to Inline comment
 
 * XSS
-  * Html encode/decode
+  * Vue.js XSS payloads
+  * Some snippets for CTF
+  * Html encode/decode with hex/dec/entity name
   * String.fromCharCode encode/decode
 
 * LFI
@@ -84,7 +86,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 After changing **enctype** field to ```multipart/form-data```, you can put your payload into **Body** field such as the following:
 
-```
+```text
 ------WebKitFormBoundarydbJBATDXCC6CL0lZ
 Content-Disposition: form-data; name="user"
 
@@ -105,7 +107,7 @@ Therefore, sent boundary will not be the same as your typed.
 
 After changing **enctype** field to ```application/json```, you can put your payload into **Body** field such as the following:
 
-```
+```json
 {
   "username": "admin",
   "password": "admin"
@@ -116,7 +118,7 @@ If your payload doesn't contain `=`:
 
 In order to post JSON data, we will insert a dummy field or object to your JSON such as the following:
 
-```
+```json
 {"username":"admin","password":"admin","4dxnzjzd5mi":"="}
 ```
 
@@ -130,4 +132,4 @@ For more details, please visit "[Posting JSON with an HTML Form](https://systemo
 
 ## Contributor
 
-- [lebr0nli](https://github.com/lebr0nli)
+* [lebr0nli](https://github.com/lebr0nli)
