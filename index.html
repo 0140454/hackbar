@@ -155,11 +155,70 @@
                   <v-list-item-title>Polyglot</v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list-item @click="applyFunction('Encode.Html.encode')">
-                  <v-list-item-title>Html encode</v-list-item-title>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>Vue.js XSS payloads</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2_1', true)">
+                      <v-list-item-title>Vue 2 - 1</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2_2', true)">
+                      <v-list-item-title>Vue 2 - 2</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3_1', true)">
+                      <v-list-item-title>Vue 3 - 1</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3_2', true)">
+                      <v-list-item-title>Vue 3 - 2</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-divider></v-divider>
+                <v-menu offset-x open-on-hover>
+                  <template v-slot:activator="{ on }">
+                    <v-list-item v-on="on" @click.stop>
+                      <v-list-item-title>CTF Snippets</v-list-item-title>
+                      <v-list-item-action class="justify-end">
+                        <v-icon small>mdi-menu-right</v-icon>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_samesite_flag', true)">
+                      <v-list-item-title>Get flag from '/flag'</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_cookie_flag', true)">
+                      <v-list-item-title>Get flag from document.cookie</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_storage_flag', true)">
+                      <v-list-item-title>Get flag from localStorage.flag</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-divider></v-divider>
+                <v-list-item @click="applyFunction('Encode.Html.encode_hex_mode')">
+                  <v-list-item-title>Html encode (by hex)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.decode')">
-                  <v-list-item-title>Html decode</v-list-item-title>
+                <v-list-item @click="applyFunction('Encode.Html.encode_dec_mode')">
+                  <v-list-item-title>Html encode (by dec)</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="applyFunction('Encode.Html.encode_name_mode')">
+                  <v-list-item-title>Html encode (by entity name)</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="applyFunction('Encode.Html.decode_hex_mode')">
+                  <v-list-item-title>Html decode (by hex)</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="applyFunction('Encode.Html.decode_dec_mode')">
+                  <v-list-item-title>Html decode (by dec)</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="applyFunction('Encode.Html.decode_name_mode')">
+                  <v-list-item-title>Html decode (by entity name)</v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item @click="applyFunction('Encode.CharCode.encode')">
