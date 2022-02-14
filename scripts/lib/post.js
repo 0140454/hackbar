@@ -6,13 +6,13 @@
       enctype: 'text/plain',
       fields: []
     }
-
+    body = body.trim();
     if (!body.includes('=')){
       const trashName = Math.random().toString(36).slice(2)
       let trash;
-      if (body.at(-1) == "}"){
+      if (body.at(-1) === "}"){
         trash = `,"${trashName}":"="}`;
-      } else if (body.at(-1) == "]") {
+      } else if (body.at(-1) === "]") {
         trash = `,"${trashName}="]`;
       } else {
         throw new Error("Your body doesn't contain `=`, we can't help you POST it as a JSON now :(");
