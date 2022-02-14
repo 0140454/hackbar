@@ -59,19 +59,19 @@ window.Encode.Unicode = {
 }
 
 window.Encode.Html = {
-  encode_hex_mode: value => {
+  encode2Hex: value => {
     return value.replace(/./gs, (char) => {
       return `&#x${char.charCodeAt().toString(16)};`;
     })
   },
 
-  encode_dec_mode: value => {
+  encode2Dec: value => {
     return value.replace(/./gs, (char) => {
       return `&#${char.charCodeAt().toString()};`;
     })
   },
 
-  encode_name_mode: value => {
+  encode2EntityName: value => {
     let entities = [
       ['&', '&amp;'],
       ['\'', '&apos;'],
@@ -87,19 +87,19 @@ window.Encode.Html = {
     return value;
   },
 
-  decode_hex_mode: value => {
+  decodeFromHex: value => {
     return value.replace(/&#x[0-9a-fA-F]{1,2};/g, (str) => {
       return String.fromCharCode(parseInt(str.substring(3), 16))
     })
   },
 
-  decode_dec_mode: value => {
+  decodeFromDec: value => {
     return value.replace(/&#\d{1,3};/g, (str) => {
       return String.fromCharCode(parseInt(str.substring(2)))
     })
   },
 
-  decode_name_mode: value => {
+  decodeFromEntityName: value => {
     let entities = [
       [/&amp;/g, '&'],
       [/&apos;/g, '\''],

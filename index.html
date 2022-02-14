@@ -165,17 +165,17 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2_1', true)">
-                      <v-list-item-title>Vue 2 - 1</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2Interpolation', true)">
+                      <v-list-item-title>Vue 2 - Interpolation</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2_2', true)">
-                      <v-list-item-title>Vue 2 - 2</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2Directive', true)">
+                      <v-list-item-title>Vue 2 - Directive</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3_1', true)">
-                      <v-list-item-title>Vue 3 - 1</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3Interpolation', true)">
+                      <v-list-item-title>Vue 3 - Interpolation</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3_2', true)">
-                      <v-list-item-title>Vue 3 - 2</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3DynamicComponent', true)">
+                      <v-list-item-title>Vue 3 - DynamicComponent</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -190,34 +190,34 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_samesite_flag', true)">
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.getSamesiteFlag', true)">
                       <v-list-item-title>Get flag from '/flag'</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_cookie_flag', true)">
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.getCookieFlag', true)">
                       <v-list-item-title>Get flag from document.cookie</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.XSS.snippets.get_storage_flag', true)">
+                    <v-list-item @click="applyFunction('Payload.XSS.snippets.getStorageFlag', true)">
                       <v-list-item-title>Get flag from localStorage.flag</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
                 <v-divider></v-divider>
-                <v-list-item @click="applyFunction('Encode.Html.encode_hex_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.encode2Hex')">
                   <v-list-item-title>Html encode (by hex)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.encode_dec_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.encode2Dec')">
                   <v-list-item-title>Html encode (by dec)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.encode_name_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.encode2EntityName')">
                   <v-list-item-title>Html encode (by entity name)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.decode_hex_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.decodeFromHex')">
                   <v-list-item-title>Html decode (by hex)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.decode_dec_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.decodeFromDec')">
                   <v-list-item-title>Html decode (by dec)</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="applyFunction('Encode.Html.decode_name_mode')">
+                <v-list-item @click="applyFunction('Encode.Html.decodeFromEntityName')">
                   <v-list-item-title>Html decode (by entity name)</v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -269,7 +269,7 @@
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.g2RCE', true)">
                       <v-list-item-title>From Flask g to RCE</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.url_for2RCE', true)">
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.urlFor2RCE', true)">
                       <v-list-item-title>From Flask url_for to RCE</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.application2RCE', true)">
@@ -278,7 +278,7 @@
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.config2RCE', true)">
                       <v-list-item-title>From Flask config to RCE</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.add_url_rule', true)">
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.addUrlRule', true)">
                       <v-list-item-title>Add a new endpoint for RCE result</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -339,10 +339,10 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.Shell.sh.with_i', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.sh.withI', true)">
                       <v-list-item-title>sh with -i</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.sh.without_i', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.sh.withoutI', true)">
                       <v-list-item-title>sh without -i</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -357,10 +357,10 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.Shell.nc.with_e', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.nc.withE', true)">
                       <v-list-item-title>nc with -e</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.nc.with_c', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.nc.withC', true)">
                       <v-list-item-title>nc with -c</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -375,25 +375,25 @@
                     </v-list-item>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.reverse_shell', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.reverseShell', true)">
                       <v-list-item-title>Reverse Shell</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_eval', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellEval', true)">
                       <v-list-item-title>with eval</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_exec', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellExec', true)">
                       <v-list-item-title>with exec</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_system', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellSystem', true)">
                       <v-list-item-title>with system</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_backquote', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellBackquote', true)">
                       <v-list-item-title>with `</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_all_function', true)">
-                      <v-list-item-title>with any function you want</v-list-item-title>
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellAllFunction', true)">
+                      <v-list-item-title>with any function you want (except eval)</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="applyFunction('Payload.Shell.php.webshell_no_alphabets_digits', true)">
+                    <v-list-item @click="applyFunction('Payload.Shell.php.webshellNoAlphabetsDigits', true)">
                       <v-list-item-title>with system && without alphabets and digits (urlencode already)</v-list-item-title>
                     </v-list-item>
                   </v-list>
