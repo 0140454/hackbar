@@ -175,7 +175,7 @@
                       <v-list-item-title>Vue 3 - Interpolation</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3DynamicComponent', true)">
-                      <v-list-item-title>Vue 3 - DynamicComponent</v-list-item-title>
+                      <v-list-item-title>Vue 3 - Dynamic Component</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -277,6 +277,24 @@
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.config2RCE', true)">
                       <v-list-item-title>From Flask config to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.getFlashedMessages2RCE', true)">
+                      <v-list-item-title>From Flask get_flashed_messages to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.self2RCE', true)">
+                      <v-list-item-title>From self to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.lipsum2RCE', true)">
+                      <v-list-item-title>From lipsum to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.cycler2RCE', true)">
+                      <v-list-item-title>From cycler to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.joiner2RCE', true)">
+                      <v-list-item-title>From joiner to RCE</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.namespace2RCE', true)">
+                      <v-list-item-title>From namespace to RCE</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.addUrlRule', true)">
                       <v-list-item-title>Add a new endpoint for RCE result</v-list-item-title>
