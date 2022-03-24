@@ -34,6 +34,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 * XSS
   * Vue.js XSS payloads
+  * Angular.js XSS payloads for strict CSP
   * Some snippets for CTF
   * Html encode/decode with hex/dec/entity name
   * String.fromCharCode encode/decode
