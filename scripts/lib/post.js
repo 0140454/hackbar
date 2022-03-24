@@ -10,7 +10,7 @@
     if (!body.includes('=')){
       const trashName = Math.random().toString(36).slice(2)
       let trash;
-      if (body.at(-1) === "}"){
+      if (body.at(-1) === '}'){
         trash = `,"${trashName}":"="}`;
       } else if (body.at(-1) === "]") {
         trash = `,"${trashName}="]`;
@@ -28,7 +28,7 @@
         value: value
       })
     } else {
-      const delimiterIndex = body.indexOf("=")
+      const delimiterIndex = body.indexOf('=')
       const name = body.substring(0, delimiterIndex)
       const value = body.substring(delimiterIndex + 1)
       result.fields.push({
