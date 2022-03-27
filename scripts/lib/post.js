@@ -6,19 +6,19 @@
       enctype: 'text/plain',
       fields: []
     }
-    body = body.trim();
-    if (!body.includes('=')){
+    body = body.trim()
+    if (!body.includes('=')) {
       const trashName = Math.random().toString(36).slice(2)
-      let trash;
-      if (body.at(-1) === '}'){
-        trash = `,"${trashName}":"="}`;
-      } else if (body.at(-1) === "]") {
-        trash = `,"${trashName}="]`;
+      let trash
+      if (body.at(-1) === '}') {
+        trash = `,"${trashName}":"="}`
+      } else if (body.at(-1) === ']') {
+        trash = `,"${trashName}="]`
       } else {
-        throw new Error("Your body doesn't contain `=`, we can't help you POST it as a JSON now :(");
+        throw new Error("Your body doesn't contain `=`, we can't help you POST it as a JSON now :(")
       }
 
-      const stringified = body.slice(0,-1) + trash
+      const stringified = body.slice(0, -1) + trash
       const delimiterIndex = stringified.indexOf(trash) + trash.indexOf('=')
       const name = stringified.substring(0, delimiterIndex)
       const value = stringified.substring(delimiterIndex + 1)

