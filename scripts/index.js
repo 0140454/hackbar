@@ -1,8 +1,11 @@
 (async () => {
+
+  const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
   const isDarkThemEnabled = async () => {
     return new Promise(resolve => {
       chrome.storage.local.get(
-        { darkThemeEnabled: false },
+        { darkThemeEnabled: isSystemDarkMode },
         ({ darkThemeEnabled }) => resolve(darkThemeEnabled))
     })
   }
