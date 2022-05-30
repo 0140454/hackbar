@@ -1,6 +1,5 @@
 (async () => {
-
-  const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 
   const isDarkThemEnabled = async () => {
     return new Promise(resolve => {
