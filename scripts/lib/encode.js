@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js'
+
 window.Encode = {}
 
 window.Encode.URL = {

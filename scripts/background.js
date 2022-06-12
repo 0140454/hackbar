@@ -1,7 +1,6 @@
 const tabDB = {}
 const decoder = new TextDecoder()
 
-const getChromeVersion = () => parseInt(/Chrome\/([0-9]+)/.exec(navigator.userAgent)[1])
 const enctypeNeededToOverrideHeader = [
   'application/json',
   'application/x-www-form-urlencoded (raw)'
@@ -25,8 +24,11 @@ const handleMessage = (message, sender, sendResponse) => {
         })
       }
 
-      chrome.tabs.executeScript(message.tabId, {
-        file: 'scripts/lib/post.js'
+      chrome.scripting.executeScript({
+        target: {
+          tabId: message.tabId,
+        },
+        files: ['scripts/lib/post.js'],
       }, () => {
         chrome.tabs.sendMessage(message.tabId, message.data, response => {
           if (response === null) {
@@ -46,8 +48,11 @@ const handleMessage = (message, sender, sendResponse) => {
     }
   } else if (message.type === 'test') {
     if (message.data.action === 'start') {
-      chrome.tabs.executeScript(message.tabId, {
-        file: message.data.script
+      chrome.scripting.executeScript({
+        target: {
+          tabId: message.tabId,
+        },
+        files: [message.data.script],
       }, () => {
         chrome.tabs.sendMessage(message.tabId, message.data)
       })
@@ -111,73 +116,70 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
 }, {
   urls: ['<all_urls>'],
   types: ['main_frame']
-}, (getChromeVersion() >= 79) ? [
-  'blocking',
+}, [
   'extraHeaders',
-  'requestBody'
-] : [
-  'blocking',
   'requestBody'
 ])
 
-chrome.webRequest.onBeforeSendHeaders.addListener(details => {
-  delete tabDB[details.tabId].request.contentType
+// FIXME: declarativeNetRequest
+// chrome.webRequest.onBeforeSendHeaders.addListener(details => {
+//   delete tabDB[details.tabId].request.contentType
 
-  for (const idx in details.requestHeaders) {
-    if (details.requestHeaders[idx].name.toLowerCase() === 'content-type') {
-      tabDB[details.tabId].request.contentType = details.requestHeaders[idx].value
-      break
-    }
-  }
+//   for (const idx in details.requestHeaders) {
+//     if (details.requestHeaders[idx].name.toLowerCase() === 'content-type') {
+//       tabDB[details.tabId].request.contentType = details.requestHeaders[idx].value
+//       break
+//     }
+//   }
 
-  if (typeof tabDB[details.tabId].modifiedHeaders === 'undefined') {
-    return
-  }
+//   if (typeof tabDB[details.tabId].modifiedHeaders === 'undefined') {
+//     return
+//   }
 
-  const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(header => {
-    return header.enabled === true && header.name.length > 0
-  })
+//   const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(header => {
+//     return header.enabled === true && header.name.length > 0
+//   })
 
-  if (modifiedHeaders.length === 0) {
-    return
-  }
+//   if (modifiedHeaders.length === 0) {
+//     return
+//   }
 
-  modifiedHeaders.forEach(header => {
-    let idx = 0
-    for (; idx < details.requestHeaders.length; idx++) {
-      if (details.requestHeaders[idx].name.toLowerCase() ===
-          header.name.toLowerCase()) {
-        details.requestHeaders[idx].value = header.value
-        break
-      }
-    }
+//   modifiedHeaders.forEach(header => {
+//     let idx = 0
+//     for (; idx < details.requestHeaders.length; idx++) {
+//       if (details.requestHeaders[idx].name.toLowerCase() ===
+//           header.name.toLowerCase()) {
+//         details.requestHeaders[idx].value = header.value
+//         break
+//       }
+//     }
 
-    if (idx === details.requestHeaders.length) {
-      details.requestHeaders.push({
-        name: header.name,
-        value: header.value
-      })
-    }
+//     if (idx === details.requestHeaders.length) {
+//       details.requestHeaders.push({
+//         name: header.name,
+//         value: header.value
+//       })
+//     }
 
-    if (header.name.toLowerCase() === 'content-type') {
-      tabDB[details.tabId].request.contentType = header.value
-    }
-  })
+//     if (header.name.toLowerCase() === 'content-type') {
+//       tabDB[details.tabId].request.contentType = header.value
+//     }
+//   })
 
-  delete tabDB[details.tabId].modifiedHeaders
+//   delete tabDB[details.tabId].modifiedHeaders
 
-  return { requestHeaders: details.requestHeaders }
-}, {
-  urls: ['<all_urls>'],
-  types: ['main_frame']
-}, (getChromeVersion() >= 72) ? [
-  'blocking',
-  'extraHeaders',
-  'requestHeaders'
-] : [
-  'blocking',
-  'requestHeaders'
-])
+//   return { requestHeaders: details.requestHeaders }
+// }, {
+//   urls: ['<all_urls>'],
+//   types: ['main_frame']
+// }, (getChromeVersion() >= 72) ? [
+//   'blocking',
+//   'extraHeaders',
+//   'requestHeaders'
+// ] : [
+//   'blocking',
+//   'requestHeaders'
+// ])
 
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   delete tabDB[tabId]

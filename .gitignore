@@ -1,5 +1,5 @@
 node_modules/
+dist/
 
 hackbar.zip
-package.json
 package-lock.json
