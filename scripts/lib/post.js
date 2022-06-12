@@ -1,10 +1,10 @@
-(() => {
+;(() => {
   /* Body parser */
 
   const jsonParser = body => {
     const result = {
       enctype: 'text/plain',
-      fields: []
+      fields: [],
     }
     body = body.trim()
     if (!body.includes('=')) {
@@ -15,7 +15,9 @@
       } else if (body.at(-1) === ']') {
         trash = `,"${trashName}="]`
       } else {
-        throw new Error("Your body doesn't contain `=`, we can't help you POST it as a JSON now :(")
+        throw new Error(
+          "Your body doesn't contain `=`, we can't help you POST it as a JSON now :(",
+        )
       }
 
       const stringified = body.slice(0, -1) + trash
@@ -25,7 +27,7 @@
       result.fields.push({
         type: 'input',
         name: name,
-        value: value
+        value: value,
       })
     } else {
       const delimiterIndex = body.indexOf('=')
@@ -34,7 +36,7 @@
       result.fields.push({
         type: 'input',
         name: name,
-        value: value
+        value: value,
       })
     }
 
@@ -44,7 +46,7 @@
   const multipartParser = body => {
     const result = {
       enctype: 'multipart/form-data',
-      fields: []
+      fields: [],
     }
 
     const boundary = body.split('\n', 1)[0].trim()
@@ -53,10 +55,10 @@
     for (let idx = 1; idx < parts.length - 1; idx++) {
       const data = {}
       const crlf = parts[idx].indexOf('\r\n\r\n') !== -1
-      const delimiterIndex = parts[idx].indexOf((crlf) ? '\r\n\r\n' : '\n\n')
+      const delimiterIndex = parts[idx].indexOf(crlf ? '\r\n\r\n' : '\n\n')
 
       const header = parts[idx].substring(0, delimiterIndex)
-      const content = parts[idx].substring(delimiterIndex + ((crlf) ? 4 : 2))
+      const content = parts[idx].substring(delimiterIndex + (crlf ? 4 : 2))
 
       let matched = null
       const regex = RegExp('(name|filename)=(?:"([^"]+)"|([^;]+))', 'gi')
@@ -75,9 +77,10 @@
         data.value = content.substring(0, content.length - 1 - crlf)
       } else {
         matched = header.match(/content-type:\s([^\r\n]+)/i)
-        data.file.type = (matched !== null) ? matched[1] : ''
-        data.file.data = new Blob(
-          [content.substring(0, content.length - 1 - crlf)])
+        data.file.type = matched !== null ? matched[1] : ''
+        data.file.data = new Blob([
+          content.substring(0, content.length - 1 - crlf),
+        ])
       }
 
       result.fields.push(data)
@@ -89,7 +92,7 @@
   const urlencodedParser = body => {
     const result = {
       enctype: 'application/x-www-form-urlencoded',
-      fields: []
+      fields: [],
     }
 
     body.split('&').forEach(field => {
@@ -102,7 +105,7 @@
       result.fields.push({
         type: 'input',
         name: decodeURIComponent(name),
-        value: decodeURIComponent(value)
+        value: decodeURIComponent(value),
       })
     })
 
@@ -112,7 +115,7 @@
   const urlencodedRawParser = body => {
     const result = {
       enctype: 'text/plain',
-      fields: []
+      fields: [],
     }
 
     const tempFields = []
@@ -128,7 +131,7 @@
     result.fields.push({
       type: 'input',
       name: name,
-      value: value
+      value: value,
     })
 
     return result
@@ -138,7 +141,7 @@
     'application/json': jsonParser,
     'multipart/form-data': multipartParser,
     'application/x-www-form-urlencoded': urlencodedParser,
-    'application/x-www-form-urlencoded (raw)': urlencodedRawParser
+    'application/x-www-form-urlencoded (raw)': urlencodedRawParser,
   }
 
   /* Form builder */
@@ -154,15 +157,18 @@
 
     fields.forEach(field => {
       const input = document.createElement(
-        (field.type === 'file') ? 'input' : 'textarea')
+        field.type === 'file' ? 'input' : 'textarea',
+      )
 
       input.setAttribute('name', field.name)
       if (field.type === 'file') {
         const dataTransfer = new DataTransfer()
 
-        dataTransfer.items.add(new File([field.file.data], field.file.name, {
-          type: field.file.type
-        }))
+        dataTransfer.items.add(
+          new File([field.file.data], field.file.name, {
+            type: field.file.type,
+          }),
+        )
 
         input.setAttribute('type', 'file')
         input.files = dataTransfer.files
@@ -184,7 +190,11 @@
     chrome.runtime.onMessage.removeListener(messageListener)
 
     try {
-      const form = buildForm(message.url, message.body.content, message.body.enctype)
+      const form = buildForm(
+        message.url,
+        message.body.content,
+        message.body.enctype,
+      )
 
       document.body.appendChild(form)
       form.submit()

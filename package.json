@@ -1,17 +1,24 @@
 {
   "name": "hackbar",
   "scripts": {
-    "build": "node ./node_modules/.bin/webpack --config ./webpack.config.js",
+    "build": "webpack --config ./webpack.config.js",
     "pack": "rm -f $npm_package_name.zip && (cd dist ; zip -r ../$npm_package_name.zip *)",
-    "watch": "node ./node_modules/.bin/webpack --watch --config webpack.config.js"
+    "watch": "webpack --watch --config webpack.config.js",
+    "lint": "eslint --ext .js,.vue ./components/ ./scripts/ && prettier --check .",
+    "lint:fix": "eslint --fix --ext .js,.vue ./components/ ./scripts/ && prettier --write ."
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-vue": "^8.7.1",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "node-sass": "^7.0.1",
+    "prettier": "^2.6.2",
     "sass": "~1.32",
     "sass-loader": "^13.0.0",
     "vue-loader": "^15.9.8",
