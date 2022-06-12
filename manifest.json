@@ -1,23 +1,26 @@
 {
   "name": "HackBar",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "HackBar for Chrome",
   "devtools_page": "devtools.html",
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "icons": {
     "128": "images/icon.png"
   },
   "permissions": [
     "storage",
+    "scripting",
     "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "declarativeNetRequest"
   ],
+  "host_permissions": ["<all_urls>"],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "service_worker": "scripts/background.js"
   },
   "web_accessible_resources": [
-    "payloads/*"
+    {
+      "resources": ["payloads/*"],
+      "matches": ["<all_urls>"]
+    }
   ],
   "commands": {
     "load_url": {
@@ -42,5 +45,5 @@
       "description": "Trigger 'Execute'"
     }
   },
-  "manifest_version": 2
+  "manifest_version": 3
 }
