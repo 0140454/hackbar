@@ -198,14 +198,10 @@
             </VBtn>
           </template>
           <VList dense>
-            <VListItem @click="applyFunction('Payload.XSS.polyglot', true)">
-              <VListItemTitle>Polyglot</VListItemTitle>
-            </VListItem>
-            <VDivider></VDivider>
             <VMenu offset-x open-on-hover>
               <template #activator="{ on }">
                 <VListItem v-on="on" @click.stop>
-                  <VListItemTitle>Vue.js XSS payloads</VListItemTitle>
+                  <VListItemTitle>Vue.js</VListItemTitle>
                   <VListItemAction class="justify-end">
                     <VIcon small>mdi-menu-right</VIcon>
                   </VListItemAction>
@@ -240,13 +236,10 @@
                 </VListItem>
               </VList>
             </VMenu>
-            <VDivider></VDivider>
             <VMenu offset-x open-on-hover>
               <template #activator="{ on }">
                 <VListItem v-on="on" @click.stop>
-                  <VListItemTitle>
-                    Angular.js XSS payloads for strict CSP
-                  </VListItemTitle>
+                  <VListItemTitle> Angular.js for strict CSP </VListItemTitle>
                   <VListItemAction class="justify-end">
                     <VIcon small>mdi-menu-right</VIcon>
                   </VListItemAction>
@@ -279,7 +272,6 @@
                 </VListItem>
               </VList>
             </VMenu>
-            <VDivider></VDivider>
             <VMenu offset-x open-on-hover>
               <template #activator="{ on }">
                 <VListItem v-on="on" @click.stop>
@@ -315,33 +307,60 @@
                 </VListItem>
               </VList>
             </VMenu>
-            <VDivider></VDivider>
-            <VListItem @click="applyFunction('Encode.Html.encode2Hex')">
-              <VListItemTitle>Html encode (by hex)</VListItemTitle>
-            </VListItem>
-            <VListItem @click="applyFunction('Encode.Html.encode2Dec')">
-              <VListItemTitle>Html encode (by dec)</VListItemTitle>
-            </VListItem>
-            <VListItem @click="applyFunction('Encode.Html.encode2EntityName')">
-              <VListItemTitle>Html encode (by entity name)</VListItemTitle>
-            </VListItem>
-            <VListItem @click="applyFunction('Encode.Html.decodeFromHex')">
-              <VListItemTitle>Html decode (by hex)</VListItemTitle>
-            </VListItem>
-            <VListItem @click="applyFunction('Encode.Html.decodeFromDec')">
-              <VListItemTitle>Html decode (by dec)</VListItemTitle>
-            </VListItem>
-            <VListItem
-              @click="applyFunction('Encode.Html.decodeFromEntityName')"
-            >
-              <VListItemTitle>Html decode (by entity name)</VListItemTitle>
-            </VListItem>
-            <VDivider></VDivider>
-            <VListItem @click="applyFunction('Encode.CharCode.encode')">
-              <VListItemTitle>String.fromCharCode encode</VListItemTitle>
-            </VListItem>
-            <VListItem @click="applyFunction('Encode.CharCode.decode')">
-              <VListItemTitle>String.fromCharCode decode</VListItemTitle>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>HTML</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem @click="applyFunction('Encode.Html.encode2Hex')">
+                  <VListItemTitle>Encode using hex</VListItemTitle>
+                </VListItem>
+                <VListItem @click="applyFunction('Encode.Html.encode2Dec')">
+                  <VListItemTitle>Encode using dec</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Encode.Html.encode2EntityName')"
+                >
+                  <VListItemTitle>Encode using entity name</VListItemTitle>
+                </VListItem>
+                <VListItem @click="applyFunction('Encode.Html.decodeFromHex')">
+                  <VListItemTitle>Decode using hex</VListItemTitle>
+                </VListItem>
+                <VListItem @click="applyFunction('Encode.Html.decodeFromDec')">
+                  <VListItemTitle>Decode using dec</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Encode.Html.decodeFromEntityName')"
+                >
+                  <VListItemTitle>Decode using entity name</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>String.fromCharCode</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem @click="applyFunction('Encode.CharCode.encode')">
+                  <VListItemTitle>Encode</VListItemTitle>
+                </VListItem>
+                <VListItem @click="applyFunction('Encode.CharCode.decode')">
+                  <VListItemTitle>Decode</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VListItem @click="applyFunction('Payload.XSS.polyglot', true)">
+              <VListItemTitle>Polyglot</VListItemTitle>
             </VListItem>
           </VList>
         </VMenu>
