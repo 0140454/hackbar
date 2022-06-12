@@ -14,6 +14,7 @@ import '../scripts/lib/payload.js'
 Vue.use(Vuetify)
 
 new Vue({
+  name: 'HackBar',
   vuetify: new Vuetify(),
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app')

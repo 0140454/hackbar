@@ -5,7 +5,7 @@ window.Encode = {}
 window.Encode.URL = {
   encode: value => encodeURIComponent(value),
   decode: value => decodeURIComponent(value),
-  decodePlus: value => decodeURIComponent(value.replaceAll('+', ' '))
+  decodePlus: value => decodeURIComponent(value.replaceAll('+', ' ')),
 }
 
 window.Encode.Base64 = {
@@ -24,7 +24,7 @@ window.Encode.Base64 = {
     }
 
     return result
-  }
+  },
 }
 
 window.Encode.Hexadecimal = {
@@ -43,32 +43,32 @@ window.Encode.Hexadecimal = {
     }
 
     return result
-  }
+  },
 }
 
 window.Encode.Unicode = {
   encode: value => {
-    return value.replace(/./gs, (char) => {
+    return value.replace(/./gs, char => {
       return '\\u' + ('000' + char.charCodeAt().toString(16)).slice(-4)
     })
   },
 
   decode: value => {
-    return value.replace(/\\u.{4}/g, (str) => {
+    return value.replace(/\\u.{4}/g, str => {
       return String.fromCharCode(parseInt(str.substring(2, 6), 16))
     })
-  }
+  },
 }
 
 window.Encode.Html = {
   encode2Hex: value => {
-    return value.replace(/./gs, (char) => {
+    return value.replace(/./gs, char => {
       return `&#x${char.charCodeAt().toString(16)};`
     })
   },
 
   encode2Dec: value => {
-    return value.replace(/./gs, (char) => {
+    return value.replace(/./gs, char => {
       return `&#${char.charCodeAt().toString()};`
     })
   },
@@ -76,11 +76,11 @@ window.Encode.Html = {
   encode2EntityName: value => {
     const entities = [
       ['&', '&amp;'],
-      ['\'', '&apos;'],
+      ["'", '&apos;'],
       ['<', '&lt;'],
       ['>', '&gt;'],
       [' ', '&nbsp;'],
-      ['"', '&quot;']
+      ['"', '&quot;'],
     ]
     entities.forEach(e => {
       const [k, v] = e
@@ -90,13 +90,13 @@ window.Encode.Html = {
   },
 
   decodeFromHex: value => {
-    return value.replace(/&#x[0-9a-fA-F]{1,2};/g, (str) => {
+    return value.replace(/&#x[0-9a-fA-F]{1,2};/g, str => {
       return String.fromCharCode(parseInt(str.substring(3), 16))
     })
   },
 
   decodeFromDec: value => {
-    return value.replace(/&#\d{1,3};/g, (str) => {
+    return value.replace(/&#\d{1,3};/g, str => {
       return String.fromCharCode(parseInt(str.substring(2)))
     })
   },
@@ -104,40 +104,57 @@ window.Encode.Html = {
   decodeFromEntityName: value => {
     const entities = [
       [/&amp;/g, '&'],
-      [/&apos;/g, '\''],
+      [/&apos;/g, "'"],
       [/&lt;/g, '<'],
       [/&gt;/g, '>'],
       [/&nbsp;/g, ' '],
-      [/&quot;/g, '"']
+      [/&quot;/g, '"'],
     ]
     entities.forEach(e => {
       const [k, v] = e
       value = value.replace(k, v)
     })
     return value
-  }
+  },
 }
 
 window.Encode.CharCode = {
   encode: value => {
-    return 'String.fromCharCode(' + value.split('').map((char) => {
-      return char.charCodeAt()
-    }).join(',') + ')'
+    return (
+      'String.fromCharCode(' +
+      value
+        .split('')
+        .map(char => {
+          return char.charCodeAt()
+        })
+        .join(',') +
+      ')'
+    )
   },
 
   decode: value => {
-    return value.substring(20, value.length - 1).split(',').map((charCode) => {
-      return String.fromCharCode(charCode)
-    }).join('')
-  }
+    return value
+      .substring(20, value.length - 1)
+      .split(',')
+      .map(charCode => {
+        return String.fromCharCode(charCode)
+      })
+      .join('')
+  },
 }
 
 window.Encode.Escape = {
   hex: value => {
-    return ([...value]).map(c => c.charCodeAt() > 0xff ? c : '\\x' + c.charCodeAt().toString(16)).join('')
+    return [...value]
+      .map(c =>
+        c.charCodeAt() > 0xff ? c : '\\x' + c.charCodeAt().toString(16),
+      )
+      .join('')
   },
 
   oct: value => {
-    return ([...value]).map(c => c.charCodeAt() > 0xff ? c : '\\' + c.charCodeAt().toString(8)).join('')
-  }
+    return [...value]
+      .map(c => (c.charCodeAt() > 0xff ? c : '\\' + c.charCodeAt().toString(8)))
+      .join('')
+  },
 }

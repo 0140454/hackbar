@@ -3,59 +3,67 @@ const decoder = new TextDecoder()
 
 const enctypeNeededToOverrideHeader = [
   'application/json',
-  'application/x-www-form-urlencoded (raw)'
+  'application/x-www-form-urlencoded (raw)',
 ]
 
-const handleMessage = (message, sender, sendResponse) => {
+const handleMessage = message => {
   if (message.type === 'load') {
     tabDB[message.tabId].connection.postMessage({
       type: 'load',
-      data: tabDB[message.tabId].request
+      data: tabDB[message.tabId].request,
     })
   } else if (message.type === 'execute') {
     tabDB[message.tabId].modifiedHeaders = message.data.headers
 
     if (message.data.body.enabled) {
-      if (enctypeNeededToOverrideHeader.indexOf(message.data.body.enctype) >= 0) {
+      if (
+        enctypeNeededToOverrideHeader.indexOf(message.data.body.enctype) >= 0
+      ) {
         tabDB[message.tabId].modifiedHeaders.unshift({
           enabled: true,
           name: 'content-type',
-          value: message.data.body.enctype.split(' ', 1)[0]
+          value: message.data.body.enctype.split(' ', 1)[0],
         })
       }
 
-      chrome.scripting.executeScript({
-        target: {
-          tabId: message.tabId,
+      chrome.scripting.executeScript(
+        {
+          target: {
+            tabId: message.tabId,
+          },
+          files: ['scripts/lib/post.js'],
         },
-        files: ['scripts/lib/post.js'],
-      }, () => {
-        chrome.tabs.sendMessage(message.tabId, message.data, response => {
-          if (response === null) {
-            return
-          }
+        () => {
+          chrome.tabs.sendMessage(message.tabId, message.data, response => {
+            if (response === null) {
+              return
+            }
 
-          tabDB[message.tabId].connection.postMessage({
-            type: 'error',
-            data: response
+            tabDB[message.tabId].connection.postMessage({
+              type: 'error',
+              data: response,
+            })
           })
-        })
-      })
+        },
+      )
     } else {
       chrome.tabs.update(message.tabId, {
-        url: message.data.url
+        url: message.data.url,
       })
     }
   } else if (message.type === 'test') {
     if (message.data.action === 'start') {
-      chrome.scripting.executeScript({
-        target: {
-          tabId: message.tabId,
+      chrome.scripting.executeScript(
+        {
+          target: {
+            tabId: message.tabId,
+          },
+          files: [message.data.script],
         },
-        files: [message.data.script],
-      }, () => {
-        chrome.tabs.sendMessage(message.tabId, message.data)
-      })
+        () => {
+          chrome.tabs.sendMessage(message.tabId, message.data)
+        },
+      )
     } else {
       chrome.tabs.sendMessage(message.tabId, message.data)
     }
@@ -78,48 +86,50 @@ chrome.runtime.onConnect.addListener(devToolsConnection => {
   })
 })
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender) => {
   if (sender.tab) {
     tabDB[sender.tab.id].connection.postMessage({
       type: 'test',
-      data: message
+      data: message,
     })
   }
 })
 
-chrome.webRequest.onBeforeRequest.addListener(details => {
-  const tabData = tabDB[details.tabId] || {}
+chrome.webRequest.onBeforeRequest.addListener(
+  details => {
+    const tabData = tabDB[details.tabId] || {}
 
-  if (typeof tabData.request === 'undefined') {
-    tabData.request = {}
-  }
-
-  tabData.request.url = details.url
-  if (typeof details.requestBody !== 'undefined') {
-    tabData.request.body = details.requestBody
-
-    if (typeof tabData.request.body.raw !== 'undefined') {
-      for (const idx in tabData.request.body.raw) {
-        if (typeof tabData.request.body.raw[idx].bytes === 'undefined') {
-          continue
-        }
-
-        tabData.request.body.raw[idx].bytes = decoder.decode(
-          tabData.request.body.raw[idx].bytes)
-      }
+    if (typeof tabData.request === 'undefined') {
+      tabData.request = {}
     }
-  } else {
-    delete tabData.request.body
-  }
 
-  tabDB[details.tabId] = tabData
-}, {
-  urls: ['<all_urls>'],
-  types: ['main_frame']
-}, [
-  'extraHeaders',
-  'requestBody'
-])
+    tabData.request.url = details.url
+    if (typeof details.requestBody !== 'undefined') {
+      tabData.request.body = details.requestBody
+
+      if (typeof tabData.request.body.raw !== 'undefined') {
+        for (const idx in tabData.request.body.raw) {
+          if (typeof tabData.request.body.raw[idx].bytes === 'undefined') {
+            continue
+          }
+
+          tabData.request.body.raw[idx].bytes = decoder.decode(
+            tabData.request.body.raw[idx].bytes,
+          )
+        }
+      }
+    } else {
+      delete tabData.request.body
+    }
+
+    tabDB[details.tabId] = tabData
+  },
+  {
+    urls: ['<all_urls>'],
+    types: ['main_frame'],
+  },
+  ['extraHeaders', 'requestBody'],
+)
 
 // FIXME: declarativeNetRequest
 // chrome.webRequest.onBeforeSendHeaders.addListener(details => {
@@ -181,20 +191,22 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
 //   'requestHeaders'
 // ])
 
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+chrome.tabs.onRemoved.addListener(tabId => {
   delete tabDB[tabId]
 })
 
 chrome.commands.onCommand.addListener(command => {
   chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-    if (typeof tabDB[tabs[0].id] === 'undefined' ||
-        typeof tabDB[tabs[0].id].connection === 'undefined') {
+    if (
+      typeof tabDB[tabs[0].id] === 'undefined' ||
+      typeof tabDB[tabs[0].id].connection === 'undefined'
+    ) {
       return
     }
 
     tabDB[tabs[0].id].connection.postMessage({
       type: 'command',
-      data: command
+      data: command,
     })
   })
 })

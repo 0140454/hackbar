@@ -6,70 +6,78 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## Requested Permissions
 
-* tabs
-* webRequest
-* webRequestBlocking
+- tabs
+- webRequest
+- webRequestBlocking
 
 ## Features
 
-* Supported methods
-  * GET
-  * POST
-    * application/x-www-form-urlencoded
-    * [multipart/form-data](#multipartform-data)
-    * [application/json](#applicationjson)
+- Supported methods
 
-* Auto Test
-  * Common paths (Wordlist from [dirsearch](https://github.com/maurosoria/dirsearch/blob/master/db/dicc.txt) included)
+  - GET
+  - POST
+    - application/x-www-form-urlencoded
+    - [multipart/form-data](#multipartform-data)
+    - [application/json](#applicationjson)
 
-* SQLi
-  * Dump all database names (MySQL, PostgreSQL)
-  * Dump tables from database (MySQL, PostgreSQL, SQLite)
-  * Dump columns from database (MySQL, PostgreSQL, SQLite)
-  * Union select statement (MySQL, PostgreSQL, SQLite)
-  * Error-based injection statement (MySQL, PostgreSQL)
-  * [Dump in one shot payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-dios---dump-in-one-shot) (MySQL)
-  * [Dump current query payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-current-queries) (MySQL)
-  * Space to Inline comment
+- Auto Test
 
-* XSS
-  * Vue.js XSS payloads
-  * Angular.js XSS payloads for strict CSP
-  * Some snippets for CTF
-  * Html encode/decode with hex/dec/entity name
-  * String.fromCharCode encode/decode
+  - Common paths (Wordlist from [dirsearch](https://github.com/maurosoria/dirsearch/blob/master/db/dicc.txt) included)
 
-* LFI
-  * PHP wrapper - Base64
+- SQLi
 
-* SSTI
-  * Jinja2 SSTI  ([Flask RCE Reference](https://twitter.com/realgam3/status/1184747565415358469))
-  * Java SSTI
+  - Dump all database names (MySQL, PostgreSQL)
+  - Dump tables from database (MySQL, PostgreSQL, SQLite)
+  - Dump columns from database (MySQL, PostgreSQL, SQLite)
+  - Union select statement (MySQL, PostgreSQL, SQLite)
+  - Error-based injection statement (MySQL, PostgreSQL)
+  - [Dump in one shot payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-dios---dump-in-one-shot) (MySQL)
+  - [Dump current query payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-current-queries) (MySQL)
+  - Space to Inline comment
 
-* Shell
-  * Python reverse shell cheatsheet
-  * bash reverse shell cheatsheet
-  * nc reverse shell cheatsheet
-  * php reverse shell/web shell cheatsheet
+- XSS
 
-* Encoding
-  * URL encode/decode
-  * Base64 encode/decode
-  * Hexadecimal encode/decode
-  * Unicode encode/decode
-  * Escape ASCII to hex/oct format
+  - Vue.js XSS payloads
+  - Angular.js XSS payloads for strict CSP
+  - Some snippets for CTF
+  - Html encode/decode with hex/dec/entity name
+  - String.fromCharCode encode/decode
 
-* Hashing
-  * MD5
-  * SHA1
-  * SHA256
-  * SHA512
+- LFI
+
+  - PHP wrapper - Base64
+
+- SSTI
+
+  - Jinja2 SSTI ([Flask RCE Reference](https://twitter.com/realgam3/status/1184747565415358469))
+  - Java SSTI
+
+- Shell
+
+  - Python reverse shell cheatsheet
+  - bash reverse shell cheatsheet
+  - nc reverse shell cheatsheet
+  - php reverse shell/web shell cheatsheet
+
+- Encoding
+
+  - URL encode/decode
+  - Base64 encode/decode
+  - Hexadecimal encode/decode
+  - Unicode encode/decode
+  - Escape ASCII to hex/oct format
+
+- Hashing
+  - MD5
+  - SHA1
+  - SHA256
+  - SHA512
 
 ## Usage
 
 ### How to open it?
 
-1. Open **Developer tools** (Press ```F12``` or ```Ctrl + Shift + I```)
+1. Open **Developer tools** (Press `F12` or `Ctrl + Shift + I`)
 2. Switch to **HackBar** tab
 3. Enjoy it
 
@@ -85,7 +93,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 #### multipart/form-data
 
-After changing **enctype** field to ```multipart/form-data```, you can put your payload into **Body** field such as the following:
+After changing **enctype** field to `multipart/form-data`, you can put your payload into **Body** field such as the following:
 
 ```text
 ------WebKitFormBoundarydbJBATDXCC6CL0lZ
@@ -106,7 +114,7 @@ Therefore, sent boundary will not be the same as your typed.
 
 #### application/json
 
-After changing **enctype** field to ```application/json```, you can put your payload into **Body** field such as the following:
+After changing **enctype** field to `application/json`, you can put your payload into **Body** field such as the following:
 
 ```json
 {
@@ -120,18 +128,16 @@ If your payload doesn't contain `=`:
 In order to post JSON data, we will insert a dummy field or object to your JSON such as the following:
 
 ```json
-{"username":"admin","password":"admin","4dxnzjzd5mi":"="}
+{ "username": "admin", "password": "admin", "4dxnzjzd5mi": "=" }
 ```
 
 For more details, please visit "[Posting JSON with an HTML Form](https://systemoverlord.com/2016/08/24/posting-json-with-an-html-form.html)".
 
 ## Third-party Libraries
 
-* Vue.js
-* Vuetify.js
-* [crypto-js](https://github.com/brix/crypto-js)
+See `package.json` for details.
 
 ## Contributor
 
-* [lebr0nli](https://github.com/lebr0nli)
-* [boylin0](https://github.com/boylin0)
+- [lebr0nli](https://github.com/lebr0nli)
+- [boylin0](https://github.com/boylin0)

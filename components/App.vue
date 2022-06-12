@@ -1,612 +1,918 @@
 <template>
-<v-app>
-  <v-app-bar app dense flat>
-    <v-toolbar-items>
-      <v-btn text @click="load()">Load</v-btn>
-      <v-btn text @click="split()">Split</v-btn>
-      <v-btn text @click="execute()">Execute</v-btn>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Test
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Common paths</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="testCommonPathsAgainstRoot()">
-                <v-list-item-title>Against web root directory</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="testCommonPathsAgainstCurrent()">
-                <v-list-item-title>Against current directory</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-list>
-      </v-menu>
-      <v-divider inset vertical></v-divider>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            SQLi
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>MySQL</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpDatabases')">
-                <v-list-item-title>Dump all database names</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpTables')">
-                <v-list-item-title>Dump tables from database</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpColumns')">
-                <v-list-item-title>Dump columns from database</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SQLi.MySQL.dumpCurrentQueries', true)">
-                <v-list-item-title>Dump current queries payload</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SQLi.MySQL.dumpInOneShot', true)">
-                <v-list-item-title>Dump in one shot payload</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect', false)">
-                <v-list-item-title>Union select statement</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SQLi.MySQL.errorBased', true)">
-                <v-list-item-title>Error-based injection statement</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>PostgreSQL</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpDatabases')">
-                <v-list-item-title>Dump all database names</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpTables')">
-                <v-list-item-title>Dump tables from database</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpColumns')">
-                <v-list-item-title>Dump columns from database</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.PostgreSQL.unionSelect', false)">
-                <v-list-item-title>Union select statement</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SQLi.PostgreSQL.errorBased', true)">
-                <v-list-item-title>Error-based injection statement</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>SQLite</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpTables')">
-                <v-list-item-title>Dump tables from database</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpColumns')">
-                <v-list-item-title>Dump columns from database (also with table name)</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="sqlInjectionPrompt('Payload.SQLi.SQLite.unionSelect', false)">
-                <v-list-item-title>Union select statement</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-list-item @click="applyFunction('Payload.SQLi.polyglot', true)">
-            <v-list-item-title>Polyglot</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Payload.SQLi.spaceToComment')">
-            <v-list-item-title>Space to Inline comment</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            XSS
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item @click="applyFunction('Payload.XSS.polyglot', true)">
-            <v-list-item-title>Polyglot</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Vue.js XSS payloads</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2Interpolation', true)">
-                <v-list-item-title>Vue 2 - Interpolation</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.Vue.vue2Directive', true)">
-                <v-list-item-title>Vue 2 - Directive</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3Interpolation', true)">
-                <v-list-item-title>Vue 3 - Interpolation</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.Vue.vue3DynamicComponent', true)">
-                <v-list-item-title>Vue 3 - Dynamic Component</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-divider></v-divider>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Angular.js XSS payloads for strict CSP</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.XSS.AngularJS.angularJS1_6WithPrototype$on', true)">
-                <v-list-item-title>AngularJS >= 1.6 with Prototype Library</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.AngularJS.angularJSWith$event', true)">
-                <v-list-item-title>AngularJS All Version (Chrome Only)</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-divider></v-divider>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>CTF Snippets</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.XSS.snippets.getSamesiteFlag', true)">
-                <v-list-item-title>Get flag from '/flag'</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.snippets.getCookieFlag', true)">
-                <v-list-item-title>Get flag from document.cookie</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.XSS.snippets.getStorageFlag', true)">
-                <v-list-item-title>Get flag from localStorage.flag</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.Html.encode2Hex')">
-            <v-list-item-title>Html encode (by hex)</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Html.encode2Dec')">
-            <v-list-item-title>Html encode (by dec)</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Html.encode2EntityName')">
-            <v-list-item-title>Html encode (by entity name)</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Html.decodeFromHex')">
-            <v-list-item-title>Html decode (by hex)</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Html.decodeFromDec')">
-            <v-list-item-title>Html decode (by dec)</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Html.decodeFromEntityName')">
-            <v-list-item-title>Html decode (by entity name)</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.CharCode.encode')">
-            <v-list-item-title>String.fromCharCode encode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.CharCode.decode')">
-            <v-list-item-title>String.fromCharCode decode</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            LFI
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item @click="applyFunction('Payload.LFI.phpWrapperBas64', true)">
-            <v-list-item-title>PHP wrapper - Base64</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            SSTI
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Jinja2 (Python)</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2AllSubclasses', true)">
-                <v-list-item-title>Show subclasses with tuple</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.tuple2RCE', true)">
-                <v-list-item-title>From Tuple to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.g2RCE', true)">
-                <v-list-item-title>From Flask g to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.urlFor2RCE', true)">
-                <v-list-item-title>From Flask url_for to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.application2RCE', true)">
-                <v-list-item-title>From Flask application to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.config2RCE', true)">
-                <v-list-item-title>From Flask config to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.getFlashedMessages2RCE', true)">
-                <v-list-item-title>From Flask get_flashed_messages to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.self2RCE', true)">
-                <v-list-item-title>From self to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.lipsum2RCE', true)">
-                <v-list-item-title>From lipsum to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.cycler2RCE', true)">
-                <v-list-item-title>From cycler to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.joiner2RCE', true)">
-                <v-list-item-title>From joiner to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.namespace2RCE', true)">
-                <v-list-item-title>From namespace to RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Jinja2.addUrlRule', true)">
-                <v-list-item-title>Add a new endpoint for RCE result</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Java</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.SSTI.Java.commonRCE', true)">
-                <v-list-item-title>Common Java Template RCE</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.SSTI.Java.thymeleafRCE', true)">
-                <v-list-item-title>Thymeleaf RCE</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Shell
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>Python Reverse Shell</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.Shell.Python.py3', true)">
-                <v-list-item-title>python3</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.Python.py', true)">
-                <v-list-item-title>python</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>sh(bash) Reverse Shell</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.Shell.sh.withI', true)">
-                <v-list-item-title>sh with -i</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.sh.withoutI', true)">
-                <v-list-item-title>sh without -i</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>nc(ncat) Reverse Shell</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.Shell.nc.withE', true)">
-                <v-list-item-title>nc with -e</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.nc.withC', true)">
-                <v-list-item-title>nc with -c</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-x open-on-hover>
-            <template v-slot:activator="{ on }">
-              <v-list-item v-on="on" @click.stop>
-                <v-list-item-title>PHP Webshell/Reverse Shell</v-list-item-title>
-                <v-list-item-action class="justify-end">
-                  <v-icon small>mdi-menu-right</v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <v-list dense>
-              <v-list-item @click="applyFunction('Payload.Shell.php.reverseShell', true)">
-                <v-list-item-title>Reverse Shell</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellEval', true)">
-                <v-list-item-title>with eval</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellExec', true)">
-                <v-list-item-title>with exec</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellSystem', true)">
-                <v-list-item-title>with system</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellBackquote', true)">
-                <v-list-item-title>with `</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellAllFunction', true)">
-                <v-list-item-title>with any function you want (except eval)</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="applyFunction('Payload.Shell.php.webshellNoAlphabetsDigits', true)">
-                <v-list-item-title>with system && without alphabets and digits (urlencode already)</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Encoding
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item @click="applyFunction('Encode.URL.encode')">
-            <v-list-item-title>URL encode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.URL.decode')">
-            <v-list-item-title>URL decode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.URL.decodePlus')">
-            <v-list-item-title>URL decode (+ => space)</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.Base64.encode')">
-            <v-list-item-title>Base64 encode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Base64.decode')">
-            <v-list-item-title>Base64 decode</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.Hexadecimal.encode')">
-            <v-list-item-title>Hexadecimal encode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Hexadecimal.decode')">
-            <v-list-item-title>Hexadecimal decode</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.Unicode.encode')">
-            <v-list-item-title>Unicode encode</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Unicode.decode')">
-            <v-list-item-title>Unicode decode</v-list-item-title>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="applyFunction('Encode.Escape.hex')">
-            <v-list-item-title>Escape ASCII with hex</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Encode.Escape.oct')">
-            <v-list-item-title>Escape ASCII with oct</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Hashing
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item @click="applyFunction('Hash.MD5.digest')">
-            <v-list-item-title>MD5</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Hash.SHA1.digest')">
-            <v-list-item-title>SHA1</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Hash.SHA256.digest')">
-            <v-list-item-title>SHA256</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="applyFunction('Hash.SHA512.digest')">
-            <v-list-item-title>SHA512</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-toolbar-items>
-    <v-spacer></v-spacer>
-    <v-toolbar-items>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Theme
-            <v-icon small right>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense>
-          <v-list-item @click="enableDarkTheme(false)">
-            <v-list-item-title>Light</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="enableDarkTheme(true)">
-            <v-list-item-title>Dark</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-toolbar-items>
-  </v-app-bar>
-  <v-main>
-    <v-container fluid px-4>
-      <v-textarea label="URL" rows="1" ref="url" auto-grow v-model="request.url" @focus="onFocus($event)" @keydown.stop></v-textarea>
-      <v-row>
-        <v-col cols="12" md="6">
-          <v-layout align-center>
-            <v-switch label="Enable POST" v-model="request.body.enabled"></v-switch>
-            <v-spacer></v-spacer>
-            <v-select class="pt-2" v-model="request.body.enctype" :items="supportedEnctype()" label="enctype" v-show="request.body.enabled" dense offset-y></v-select>
-          </v-layout>
-          <v-textarea label="Body" rows="1" auto-grow v-show="request.body.enabled" v-model="request.body.content" @focus="onFocus($event)" @keydown.stop></v-textarea>
-        </v-col>
-        <v-col cols="12" md="6">
-          <v-btn id="add-header-button" @click="addHeader()">Add Header</v-btn>
-          <v-layout class="header-settings" align-center v-for="(header, index) in request.headers" :key="index">
-            <v-checkbox v-model="header.enabled"></v-checkbox>
-            <v-combobox dense class="px-1 pt-2" label="Name" v-model="header.name" :items="commonRequestHeaders()" @focus="onFocus($event)" :menu-props='{ "maxHeight": 200 }'></v-combobox>
-            <v-text-field class="px-1" label="Value" v-model="header.value" @focus="onFocus($event)" @keydown.stop></v-text-field>
-            <v-btn icon text @click="deleteHeader(index)">
-              <v-icon small>mdi-close</v-icon>
-            </v-btn>
-          </v-layout>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
-  <v-dialog max-width="580" v-model="reloadDialog">
-    <v-card>
-      <v-card-title class="headline">
-        Unable to fetch request information
-      </v-card-title>
-      <v-card-text class="body-1">
-        After installing extension, it is required to reload the tab for recording the request.<br><br>
+  <VApp>
+    <VAppBar app dense flat>
+      <VToolbarItems>
+        <VBtn text @click="load()">Load</VBtn>
+        <VBtn text @click="split()">Split</VBtn>
+        <VBtn text @click="execute()">Execute</VBtn>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              Test
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>Common paths</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem @click="testCommonPathsAgainstRoot()">
+                  <VListItemTitle>Against web root directory</VListItemTitle>
+                </VListItem>
+                <VListItem @click="testCommonPathsAgainstCurrent()">
+                  <VListItemTitle>Against current directory</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VList>
+        </VMenu>
+        <VDivider inset vertical></VDivider>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              SQLi
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>MySQL</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.MySQL.dumpDatabases')
+                  "
+                >
+                  <VListItemTitle>Dump all database names</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpTables')"
+                >
+                  <VListItemTitle>Dump tables from database</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="sqlInjectionPrompt('Payload.SQLi.MySQL.dumpColumns')"
+                >
+                  <VListItemTitle>Dump columns from database</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.SQLi.MySQL.dumpCurrentQueries', true)
+                  "
+                >
+                  <VListItemTitle>Dump current queries payload</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.SQLi.MySQL.dumpInOneShot', true)
+                  "
+                >
+                  <VListItemTitle>Dump in one shot payload</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.MySQL.unionSelect', false)
+                  "
+                >
+                  <VListItemTitle>Union select statement</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SQLi.MySQL.errorBased', true)"
+                >
+                  <VListItemTitle>
+                    Error-based injection statement
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>PostgreSQL</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpDatabases')
+                  "
+                >
+                  <VListItemTitle>Dump all database names</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpTables')
+                  "
+                >
+                  <VListItemTitle>Dump tables from database</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.PostgreSQL.dumpColumns')
+                  "
+                >
+                  <VListItemTitle>Dump columns from database</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt(
+                      'Payload.SQLi.PostgreSQL.unionSelect',
+                      false,
+                    )
+                  "
+                >
+                  <VListItemTitle>Union select statement</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.SQLi.PostgreSQL.errorBased', true)
+                  "
+                >
+                  <VListItemTitle>
+                    Error-based injection statement
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>SQLite</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpTables')"
+                >
+                  <VListItemTitle>Dump tables from database</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="sqlInjectionPrompt('Payload.SQLi.SQLite.dumpColumns')"
+                >
+                  <VListItemTitle>
+                    Dump columns from database (also wit h table name)
+                  </VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    sqlInjectionPrompt('Payload.SQLi.SQLite.unionSelect', false)
+                  "
+                >
+                  <VListItemTitle>Union select statement</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VListItem @click="applyFunction('Payload.SQLi.polyglot', true)">
+              <VListItemTitle>Polyglot</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Payload.SQLi.spaceToComment')">
+              <VListItemTitle>Space to Inline comment</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              XSS
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VListItem @click="applyFunction('Payload.XSS.polyglot', true)">
+              <VListItemTitle>Polyglot</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>Vue.js XSS payloads</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.Vue.vue2Interpolation', true)
+                  "
+                >
+                  <VListItemTitle>Vue 2 - Interpolation</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.XSS.Vue.vue2Directive', true)"
+                >
+                  <VListItemTitle>Vue 2 - Directive</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.Vue.vue3Interpolation', true)
+                  "
+                >
+                  <VListItemTitle>Vue 3 - Interpolation</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.Vue.vue3DynamicComponent', true)
+                  "
+                >
+                  <VListItemTitle>Vue 3 - Dynamic Component</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VDivider></VDivider>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>
+                    Angular.js XSS payloads for strict CSP
+                  </VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    applyFunction(
+                      'Payload.XSS.AngularJS.angularJS1_6WithPrototype$on',
+                      true,
+                    )
+                  "
+                >
+                  <VListItemTitle>
+                    AngularJS >= 1.6 with Prototype Library
+                  </VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction(
+                      'Payload.XSS.AngularJS.angularJSWith$event',
+                      true,
+                    )
+                  "
+                >
+                  <VListItemTitle>
+                    AngularJS All Version (Chrome Only)
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VDivider></VDivider>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>CTF Snippets</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.snippets.getSamesiteFlag', true)
+                  "
+                >
+                  <VListItemTitle>Get flag from '/flag'</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.snippets.getCookieFlag', true)
+                  "
+                >
+                  <VListItemTitle>Get flag from document.cookie</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.XSS.snippets.getStorageFlag', true)
+                  "
+                >
+                  <VListItemTitle>
+                    Get flag from localStorage.flag
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.Html.encode2Hex')">
+              <VListItemTitle>Html encode (by hex)</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Html.encode2Dec')">
+              <VListItemTitle>Html encode (by dec)</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Html.encode2EntityName')">
+              <VListItemTitle>Html encode (by entity name)</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Html.decodeFromHex')">
+              <VListItemTitle>Html decode (by hex)</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Html.decodeFromDec')">
+              <VListItemTitle>Html decode (by dec)</VListItemTitle>
+            </VListItem>
+            <VListItem
+              @click="applyFunction('Encode.Html.decodeFromEntityName')"
+            >
+              <VListItemTitle>Html decode (by entity name)</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.CharCode.encode')">
+              <VListItemTitle>String.fromCharCode encode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.CharCode.decode')">
+              <VListItemTitle>String.fromCharCode decode</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              LFI
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VListItem
+              @click="applyFunction('Payload.LFI.phpWrapperBas64', true)"
+            >
+              <VListItemTitle>PHP wrapper - Base64</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              SSTI
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>Jinja2 (Python)</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="
+                    applyFunction(
+                      'Payload.SSTI.Jinja2.tuple2AllSubclasses',
+                      true,
+                    )
+                  "
+                >
+                  <VListItemTitle>Show subclasses with tuple</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.tuple2RCE', true)"
+                >
+                  <VListItemTitle>From Tuple to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.g2RCE', true)"
+                >
+                  <VListItemTitle>From Flask g to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.urlFor2RCE', true)"
+                >
+                  <VListItemTitle>From Flask url_for to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.SSTI.Jinja2.application2RCE', true)
+                  "
+                >
+                  <VListItemTitle>From Flask application to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.config2RCE', true)"
+                >
+                  <VListItemTitle>From Flask config to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction(
+                      'Payload.SSTI.Jinja2.getFlashedMessages2RCE',
+                      true,
+                    )
+                  "
+                >
+                  <VListItemTitle>
+                    From Flask get_flashed_messages to RCE
+                  </VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.self2RCE', true)"
+                >
+                  <VListItemTitle>From self to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.lipsum2RCE', true)"
+                >
+                  <VListItemTitle>From lipsum to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.cycler2RCE', true)"
+                >
+                  <VListItemTitle>From cycler to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.joiner2RCE', true)"
+                >
+                  <VListItemTitle>From joiner to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.SSTI.Jinja2.namespace2RCE', true)
+                  "
+                >
+                  <VListItemTitle>From namespace to RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Jinja2.addUrlRule', true)"
+                >
+                  <VListItemTitle>
+                    Add a new endpoint for RCE result
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>Java</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Java.commonRCE', true)"
+                >
+                  <VListItemTitle>Common Java Template RCE</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.SSTI.Java.thymeleafRCE', true)"
+                >
+                  <VListItemTitle>Thymeleaf RCE</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              Shell
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>Python Reverse Shell</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.Python.py3', true)"
+                >
+                  <VListItemTitle>python3</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.Python.py', true)"
+                >
+                  <VListItemTitle>python</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>sh(bash) Reverse Shell</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.sh.withI', true)"
+                >
+                  <VListItemTitle>sh with -i</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.sh.withoutI', true)"
+                >
+                  <VListItemTitle>sh without -i</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>nc(ncat) Reverse Shell</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.nc.withE', true)"
+                >
+                  <VListItemTitle>nc with -e</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.nc.withC', true)"
+                >
+                  <VListItemTitle>nc with -c</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+            <VMenu offset-x open-on-hover>
+              <template #activator="{ on }">
+                <VListItem v-on="on" @click.stop>
+                  <VListItemTitle>PHP Webshell/Reverse Shell</VListItemTitle>
+                  <VListItemAction class="justify-end">
+                    <VIcon small>mdi-menu-right</VIcon>
+                  </VListItemAction>
+                </VListItem>
+              </template>
+              <VList dense>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.php.reverseShell', true)"
+                >
+                  <VListItemTitle>Reverse Shell</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.php.webshellEval', true)"
+                >
+                  <VListItemTitle>with eval</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="applyFunction('Payload.Shell.php.webshellExec', true)"
+                >
+                  <VListItemTitle>with exec</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.Shell.php.webshellSystem', true)
+                  "
+                >
+                  <VListItemTitle>with system</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.Shell.php.webshellBackquote', true)
+                  "
+                >
+                  <VListItemTitle>with `</VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction('Payload.Shell.php.webshellAllFunction', true)
+                  "
+                >
+                  <VListItemTitle>
+                    with any function you want (except eval)
+                  </VListItemTitle>
+                </VListItem>
+                <VListItem
+                  @click="
+                    applyFunction(
+                      'Payload.Shell.php.webshellNoAlphabetsDigits',
+                      true,
+                    )
+                  "
+                >
+                  <VListItemTitle>
+                    with system && without alphabets and digits (urlencode
+                    already)
+                  </VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              Encoding
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VListItem @click="applyFunction('Encode.URL.encode')">
+              <VListItemTitle>URL encode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.URL.decode')">
+              <VListItemTitle>URL decode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.URL.decodePlus')">
+              <VListItemTitle>URL decode (+ => space)</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.Base64.encode')">
+              <VListItemTitle>Base64 encode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Base64.decode')">
+              <VListItemTitle>Base64 decode</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.Hexadecimal.encode')">
+              <VListItemTitle>Hexadecimal encode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Hexadecimal.decode')">
+              <VListItemTitle>Hexadecimal decode</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.Unicode.encode')">
+              <VListItemTitle>Unicode encode</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Unicode.decode')">
+              <VListItemTitle>Unicode decode</VListItemTitle>
+            </VListItem>
+            <VDivider></VDivider>
+            <VListItem @click="applyFunction('Encode.Escape.hex')">
+              <VListItemTitle>Escape ASCII with hex</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Encode.Escape.oct')">
+              <VListItemTitle>Escape ASCII with oct</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              Hashing
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VListItem @click="applyFunction('Hash.MD5.digest')">
+              <VListItemTitle>MD5</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Hash.SHA1.digest')">
+              <VListItemTitle>SHA1</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Hash.SHA256.digest')">
+              <VListItemTitle>SHA256</VListItemTitle>
+            </VListItem>
+            <VListItem @click="applyFunction('Hash.SHA512.digest')">
+              <VListItemTitle>SHA512</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+      </VToolbarItems>
+      <VSpacer></VSpacer>
+      <VToolbarItems>
+        <VMenu offset-y>
+          <template #activator="{ on }">
+            <VBtn text v-on="on">
+              Theme
+              <VIcon small right>mdi-menu-down</VIcon>
+            </VBtn>
+          </template>
+          <VList dense>
+            <VListItem @click="enableDarkTheme(false)">
+              <VListItemTitle>Light</VListItemTitle>
+            </VListItem>
+            <VListItem @click="enableDarkTheme(true)">
+              <VListItemTitle>Dark</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+      </VToolbarItems>
+    </VAppBar>
+    <VMain>
+      <VContainer fluid px-4>
+        <VTextarea
+          ref="url"
+          v-model="request.url"
+          label="URL"
+          rows="1"
+          auto-grow
+          @focus="onFocus($event)"
+          @keydown.stop
+        ></VTextarea>
+        <VRow>
+          <VCol cols="12" md="6">
+            <VLayout align-center>
+              <VSwitch
+                v-model="request.body.enabled"
+                label="Enable POST"
+              ></VSwitch>
+              <VSpacer></VSpacer>
+              <VSelect
+                v-show="request.body.enabled"
+                v-model="request.body.enctype"
+                class="pt-2"
+                :items="supportedEnctype()"
+                label="enctype"
+                dense
+                offset-y
+              ></VSelect>
+            </VLayout>
+            <VTextarea
+              v-show="request.body.enabled"
+              v-model="request.body.content"
+              label="Body"
+              rows="1"
+              auto-grow
+              @focus="onFocus($event)"
+              @keydown.stop
+            ></VTextarea>
+          </VCol>
+          <VCol cols="12" md="6">
+            <VBtn id="add-header-button" @click="addHeader()">Add Header</VBtn>
+            <VLayout
+              v-for="(header, index) in request.headers"
+              :key="index"
+              class="header-settings"
+              align-center
+            >
+              <VCheckbox v-model="header.enabled"></VCheckbox>
+              <VCombobox
+                v-model="header.name"
+                dense
+                class="px-1 pt-2"
+                label="Name"
+                :items="commonRequestHeaders()"
+                :menu-props="{ maxHeight: 200 }"
+                @focus="onFocus($event)"
+              ></VCombobox>
+              <VTextField
+                v-model="header.value"
+                class="px-1"
+                label="Value"
+                @focus="onFocus($event)"
+                @keydown.stop
+              ></VTextField>
+              <VBtn icon text @click="deleteHeader(index)">
+                <VIcon small>mdi-close</VIcon>
+              </VBtn>
+            </VLayout>
+          </VCol>
+        </VRow>
+      </VContainer>
+    </VMain>
+    <VDialog v-model="reloadDialog" max-width="580">
+      <VCard>
+        <VCardTitle class="headline">
+          Unable to fetch request information
+        </VCardTitle>
+        <VCardText class="body-1">
+          After installing extension, it is required to reload the tab for
+          recording the request.<br /><br />
 
-        Note that the extension cannot record sensitive requests. Please visit <a href="https://developer.chrome.com/extensions/webRequest" target="blank">here</a> for more information.
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="reloadDialog = false">OK</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog max-width="580" persistent eager v-model="sqlInjectionDialog.show">
-    <v-form @submit.prevent="sqlInjectionDialog.show = false; applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)" v-model="sqlInjectionDialog.valid">
-      <v-card>
-        <v-card-title class="headline">
-          SQL Injection
-        </v-card-title>
-        <v-card-text class="body-1">
-          <p v-if="sqlInjectionDialog.positionRequired">The number of columns must be <strong>larger than</strong> or <strong>equal to</strong> output position.</p>
-          <p v-else>The number of columns to use in UNION SELECT statement.</p>
-          <v-row>
-            <v-col>
-              <v-text-field type="number" min="1" label="The number of columns" ref="sqlInjectionInput" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.columns" @keydown.stop required></v-text-field>
-            </v-col>
-            <v-col v-show="sqlInjectionDialog.positionRequired">
-              <v-text-field type="number" min="1" :max="sqlInjectionDialog.columns" label="Output position" :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']" v-model="sqlInjectionDialog.position" @keydown.stop required></v-text-field>
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="sqlInjectionDialog.show = false">Cancel</v-btn>
-          <v-btn text type="submit" :disabled="!sqlInjectionDialog.valid">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-dialog>
-  <v-dialog max-width="580" persistent v-model="testProgressDialog.show">
-    <v-card>
-      <v-card-title class="headline">
-        Test Progress
-      </v-card-title>
-      <v-card-text class="body-1">
-        <p v-if="!testProgressDialog.status">Waiting response from test script...</p>
-        <p v-else>Status: {{testProgressDialog.status}}</p>
-        <v-progress-linear v-if="!testProgressDialog.result" :indeterminate="!testProgressDialog.percentage" :value="testProgressDialog.percentage"></v-progress-linear>
-        <v-data-table v-if="testProgressDialog.result" :headers="testProgressDialog.result.header" :items="testProgressDialog.result.data"></v-data-table>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text v-if="!testProgressDialog.result" @click="controlTest('toggle')">Pause/Resume</v-btn>
-        <v-btn text v-if="!testProgressDialog.result" @click="controlTest('stop')">Stop</v-btn>
-        <v-btn text v-if="testProgressDialog.result" @click="testProgressDialog.show = false">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-snackbar v-model="snackbar.show" color="error" timeout="3000" bottom>
-    {{ snackbar.text }}
-    <v-btn @click="snackbar.show = false" dark text>Close</v-btn>
-  </v-snackbar>
-</v-app>
+          Note that the extension cannot record sensitive requests. Please visit
+          <a
+            href="https://developer.chrome.com/extensions/webRequest"
+            target="blank"
+            >here</a
+          >
+          for more information.
+        </VCardText>
+        <VCardActions>
+          <VSpacer></VSpacer>
+          <VBtn text @click="reloadDialog = false">OK</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VDialog v-model="sqlInjectionDialog.show" max-width="580" persistent eager>
+      <VForm
+        v-model="sqlInjectionDialog.valid"
+        @submit.prevent="
+          sqlInjectionDialog.show = false
+          applyFunction(sqlInjectionDialog.func, true, sqlInjectionDialog)
+        "
+      >
+        <VCard>
+          <VCardTitle class="headline"> SQL Injection </VCardTitle>
+          <VCardText class="body-1">
+            <p v-if="sqlInjectionDialog.positionRequired">
+              The number of columns must be <strong>larger than</strong> or
+              <strong>equal to</strong> output position.
+            </p>
+            <p v-else>
+              The number of columns to use in UNION SELECT statement.
+            </p>
+            <VRow>
+              <VCol>
+                <VTextField
+                  ref="sqlInjectionInput"
+                  v-model="sqlInjectionDialog.columns"
+                  type="number"
+                  min="1"
+                  label="The number of columns"
+                  :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']"
+                  required
+                  @keydown.stop
+                ></VTextField>
+              </VCol>
+              <VCol v-show="sqlInjectionDialog.positionRequired">
+                <VTextField
+                  v-model="sqlInjectionDialog.position"
+                  type="number"
+                  min="1"
+                  :max="sqlInjectionDialog.columns"
+                  label="Output position"
+                  :rules="[v => /^[1-9][0-9]{0,}$/.test(v) || 'Invalid value']"
+                  required
+                  @keydown.stop
+                ></VTextField>
+              </VCol>
+            </VRow>
+          </VCardText>
+          <VCardActions>
+            <VSpacer></VSpacer>
+            <VBtn text @click="sqlInjectionDialog.show = false">Cancel</VBtn>
+            <VBtn text type="submit" :disabled="!sqlInjectionDialog.valid"
+              >OK</VBtn
+            >
+          </VCardActions>
+        </VCard>
+      </VForm>
+    </VDialog>
+    <VDialog v-model="testProgressDialog.show" max-width="580" persistent>
+      <VCard>
+        <VCardTitle class="headline"> Test Progress </VCardTitle>
+        <VCardText class="body-1">
+          <p v-if="!testProgressDialog.status">
+            Waiting response from test script...
+          </p>
+          <p v-else>Status: {{ testProgressDialog.status }}</p>
+          <VProgressLinear
+            v-if="!testProgressDialog.result"
+            :indeterminate="!testProgressDialog.percentage"
+            :value="testProgressDialog.percentage"
+          ></VProgressLinear>
+          <VDataTable
+            v-if="testProgressDialog.result"
+            :headers="testProgressDialog.result.header"
+            :items="testProgressDialog.result.data"
+          ></VDataTable>
+        </VCardText>
+        <VCardActions>
+          <VSpacer></VSpacer>
+          <VBtn
+            v-if="!testProgressDialog.result"
+            text
+            @click="controlTest('toggle')"
+            >Pause/Resume</VBtn
+          >
+          <VBtn
+            v-if="!testProgressDialog.result"
+            text
+            @click="controlTest('stop')"
+            >Stop</VBtn
+          >
+          <VBtn
+            v-if="testProgressDialog.result"
+            text
+            @click="testProgressDialog.show = false"
+            >Close</VBtn
+          >
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VSnackbar v-model="snackbar.show" color="error" timeout="3000" bottom>
+      {{ snackbar.text }}
+      <VBtn dark text @click="snackbar.show = false">Close</VBtn>
+    </VSnackbar>
+  </VApp>
 </template>
 
 <script>
@@ -640,8 +946,8 @@ import {
   VSnackbar,
   VSpacer,
   VSwitch,
-  VTextarea,
   VTextField,
+  VTextarea,
   VToolbarItems,
 } from 'vuetify/lib'
 
@@ -695,19 +1001,19 @@ export default {
         positionRequired: true,
         func: '',
         columns: '1',
-        position: '1'
+        position: '1',
       },
       testProgressDialog: {
         show: false,
         percentage: null,
         status: null,
         error: null,
-        result: null
+        result: null,
       },
       /* Error handling */
       snackbar: {
         show: false,
-        text: ''
+        text: '',
       },
       /* HTTP Request */
       request: {
@@ -715,10 +1021,10 @@ export default {
         body: {
           content: '',
           enctype: 'application/x-www-form-urlencoded',
-          enabled: false
+          enabled: false,
         },
-        headers: []
-      }
+        headers: [],
+      },
     }
   },
   created: function () {
@@ -728,7 +1034,7 @@ export default {
     this.backgroundPageConnection.onMessage.addListener(this.handleMessage)
     this.backgroundPageConnection.postMessage({
       tabId: chrome.devtools.inspectedWindow.tabId,
-      type: 'init'
+      type: 'init',
     })
 
     chrome.storage.onChanged.addListener(changes => {
@@ -743,7 +1049,7 @@ export default {
     load: function () {
       this.backgroundPageConnection.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
-        type: 'load'
+        type: 'load',
       })
     },
 
@@ -752,12 +1058,16 @@ export default {
         return str[0] + '\n' + str[1]
       })
 
-      if (typeof this.request.body.content !== 'undefined' &&
-        this.request.body.enctype !== 'multipart/form-data') {
+      if (
+        typeof this.request.body.content !== 'undefined' &&
+        this.request.body.enctype !== 'multipart/form-data'
+      ) {
         this.request.body.content = this.request.body.content.replace(
-          /[^\n][?&#]/g, str => {
+          /[^\n][?&#]/g,
+          str => {
             return str[0] + '\n' + str[1]
-          })
+          },
+        )
       }
     },
 
@@ -769,7 +1079,7 @@ export default {
       this.backgroundPageConnection.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
         type: 'execute',
-        data: this.request
+        data: this.request,
       })
     },
 
@@ -785,7 +1095,7 @@ export default {
       this.backgroundPageConnection.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
         type: 'test',
-        data: { action, script, argument }
+        data: { action, script, argument },
       })
     },
 
@@ -793,7 +1103,7 @@ export default {
       this.request.headers.unshift({
         enabled: true,
         name: '',
-        value: ''
+        value: '',
       })
     },
 
@@ -803,7 +1113,7 @@ export default {
 
     enableDarkTheme: function (enabled) {
       chrome.storage.local.set({
-        darkThemeEnabled: enabled
+        darkThemeEnabled: enabled,
       })
     },
 
@@ -818,7 +1128,7 @@ export default {
     },
 
     getNamespaceByPath: function (path, root, returnName) {
-      let namespace = (typeof root === 'undefined') ? window : root
+      let namespace = typeof root === 'undefined' ? window : root
 
       path = path.split('.')
       for (let idx = 0; idx < path.length - 1; idx++) {
@@ -832,14 +1142,18 @@ export default {
       if (returnName === true) {
         return {
           namespace: namespace,
-          name: path.pop()
+          name: path.pop(),
         }
       } else {
         return namespace
       }
     },
 
-    applyFunction: function (func, insertWhenNoSelection = false, argument = undefined) {
+    applyFunction: function (
+      func,
+      insertWhenNoSelection = false,
+      argument = undefined,
+    ) {
       func = this.getNamespaceByPath(func, window, true)
 
       if (this.domFocusedInput === null) {
@@ -848,7 +1162,7 @@ export default {
 
       let startIndex = this.domFocusedInput.selectionStart
       let endIndex = this.domFocusedInput.selectionEnd
-      const textSelected = (endIndex - startIndex !== 0)
+      const textSelected = endIndex - startIndex !== 0
       const inputText = this.domFocusedInput.value
 
       if (typeof argument === 'undefined') {
@@ -881,8 +1195,9 @@ export default {
         document.execCommand('insertText', false, processed)
 
         this.domFocusedInput.setSelectionRange(
-          startIndex + ((textSelected === true) ? 0 : processed.length),
-          startIndex + processed.length)
+          startIndex + (textSelected === true ? 0 : processed.length),
+          startIndex + processed.length,
+        )
       })
     },
 
@@ -893,14 +1208,14 @@ export default {
       this.$nextTick(this.$refs.sqlInjectionInput.focus)
     },
 
-    testCommonPathsAgainstRoot: function() {
+    testCommonPathsAgainstRoot: function () {
       this.controlTest('start', 'scripts/test/paths.js', {
         payloadsPath: chrome.runtime.getURL('payloads/paths.txt'),
         againstWebRoot: true,
       })
     },
 
-    testCommonPathsAgainstCurrent: function() {
+    testCommonPathsAgainstCurrent: function () {
       this.controlTest('start', 'scripts/test/paths.js', {
         payloadsPath: chrome.runtime.getURL('payloads/paths.txt'),
         againstWebRoot: false,
@@ -911,7 +1226,7 @@ export default {
       this.domFocusedInput = event.target
     },
 
-    handleMessage: function (message, sender, sendResponse) {
+    handleMessage: function (message) {
       if (message.type === 'load') {
         if (typeof message.data === 'undefined') {
           this.reloadDialog = true
@@ -921,9 +1236,11 @@ export default {
         const request = message.data
 
         this.request.url = request.url
-        this.request.body.enabled = (typeof request.body !== 'undefined')
+        this.request.body.enabled = typeof request.body !== 'undefined'
         if (typeof request.contentType !== 'undefined') {
-          this.request.body.enctype = request.contentType.split(';', 1)[0].trim()
+          this.request.body.enctype = request.contentType
+            .split(';', 1)[0]
+            .trim()
         }
 
         if (this.request.body.enabled) {
@@ -971,10 +1288,10 @@ export default {
 
         switch (report.type) {
           case 'progress':
-            this.testProgressDialog.status = report.data.status ||
-                                              this.testProgressDialog.status
-            this.testProgressDialog.percentage = report.data.percentage ||
-                                                  this.testProgressDialog.percentage
+            this.testProgressDialog.status =
+              report.data.status || this.testProgressDialog.status
+            this.testProgressDialog.percentage =
+              report.data.percentage || this.testProgressDialog.percentage
             break
           case 'finished':
             if (this.testProgressDialog.error === null) {
@@ -996,12 +1313,15 @@ export default {
     },
 
     isDarkThemEnabled: function () {
-      const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const isSystemDarkMode = window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches
 
       return new Promise(resolve => {
         chrome.storage.local.get(
           { darkThemeEnabled: isSystemDarkMode },
-          ({ darkThemeEnabled }) => resolve(darkThemeEnabled))
+          ({ darkThemeEnabled }) => resolve(darkThemeEnabled),
+        )
       })
     },
 
@@ -1010,7 +1330,7 @@ export default {
         'application/x-www-form-urlencoded',
         'application/x-www-form-urlencoded (raw)',
         'multipart/form-data',
-        'application/json'
+        'application/json',
       ]
     },
 
@@ -1068,9 +1388,9 @@ export default {
         'X-Requested-With',
         'X-Request-ID',
         'X-UIDH',
-        'X-Wap-Profile'
+        'X-Wap-Profile',
       ]
-    }
-  }
+    },
+  },
 }
 </script>

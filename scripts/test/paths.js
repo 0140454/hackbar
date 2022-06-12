@@ -1,4 +1,4 @@
-(() => {
+;(() => {
   /*
    * The following are about the messages sent from devtools.
    *   - Start the test
@@ -57,34 +57,35 @@
   const RUNNING = 1
   const PAUSED = 2
 
-  const GETTING_NOT_FOUND_STATUS = 'Getting status code for non-existent path...'
+  const GETTING_NOT_FOUND_STATUS =
+    'Getting status code for non-existent path...'
 
   /* Variables */
 
   const result = []
-  const reporter = new class {
-    constructor () {
+  const reporter = new (class {
+    constructor() {
       this.data = { status: null, percentage: null }
       this.timer = setInterval(() => {
         chrome.runtime.sendMessage({
           type: 'progress',
-          data: this.data
+          data: this.data,
         })
       }, 256)
     }
 
-    setStatus (status) {
+    setStatus(status) {
       this.data.status = status
     }
 
-    setPercentage (percentage) {
+    setPercentage(percentage) {
       this.data.percentage = percentage
     }
 
-    stop () {
+    stop() {
       clearInterval(this.timer)
     }
-  }()
+  })()
 
   let baseDirectory = '/'
   let state = RUNNING
@@ -111,7 +112,7 @@
       try {
         resp = await fetch(url, {
           credentials: 'include',
-          signal: controller.signal
+          signal: controller.signal,
         })
         break
       } catch (error) {
@@ -146,24 +147,29 @@
     const resp = await fetch(url)
     const text = await resp.text()
 
-    return text.replace(/(.*\.?)%EXT%/g, '$1' +
-      commonExtensions.join('\n$1')).split('\n')
+    return text
+      .replace(/(.*\.?)%EXT%/g, '$1' + commonExtensions.join('\n$1'))
+      .split('\n')
   }
 
   const test = async wordlist => {
     const checkResponse = await sendRequest(
-      generateNotFoundUrl(), GETTING_NOT_FOUND_STATUS)
+      generateNotFoundUrl(),
+      GETTING_NOT_FOUND_STATUS,
+    )
     if (checkResponse === null) {
       return
     }
 
     if ([403, 404].includes(checkResponse.status) === false) {
-      throw new Error(`Unexpected status code ${checkResponse.status}, expected 403 or 404 when accessing non-existent path.`)
+      throw new Error(
+        `Unexpected status code ${checkResponse.status}, expected 403 or 404 when accessing non-existent path.`,
+      )
     }
 
     wordlist = await loadWordlist(wordlist)
     for (const idx in wordlist) {
-      reporter.setPercentage(idx / wordlist.length * 100)
+      reporter.setPercentage((idx / wordlist.length) * 100)
 
       const testUrl = generateTestUrl(wordlist[idx])
       const testResponse = await sendRequest(testUrl)
@@ -174,7 +180,9 @@
       if (testResponse.status !== checkResponse.status) {
         result.push({
           url: testUrl,
-          code: testResponse.status + (testResponse.redirected ? ' (Redirected)' : '')
+          code:
+            testResponse.status +
+            (testResponse.redirected ? ' (Redirected)' : ''),
         })
       }
     }
@@ -182,20 +190,23 @@
 
   /* Message listener */
 
-  const messageListener = async (message, sender, sendResponse) => {
+  const messageListener = async message => {
     if (message.action === 'start') {
       try {
         controller = new AbortController()
         if (message.argument.againstWebRoot === false) {
-          baseDirectory = window.location.pathname.substr(
-            0, window.location.pathname.lastIndexOf('/')) + '/'
+          baseDirectory =
+            window.location.pathname.substr(
+              0,
+              window.location.pathname.lastIndexOf('/'),
+            ) + '/'
         }
 
         await test(message.argument.payloadsPath)
       } catch (error) {
         chrome.runtime.sendMessage({
           type: 'error',
-          data: error.message
+          data: error.message,
         })
       } finally {
         chrome.runtime.sendMessage({
@@ -203,10 +214,10 @@
           data: {
             header: [
               { text: 'URL', value: 'url' },
-              { text: 'Code', value: 'code' }
+              { text: 'Code', value: 'code' },
             ],
-            data: result
-          }
+            data: result,
+          },
         })
 
         reporter.stop()
