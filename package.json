@@ -4,10 +4,13 @@
     "build": "webpack --config ./webpack.config.js",
     "pack": "rm -f $npm_package_name.zip && (cd dist ; zip -r ../$npm_package_name.zip *)",
     "watch": "webpack --watch --config webpack.config.js",
-    "lint": "eslint --ext .js,.vue ./components/ ./scripts/ && prettier --check .",
-    "lint:fix": "eslint --fix --ext .js,.vue ./components/ ./scripts/ && prettier --write ."
+    "lint": "eslint --ext .js,.ts,.vue ./components/ ./scripts/ && prettier --check .",
+    "lint:fix": "eslint --fix --ext .js,.ts,.vue ./components/ ./scripts/ && prettier --write ."
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.190",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "eslint": "^8.17.0",
@@ -21,6 +24,7 @@
     "prettier": "^2.6.2",
     "sass": "~1.32",
     "sass-loader": "^13.0.0",
+    "ts-loader": "^9.3.0",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.73.0",

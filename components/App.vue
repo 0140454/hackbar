@@ -1252,40 +1252,8 @@ export default {
           return
         }
 
-        const request = message.data
-
-        this.request.url = request.url
-        this.request.body.enabled = typeof request.body !== 'undefined'
-        if (typeof request.contentType !== 'undefined') {
-          this.request.body.enctype = request.contentType
-            .split(';', 1)[0]
-            .trim()
-        }
-
-        if (this.request.body.enabled) {
-          if (typeof request.body.formData !== 'undefined') {
-            const params = new URLSearchParams()
-
-            for (const name in request.body.formData) {
-              request.body.formData[name].forEach(value => {
-                params.append(name, value)
-              })
-            }
-
-            this.request.body.content = params.toString()
-          } else {
-            this.request.body.content = ''
-
-            request.body.raw.forEach(data => {
-              if (typeof data.file !== 'undefined') {
-                this.request.body.content += `[Content of '${data.file}']`
-              } else {
-                this.request.body.content += data.bytes
-              }
-            })
-          }
-        }
-
+        this.request.url = message.data.url
+        this.request.body = message.data.body
         this.$refs.url.focus()
       } else if (message.type === 'command') {
         switch (message.data) {

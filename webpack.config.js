@@ -13,6 +13,7 @@ module.exports = (env, { mode = 'development' }) => {
     entry: {
       app: ['./scripts/index.js'],
       devtools: ['./scripts/devtools.js'],
+      background: ['./scripts/background.ts'],
     },
     output: {
       clean: true,
@@ -24,6 +25,10 @@ module.exports = (env, { mode = 'development' }) => {
         {
           test: /\.vue$/,
           loader: 'vue-loader',
+        },
+        {
+          test: /\.ts$/i,
+          loader: 'ts-loader',
         },
         {
           test: /\.css$/i,
@@ -72,7 +77,6 @@ module.exports = (env, { mode = 'development' }) => {
           { from: 'images/icon.png', to: 'images/icon.png' },
           { from: 'manifest.json', to: 'manifest.json' },
           { from: 'payloads/paths.txt', to: 'payloads/paths.txt' },
-          { from: 'scripts/background.js', to: 'scripts/background.js' },
           { from: 'scripts/lib/post.js', to: 'scripts/lib/post.js' },
           { from: 'scripts/test/*', to: '.' },
         ],
