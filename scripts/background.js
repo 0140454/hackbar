@@ -13,19 +13,56 @@ const handleMessage = message => {
       data: tabDB[message.tabId].request,
     })
   } else if (message.type === 'execute') {
-    tabDB[message.tabId].modifiedHeaders = message.data.headers
+    const modifiedHeaders = message.data.headers
+    if (
+      message.data.body.enabled &&
+      enctypeNeededToOverrideHeader.indexOf(message.data.body.enctype) >= 0
+    ) {
+      const enctype = message.data.body.enctype.split(' ', 1)[0]
+
+      modifiedHeaders.unshift({
+        enabled: true,
+        name: 'content-type',
+        value: enctype,
+      })
+      tabDB[message.tabId].request.contentType = enctype
+    }
+
+    const sessionRules = modifiedHeaders
+      .filter(header => header.enabled)
+      .map(header => ({
+        ...header,
+        name: header.name.toLowerCase(),
+      }))
+      .map(header => ({
+        header: header.name,
+        operation: 'set',
+        value: header.value,
+      }))
+    const sessionRuleId =
+      message.tabId * 10000 + (tabDB[message.tabId].sessionRuleId++ % 10000)
+    chrome.declarativeNetRequest.updateSessionRules(
+      {
+        addRules: [
+          {
+            id: sessionRuleId,
+            action: {
+              type: 'modifyHeaders',
+              requestHeaders: sessionRules,
+            },
+            condition: {
+              tabIds: [message.tabId],
+              resourceTypes: ['main_frame'],
+            },
+          },
+        ],
+      },
+      () => {
+        tabDB[message.tabId].sessionRuleIds = [sessionRuleId]
+      },
+    )
 
     if (message.data.body.enabled) {
-      if (
-        enctypeNeededToOverrideHeader.indexOf(message.data.body.enctype) >= 0
-      ) {
-        tabDB[message.tabId].modifiedHeaders.unshift({
-          enabled: true,
-          name: 'content-type',
-          value: message.data.body.enctype.split(' ', 1)[0],
-        })
-      }
-
       chrome.scripting.executeScript(
         {
           target: {
@@ -75,6 +112,7 @@ chrome.runtime.onConnect.addListener(devToolsConnection => {
     const tabData = tabDB[message.tabId] || {}
 
     tabData.connection = devToolsConnection
+    tabData.sessionRuleId = 1
     tabDB[message.tabId] = tabData
 
     handleMessage(message, sender, sendResponse)
@@ -131,65 +169,30 @@ chrome.webRequest.onBeforeRequest.addListener(
   ['extraHeaders', 'requestBody'],
 )
 
-// FIXME: declarativeNetRequest
-// chrome.webRequest.onBeforeSendHeaders.addListener(details => {
-//   delete tabDB[details.tabId].request.contentType
+const handleResponseCompleted = details => {
+  if (!tabDB[details.tabId]?.sessionRuleIds) {
+    return
+  }
 
-//   for (const idx in details.requestHeaders) {
-//     if (details.requestHeaders[idx].name.toLowerCase() === 'content-type') {
-//       tabDB[details.tabId].request.contentType = details.requestHeaders[idx].value
-//       break
-//     }
-//   }
+  chrome.declarativeNetRequest.updateSessionRules(
+    {
+      removeRuleIds: tabDB[details.tabId].sessionRuleIds,
+    },
+    () => {
+      tabDB[details.tabId].sessionRuleIds = null
+    },
+  )
+}
 
-//   if (typeof tabDB[details.tabId].modifiedHeaders === 'undefined') {
-//     return
-//   }
-
-//   const modifiedHeaders = tabDB[details.tabId].modifiedHeaders.filter(header => {
-//     return header.enabled === true && header.name.length > 0
-//   })
-
-//   if (modifiedHeaders.length === 0) {
-//     return
-//   }
-
-//   modifiedHeaders.forEach(header => {
-//     let idx = 0
-//     for (; idx < details.requestHeaders.length; idx++) {
-//       if (details.requestHeaders[idx].name.toLowerCase() ===
-//           header.name.toLowerCase()) {
-//         details.requestHeaders[idx].value = header.value
-//         break
-//       }
-//     }
-
-//     if (idx === details.requestHeaders.length) {
-//       details.requestHeaders.push({
-//         name: header.name,
-//         value: header.value
-//       })
-//     }
-
-//     if (header.name.toLowerCase() === 'content-type') {
-//       tabDB[details.tabId].request.contentType = header.value
-//     }
-//   })
-
-//   delete tabDB[details.tabId].modifiedHeaders
-
-//   return { requestHeaders: details.requestHeaders }
-// }, {
-//   urls: ['<all_urls>'],
-//   types: ['main_frame']
-// }, (getChromeVersion() >= 72) ? [
-//   'blocking',
-//   'extraHeaders',
-//   'requestHeaders'
-// ] : [
-//   'blocking',
-//   'requestHeaders'
-// ])
+chrome.webRequest.onBeforeRedirect.addListener(handleResponseCompleted, {
+  urls: ['<all_urls>'],
+})
+chrome.webRequest.onCompleted.addListener(handleResponseCompleted, {
+  urls: ['<all_urls>'],
+})
+chrome.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
+  urls: ['<all_urls>'],
+})
 
 chrome.tabs.onRemoved.addListener(tabId => {
   delete tabDB[tabId]
