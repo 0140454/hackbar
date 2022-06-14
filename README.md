@@ -6,9 +6,16 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ## Requested Permissions
 
-- tabs
+- storage
+  - Save theme preferences
+- scripting
+  - Perform POST request
+  - Run test function
 - webRequest
-- webRequestBlocking
+  - Remember request information
+  - Listen finish event to clean up
+- declarativeNetRequest
+  - Set HTTP header value based on settings
 
 ## Features
 
