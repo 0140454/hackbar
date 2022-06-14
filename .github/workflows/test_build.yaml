@@ -1,0 +1,22 @@
+on:
+  push
+
+name: Test build
+
+jobs:
+  build:
+    name: Test build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
