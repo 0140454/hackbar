@@ -5,5 +5,9 @@ module.exports = {
     commonjs: true,
     webextensions: true,
   },
-  extends: ['.eslintrc.common', '.eslintrc.typescript', '.eslintrc.vue'],
+  extends: [
+    './eslint-config',
+    './eslint-config/typescript',
+    './eslint-config/vue',
+  ],
 }
