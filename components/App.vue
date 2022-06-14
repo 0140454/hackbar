@@ -345,8 +345,8 @@ export default {
     MenuSsti,
     MenuShell,
     MenuEncoding,
-    MenuHashing
-},
+    MenuHashing,
+  },
   provide: function () {
     return {
       applyFunction: this.applyFunction,
