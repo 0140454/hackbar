@@ -1,11 +1,11 @@
 {
   "name": "hackbar",
   "scripts": {
-    "build": "webpack --config ./webpack.config.js",
-    "pack": "rm -f $npm_package_name.zip && (cd dist ; zip -r ../$npm_package_name.zip *)",
-    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --node-env none --mode none --config ./webpack.config.js",
+    "watch": "webpack --node-env development --mode development --watch --config webpack.config.js",
     "lint": "eslint --ext .js,.ts,.vue ./components/ ./scripts/ && prettier --check .",
-    "lint:fix": "eslint --fix --ext .js,.ts,.vue ./components/ ./scripts/ && prettier --write ."
+    "lint:fix": "eslint --fix --ext .js,.ts,.vue ./components/ ./scripts/ && prettier --write .",
+    "pack": "rm -f $npm_package_name.zip && (cd dist ; zip -r ../$npm_package_name.zip *)"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.190",

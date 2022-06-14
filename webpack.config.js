@@ -5,8 +5,11 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const webpack = require('webpack')
 
 module.exports = (env, { mode = 'development' }) => {
+  const isDevelopment = mode === 'development'
+
   return {
-    mode: 'none',
+    mode,
+    devtool: isDevelopment ? 'inline-cheap-module-source-map' : false,
     cache: {
       type: 'filesystem',
     },
