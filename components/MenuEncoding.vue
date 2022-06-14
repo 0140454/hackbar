@@ -52,6 +52,7 @@
 import Vue from 'vue'
 import {
   VBtn,
+  VDivider,
   VIcon,
   VList,
   VListItem,
@@ -63,6 +64,7 @@ export default Vue.extend({
   name: 'MenuEncoding',
   components: {
     VBtn,
+    VDivider,
     VIcon,
     VList,
     VListItem,
