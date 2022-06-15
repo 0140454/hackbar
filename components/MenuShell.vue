@@ -12,7 +12,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>Python Reverse Shell</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
@@ -30,7 +30,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>sh(bash) Reverse Shell</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
@@ -48,7 +48,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>nc(ncat) Reverse Shell</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
@@ -66,7 +66,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>PHP Webshell/Reverse Shell</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>

@@ -18,7 +18,7 @@
                 <VListItem v-on="on" @click.stop>
                   <VListItemTitle>Common paths</VListItemTitle>
                   <VListItemAction class="justify-end">
-                    <VIcon small>mdi-menu-right</VIcon>
+                    <VIcon small>mdi-chevron-right</VIcon>
                   </VListItemAction>
                 </VListItem>
               </template>

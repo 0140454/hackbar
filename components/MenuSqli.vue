@@ -12,7 +12,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>MySQL</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
@@ -61,7 +61,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>PostgreSQL</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
@@ -100,7 +100,7 @@
           <VListItem v-on="on" @click.stop>
             <VListItemTitle>SQLite</VListItemTitle>
             <VListItemAction class="justify-end">
-              <VIcon small>mdi-menu-right</VIcon>
+              <VIcon small>mdi-chevron-right</VIcon>
             </VListItemAction>
           </VListItem>
         </template>
