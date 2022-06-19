@@ -1,7 +1,7 @@
 /* Place Vuetify overrides here */
 @use './variables' as *;
 
-.v-combobox__selection {
+.v-combobox .v-combobox__selection {
   width: inherit;
 
   > .v-combobox__selection-text {
@@ -15,4 +15,9 @@
 
 .v-dialog .v-overlay__content {
   width: calc(100% - 48px);
+}
+
+.v-btn .v-btn__content {
+  align-items: center;
+  display: flex;
 }
