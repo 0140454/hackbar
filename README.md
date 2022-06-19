@@ -64,7 +64,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Python reverse shell cheatsheet
   - bash reverse shell cheatsheet
   - nc reverse shell cheatsheet
-  - php reverse shell/web shell cheatsheet
+  - PHP reverse shell/web shell cheatsheet
 
 - Encoding
 
@@ -78,6 +78,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - MD5
   - SHA1
   - SHA256
+  - SHA384
   - SHA512
 
 ## Usage
