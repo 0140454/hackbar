@@ -1,0 +1,52 @@
+@use './variables' as *;
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+}
+
+.v-theme--light ::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.v-theme--light ::-webkit-scrollbar-thumb {
+  background: #757575;
+}
+
+.v-theme--light header::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+html.v-theme--light,
+html.v-theme--light > body::-webkit-scrollbar-track {
+  background: linear-gradient(#ffffff, #ffffff 48px, #ffffff 48px, #ffffff);
+}
+
+.v-theme--dark ::-webkit-scrollbar-track {
+  background: #212121;
+}
+
+.v-theme--dark ::-webkit-scrollbar-thumb {
+  background: #9e9e9e;
+}
+
+.v-theme--dark header::-webkit-scrollbar-track {
+  background: #212121;
+}
+
+html.v-theme--dark,
+html.v-theme--dark > body::-webkit-scrollbar-track {
+  background: linear-gradient(#212121, #212121 48px, #121212 48px, #121212);
+}
+
+header {
+  overflow-x: auto !important;
+}
+
+.ellipsis {
+  @include ellipsis;
+}

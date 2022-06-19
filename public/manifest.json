@@ -1,0 +1,50 @@
+{
+  "name": "HackBar",
+  "version": "1.0.0",
+  "description": "HackBar for Chrome",
+  "devtools_page": "devtools.html",
+  "icons": {
+    "128": "icon.png"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "webRequest",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["payloads/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "load_url": {
+      "suggested_key": {
+        "default": "Alt+A",
+        "mac": "MacCtrl+A"
+      },
+      "description": "Trigger 'Load'"
+    },
+    "split_url": {
+      "suggested_key": {
+        "default": "Alt+S",
+        "mac": "MacCtrl+S"
+      },
+      "description": "Trigger 'Split'"
+    },
+    "execute_url": {
+      "suggested_key": {
+        "default": "Alt+X",
+        "mac": "MacCtrl+X"
+      },
+      "description": "Trigger 'Execute'"
+    }
+  },
+  "minimum_chrome_version": "92",
+  "manifest_version": 3
+}

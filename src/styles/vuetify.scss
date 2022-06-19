@@ -1,0 +1,22 @@
+/* Place Vuetify overrides here */
+@use './variables' as *;
+
+.v-combobox__selection {
+  width: inherit;
+
+  > .v-combobox__selection-text {
+    @include ellipsis;
+  }
+}
+
+.v-combobox .v-field__input {
+  height: 24px;
+}
+
+.v-dialog .v-overlay__content {
+  width: calc(100% - 48px);
+}
+
+.v-tooltip {
+  z-index: 3000 !important;
+}

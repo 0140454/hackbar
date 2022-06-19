@@ -13,11 +13,11 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   overrides: [{ files: '*.ts' }],
   rules: {
-    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-
     'constructor-super': 'off',
     'getter-return': 'off',
+    'import/named': 'off',
+    'import/no-unresolved': 'off',
     'no-const-assign': 'off',
     'no-dupe-args': 'off',
     'no-dupe-class-members': 'off',
@@ -32,13 +32,11 @@ module.exports = {
     'no-undef': 'off',
     'no-unreachable': 'off',
     'no-unsafe-negation': 'off',
+    'no-unused-vars': 'off',
     'no-var': 'error',
     'prefer-const': 'error',
     'prefer-rest-params': 'error',
     'prefer-spread': 'error',
     'valid-typeof': 'off',
-
-    'import/named': 'off',
-    'import/no-unresolved': 'off',
   },
 }
