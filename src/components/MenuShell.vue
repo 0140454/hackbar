@@ -17,11 +17,11 @@
         </template>
         <VList>
           <VListItem
-            title="python3"
+            title="Python3"
             @click="openReverseShellPrompt('Payload.Shell.Python.py3')"
           />
           <VListItem
-            title="python"
+            title="Python"
             @click="openReverseShellPrompt('Payload.Shell.Python.py')"
           />
         </VList>
