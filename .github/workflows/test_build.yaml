@@ -14,8 +14,10 @@ jobs:
         with:
           node-version: '12'
       - name: Install dependencies
-        run: npm install
+        run: yarn install
       - name: Lint
-        run: npm run lint
+        run: yarn lint
+      - name: Check types
+        run: yarn types:check
       - name: Build
-        run: npm run build
+        run: yarn build

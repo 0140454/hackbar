@@ -1,7 +1,16 @@
+/* UI */
+
+type Preferences = {
+  darkThemeEnabled: boolean
+}
+
+/* Request */
+
 type Header = {
   enabled: boolean
   name: string
   value: string
+  _createdAt: number
 }
 
 type BrowseRequest = {
@@ -14,27 +23,105 @@ type BrowseRequest = {
   headers: Array<Header>
 }
 
+type PostFile = {
+  name: string
+  type: string
+  data: Blob
+}
+
+type TextPostField = {
+  type: 'input' | 'textarea'
+  name: string
+  value: string
+}
+
+type FilePostField = {
+  type: 'file'
+  name: string
+  file: PostFile
+}
+
+type PostField = TextPostField | FilePostField
+
 type TestRequest = {
-  action: string
+  action: 'start' | 'toggle' | 'stop'
   script: string
   argument: any
 }
 
-type MessageType = 'load' | 'execute' | 'test'
+type BackgroundFunctionType = 'load' | 'execute' | 'test'
 
-interface Message {
+interface BackgroundFunctionMessage {
   tabId: number
-  type: MessageType
+  type: BackgroundFunctionType
 }
 
-interface LoadMessage extends Message {
+interface BackgroundLoadMessage extends BackgroundFunctionMessage {
+  type: Extract<BackgroundFunctionType, 'load'>
   data: never
 }
 
-interface ExecuteMessage extends Message {
+interface BackgroundExecuteMessage extends BackgroundFunctionMessage {
+  type: Extract<BackgroundFunctionType, 'execute'>
   data: BrowseRequest
 }
 
-interface TestMessage extends Message {
+interface BackgroundTestMessage extends BackgroundFunctionMessage {
+  type: Extract<BackgroundFunctionType, 'test'>
   data: TestRequest
+}
+
+/* Response */
+
+type TestProgress = {
+  status: string
+  percentage: number
+}
+
+type TestResultData = Record<string, string>
+
+type TestResult = {
+  header: Array<{
+    text: string
+    value: string
+  }>
+  data: Array<TestResultData>
+}
+
+type DevtoolsFunctionType = 'load' | 'test' | 'command' | 'error'
+
+interface DevtoolsFunctionMessage {
+  type: DevtoolsFunctionType
+}
+
+interface DevtoolsLoadMessage extends DevtoolsFunctionMessage {
+  type: Extract<DevtoolsFunctionType, 'load'>
+  data: BrowseRequest | undefined
+}
+
+interface DevtoolsCommandMessage extends DevtoolsFunctionMessage {
+  type: Extract<DevtoolsFunctionType, 'command'>
+  data: 'load_url' | 'split_url' | 'execute_url'
+}
+
+interface DevtoolsErrorMessage extends DevtoolsFunctionMessage {
+  type: Extract<DevtoolsFunctionType, 'error'>
+  data: string
+}
+
+interface DevtoolsTestMessage extends DevtoolsFunctionMessage {
+  type: Extract<DevtoolsFunctionType, 'test'>
+  data:
+    | {
+        type: 'progress'
+        data: TestProgress
+      }
+    | {
+        type: 'finished'
+        data: TestResult
+      }
+    | {
+        type: 'error'
+        data: string
+      }
 }
