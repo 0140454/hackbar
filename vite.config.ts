@@ -25,7 +25,7 @@ export default defineConfig({
   plugins: [vue(), vuetify({ autoImport: true })],
   css: {
     modules: {
-      generateScopedName: '[path][name]__[local]',
+      generateScopedName: '[name]__[local]',
     },
   },
   build: {
