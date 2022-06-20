@@ -52,6 +52,7 @@
               <div class="d-flex align-center">
                 <VSwitch
                   v-model="request.body.enabled"
+                  :class="$style.postSwitch"
                   :color="theme === 'dark' ? 'white' : 'black'"
                   label="Enable POST"
                   hide-details
@@ -612,3 +613,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" module>
+.postSwitch :global .v-selection-control .v-label {
+  width: unset;
+}
+</style>
