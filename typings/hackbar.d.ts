@@ -17,7 +17,7 @@ type BrowseRequest = {
   url: string
   body: {
     enabled: boolean
-    enctype: string
+    enctype: SupportedEnctype
     content: string
   }
   headers: Array<Header>

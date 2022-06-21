@@ -1,3 +1,4 @@
+import { SupportedEnctype } from '../../utils/constants'
 ;(() => {
   /* Body parser */
 
@@ -143,7 +144,13 @@
     return result
   }
 
-  const parser = {
+  const parser: Record<
+    SupportedEnctype,
+    (body: string) => {
+      enctype: string
+      fields: Array<PostField>
+    }
+  > = {
     'application/json': jsonParser,
     'multipart/form-data': multipartParser,
     'application/x-www-form-urlencoded': urlencodedParser,
@@ -155,7 +162,7 @@
   const buildForm = (
     url: string,
     body: string,
-    selectedEnctype: keyof typeof parser,
+    selectedEnctype: SupportedEnctype,
   ) => {
     const form = document.createElement('form')
     const { enctype, fields } = parser[selectedEnctype](body)
@@ -208,7 +215,7 @@
       const form = buildForm(
         message.url,
         message.body.content,
-        message.body.enctype as keyof typeof parser,
+        message.body.enctype,
       )
 
       document.body.appendChild(form)
@@ -222,5 +229,3 @@
 
   chrome.runtime.onMessage.addListener(messageListener)
 })()
-
-export {}
