@@ -61,7 +61,7 @@
                   v-show="request.body.enabled"
                   v-model="request.body.enctype"
                   density="compact"
-                  :items="getSupportedEnctype()"
+                  :items="supportedEnctype"
                   label="enctype"
                   variant="underlined"
                   hide-details
@@ -91,7 +91,7 @@
                 <VCheckboxBtn v-model="header.enabled" hide-details />
                 <VCombobox
                   v-model="header.name"
-                  :items="getCommonRequestHeaders()"
+                  :items="commonRequestHeaders"
                   label="Name"
                   :menu-props="{ maxHeight: 200 }"
                   style="flex: 1 0"
@@ -149,6 +149,7 @@ import MenuSqli from './components/MenuSqli.vue'
 import MenuSsti from './components/MenuSsti.vue'
 import MenuTest from './components/MenuTest.vue'
 import MenuXss from './components/MenuXss.vue'
+import { COMMON_REQUEST_HEADERS, SUPPORTED_ENCTYPE } from './utils/constants'
 
 export default defineComponent({
   name: 'App',
@@ -167,6 +168,11 @@ export default defineComponent({
     DialogReverseShellSetting,
   },
   setup() {
+    /* Constants */
+    const supportedEnctype = SUPPORTED_ENCTYPE as unknown as Array<string>
+    const commonRequestHeaders =
+      COMMON_REQUEST_HEADERS as unknown as Array<string>
+
     /* DOM element and refs */
     let domFocusedInput: HTMLInputElement | null = null
     const appBar = ref<InstanceType<typeof VAppBar>>()
@@ -296,7 +302,7 @@ export default defineComponent({
           return
         }
 
-        if (!getSupportedEnctype().includes(message.data.body.enctype)) {
+        if (!supportedEnctype.includes(message.data.body.enctype)) {
           // Limit enctype
           message.data.body.enctype = request.value.body.enctype
         }
@@ -519,104 +525,10 @@ export default defineComponent({
       appBar.value.$el.scrollLeft += event.deltaY
     }
 
-    const getSupportedEnctype = () => {
-      return [
-        'application/x-www-form-urlencoded',
-        'application/x-www-form-urlencoded (raw)',
-        'multipart/form-data',
-        'application/json',
-      ]
-    }
-
-    const getCommonRequestHeaders = () => {
-      return [
-        'Accept',
-        'Accept-Charset',
-        'Accept-Datetime',
-        'Accept-Encoding',
-        'Accept-Language',
-        'Access-Control-Request-Headers',
-        'Access-Control-Request-Method',
-        'A-IM',
-        'Authorization',
-        'Cache-Control',
-        'Connection',
-        'Content-Disposition',
-        'Content-Encoding',
-        'Content-Language',
-        'Content-Length',
-        'Content-Location',
-        'Content-MD5',
-        'Content-Range',
-        'Content-Type',
-        'Cookie',
-        'Date',
-        'Device-Memory',
-        'Digest',
-        'DNT',
-        'Downlink',
-        'DPR',
-        'Early-Data',
-        'ECT',
-        'Expect',
-        'Forwarded',
-        'From',
-        'Front-End-Https',
-        'Host',
-        'HTTP2-Settings',
-        'If-Match',
-        'If-Modified-Since',
-        'If-None-Match',
-        'If-Range',
-        'If-Unmodified-Since',
-        'Keep-Alive',
-        'Last-Modified',
-        'Max-Forwards',
-        'Origin',
-        'Pragma',
-        'Prefer',
-        'Proxy-Authorization',
-        'Proxy-Connection',
-        'Range',
-        'Referer',
-        'RTT',
-        'Save-Data',
-        'Sec-CH-UA',
-        'Sec-CH-UA-Arch',
-        'Sec-CH-UA-Bitness',
-        'Sec-CH-UA-Full-Version',
-        'Sec-CH-UA-Full-Version-List',
-        'Sec-CH-UA-Mobile',
-        'Sec-CH-UA-Model',
-        'Sec-CH-UA-Platform',
-        'Sec-CH-UA-Platform-Version',
-        'Service-Worker-Navigation-Preload',
-        'TE',
-        'Trailer',
-        'Transfer-Encoding',
-        'Upgrade',
-        'Upgrade-Insecure-Requests',
-        'User-Agent',
-        'Via',
-        'Viewport-Width',
-        'Want-Digest',
-        'Warning',
-        'Width',
-        'X-ATT-DeviceId',
-        'X-Correlation-ID',
-        'X-Csrf-Token',
-        'X-Forwarded-For',
-        'X-Forwarded-Host',
-        'X-Forwarded-Proto',
-        'X-Http-Method-Override',
-        'X-Requested-With',
-        'X-Request-ID',
-        'X-UIDH',
-        'X-Wap-Profile',
-      ]
-    }
-
     return {
+      supportedEnctype,
+      commonRequestHeaders,
+
       appBar,
       urlInput,
 
@@ -637,8 +549,6 @@ export default defineComponent({
       enableDarkTheme,
       onFocus,
       onScrollAppBar,
-      getSupportedEnctype,
-      getCommonRequestHeaders,
     }
   },
 })
