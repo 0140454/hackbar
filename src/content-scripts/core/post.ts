@@ -225,6 +225,8 @@ import { SupportedEnctype } from '../../utils/constants'
     } finally {
       sendResponse(response)
     }
+
+    return undefined
   }
 
   chrome.runtime.onMessage.addListener(messageListener)
