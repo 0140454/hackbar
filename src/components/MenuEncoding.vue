@@ -46,11 +46,11 @@
       />
       <VDivider />
       <VListItem
-        title="Escape ASCII using hex"
+        title="Escape ASCII with hex"
         @click="applyFunction('Encode.Escape.hex')"
       />
       <VListItem
-        title="Escape ASCII using oct"
+        title="Escape ASCII with oct"
         @click="applyFunction('Encode.Escape.oct')"
       />
     </VList>

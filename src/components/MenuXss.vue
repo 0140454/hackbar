@@ -96,27 +96,27 @@
         </template>
         <VList>
           <VListItem
-            title="Encode using hex"
+            title="Encode with hex"
             @click="applyFunction('Encode.Html.encode2Hex')"
           />
           <VListItem
-            title="Encode using dec"
+            title="Encode with dec"
             @click="applyFunction('Encode.Html.encode2Dec')"
           />
           <VListItem
-            title="Encode using entity name"
+            title="Encode with entity name"
             @click="applyFunction('Encode.Html.encode2EntityName')"
           />
           <VListItem
-            title="Decode using hex"
+            title="Decode with hex"
             @click="applyFunction('Encode.Html.decodeFromHex')"
           />
           <VListItem
-            title="Decode using dec"
+            title="Decode with dec"
             @click="applyFunction('Encode.Html.decodeFromDec')"
           />
           <VListItem
-            title="Decode using entity name"
+            title="Decode with entity name"
             @click="applyFunction('Encode.Html.decodeFromEntityName')"
           />
         </VList>
