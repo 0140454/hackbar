@@ -56,15 +56,16 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 - SSTI
 
-  - Jinja2 SSTI ([Flask RCE Reference](https://twitter.com/realgam3/status/1184747565415358469))
+  - Jinja2 SSTI
+    - ["From Flask config to RCE" Reference](https://twitter.com/realgam3/status/1184747565415358469)
   - Java SSTI
 
 - Shell
 
   - Python reverse shell cheatsheet
-  - bash reverse shell cheatsheet
-  - nc reverse shell cheatsheet
-  - PHP reverse shell/web shell cheatsheet
+  - sh(bash) reverse shell cheatsheet
+  - nc(ncat) reverse shell cheatsheet
+  - PHP webshell/reverse shell cheatsheet
 
 - Encoding
 
@@ -72,7 +73,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Base64 encode/decode
   - Hexadecimal encode/decode
   - Unicode encode/decode
-  - Escape ASCII to hex/oct format
+  - Escape ASCII with hex/oct
 
 - Hashing
   - MD5
