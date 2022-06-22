@@ -21,13 +21,13 @@
     "vuetify": "^3.0.0-beta.4"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.190",
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "@vitejs/plugin-vue": "^2.3.3",
+    "chrome-types": "^0.1.117",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",

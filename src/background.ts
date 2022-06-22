@@ -54,11 +54,13 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
     const sessionRules = modifiedHeaders
       .filter(header => header.enabled && header.name.length > 0)
-      .map(header => ({
-        header: header.name,
-        operation: chrome.declarativeNetRequest.HeaderOperation.SET,
-        value: header.value,
-      }))
+      .map(
+        (header): chrome.declarativeNetRequest.ModifyHeaderInfo => ({
+          header: header.name,
+          operation: 'set',
+          value: header.value,
+        }),
+      )
 
     if (sessionRules.length > 0) {
       await chrome.declarativeNetRequest.updateSessionRules({
@@ -67,14 +69,12 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
           {
             id: message.tabId,
             action: {
-              type: chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS,
+              type: 'modifyHeaders',
               requestHeaders: sessionRules,
             },
             condition: {
               tabIds: [message.tabId],
-              resourceTypes: [
-                chrome.declarativeNetRequest.ResourceType.MAIN_FRAME,
-              ],
+              resourceTypes: ['main_frame'],
             },
           },
         ],
@@ -92,7 +92,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       const error = (await chrome.tabs.sendMessage(
         message.tabId,
         message.data,
-      )) as unknown as string
+      )) as string
       if (error !== null) {
         tabDB[message.tabId].connection!.postMessage({
           type: 'error',
@@ -145,6 +145,8 @@ chrome.runtime.onMessage.addListener(
         data: message,
       } as DevtoolsTestMessage)
     }
+
+    return undefined
   },
 )
 
@@ -158,7 +160,9 @@ chrome.webRequest.onBeforeRequest.addListener(
 
       for (const name in requestBody?.formData) {
         requestBody?.formData[name].forEach(value => {
-          params.append(name, value)
+          const fieldContent =
+            value instanceof ArrayBuffer ? decoder.decode(value) : value
+          params.append(name, fieldContent)
         })
       }
 
@@ -191,6 +195,8 @@ chrome.webRequest.onBeforeRequest.addListener(
       body,
       headers: [], // Ignored in UI part
     }
+
+    return undefined
   },
   {
     urls: ['<all_urls>'],
@@ -213,6 +219,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     if (bodyObject) {
       bodyObject.enctype = contentType
     }
+
+    return undefined
   },
   {
     urls: ['<all_urls>'],
@@ -223,13 +231,21 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 const handleResponseCompleted = async (
   details:
-    | chrome.webRequest.WebRedirectionResponseDetails
-    | chrome.webRequest.WebResponseCacheDetails
-    | chrome.webRequest.WebResponseErrorDetails,
+    | Parameters<
+        Parameters<typeof chrome.webRequest.onBeforeRedirect['addListener']>[0]
+      >[0]
+    | Parameters<
+        Parameters<typeof chrome.webRequest.onCompleted['addListener']>[0]
+      >[0]
+    | Parameters<
+        Parameters<typeof chrome.webRequest.onErrorOccurred['addListener']>[0]
+      >[0],
 ) => {
   await chrome.declarativeNetRequest.updateSessionRules({
     removeRuleIds: [details.tabId],
   })
+
+  return undefined
 }
 
 chrome.webRequest.onBeforeRedirect.addListener(handleResponseCompleted, {

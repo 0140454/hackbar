@@ -81,10 +81,10 @@
     }
 
     flush() {
-      chrome.runtime.sendMessage<DevtoolsTestMessage['data']>({
+      chrome.runtime.sendMessage({
         type: 'progress',
         data: this.data,
-      })
+      } as DevtoolsTestMessage['data'])
     }
 
     stop() {
@@ -211,12 +211,12 @@
         await test(message.argument.payloadsPath)
       } catch (error) {
         reporter.flush()
-        chrome.runtime.sendMessage<DevtoolsTestMessage['data']>({
+        chrome.runtime.sendMessage({
           type: 'error',
           data: (error as Error).message,
-        })
+        } as DevtoolsTestMessage['data'])
       } finally {
-        chrome.runtime.sendMessage<DevtoolsTestMessage['data']>({
+        chrome.runtime.sendMessage({
           type: 'finished',
           data: {
             header: [
@@ -225,10 +225,14 @@
             ],
             data: result,
           },
-        })
+        } as DevtoolsTestMessage['data'])
 
         reporter.stop()
-        chrome.runtime.onMessage.removeListener(messageListener)
+        chrome.runtime.onMessage.removeListener(
+          messageListener as Parameters<
+            Parameters<typeof chrome.runtime.onMessage['removeListener']>[0]
+          >[0],
+        )
       }
     } else if (message.action === 'toggle') {
       if (state === RUNNING) {
@@ -242,9 +246,15 @@
       state = STOPPED
       controller!.abort()
     }
+
+    return undefined
   }
 
-  chrome.runtime.onMessage.addListener(messageListener)
+  chrome.runtime.onMessage.addListener(
+    messageListener as Parameters<
+      Parameters<typeof chrome.runtime.onMessage['removeListener']>[0]
+    >[0],
+  )
 })()
 
 export {}
