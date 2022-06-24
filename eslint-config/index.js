@@ -22,5 +22,12 @@ module.exports = {
     'require-sort/require-sort': ['error', { ignoreDeclarationSort: true }],
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
     'standard/no-callback-literal': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
 }

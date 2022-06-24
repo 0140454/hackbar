@@ -232,10 +232,10 @@ export default defineComponent({
       chrome = noopProxy
     }
 
-    const backgroundPageConnection = chrome.runtime.connect()
+    let backgroundPageConnection: chrome.runtime.Port | null = null
 
     const load = () => {
-      backgroundPageConnection.postMessage({
+      backgroundPageConnection!.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
         type: 'load',
       })
@@ -264,7 +264,7 @@ export default defineComponent({
         return
       }
 
-      backgroundPageConnection.postMessage({
+      backgroundPageConnection!.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
         type: 'execute',
         data: request.value,
@@ -350,11 +350,13 @@ export default defineComponent({
       }
     }
 
-    backgroundPageConnection.onMessage.addListener(handleMessage)
-    backgroundPageConnection.postMessage({
-      tabId: chrome.devtools.inspectedWindow.tabId,
-      type: 'init',
-    })
+    const connectToBackgroundPage = () => {
+      backgroundPageConnection = chrome.runtime.connect()
+      backgroundPageConnection.onMessage.addListener(handleMessage)
+      backgroundPageConnection.onDisconnect.addListener(connectToBackgroundPage)
+    }
+
+    connectToBackgroundPage()
 
     /* Theme */
     const theme = ref<'light' | 'dark'>('light')
@@ -386,7 +388,7 @@ export default defineComponent({
       theme.value = preferences.darkThemeEnabled ? 'dark' : 'light'
     })
 
-    chrome.storage.onChanged.addListener(changes => {
+    chrome.storage.local.onChanged.addListener(changes => {
       theme.value = changes.darkThemeEnabled.newValue ? 'dark' : 'light'
     })
 
@@ -507,7 +509,7 @@ export default defineComponent({
         testProgressDialog.value.show = true
       }
 
-      backgroundPageConnection.postMessage({
+      backgroundPageConnection!.postMessage({
         tabId: chrome.devtools.inspectedWindow.tabId,
         type: 'test',
         data: { action, script, argument },

@@ -35,7 +35,7 @@ export default defineConfig({
       input: {
         main: 'main.html',
         devtools: 'devtools.html',
-        background: 'src/background.ts',
+        background: 'src/background-workers/background.ts',
         ...generateContentScriptsConfig(),
       },
       output: {
