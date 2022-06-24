@@ -1,10 +1,5 @@
-const tabDB: Record<
-  number,
-  {
-    connection?: chrome.runtime.Port
-    request?: BrowseRequest
-  }
-> = {}
+import tabStore from './store'
+
 const decoder = new TextDecoder()
 
 const enctypeNeededToOverrideHeader = [
@@ -32,9 +27,9 @@ function isTestMessage(
 
 const handleMessage = async (message: BackgroundFunctionMessage) => {
   if (isLoadMessage(message)) {
-    tabDB[message.tabId].connection!.postMessage({
+    tabStore.getConnection(message.tabId)!.postMessage({
       type: 'load',
-      data: tabDB[message.tabId].request,
+      data: tabStore.getBrowseRequest(message.tabId),
     } as DevtoolsLoadMessage)
   } else if (isExecuteMessage(message)) {
     const modifiedHeaders = message.data.headers
@@ -94,7 +89,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
         message.data,
       )) as string
       if (error !== null) {
-        tabDB[message.tabId].connection!.postMessage({
+        tabStore.getConnection(message.tabId)!.postMessage({
           type: 'error',
           data: error,
         } as DevtoolsErrorMessage)
@@ -120,11 +115,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
 chrome.runtime.onConnect.addListener(devToolsConnection => {
   const devToolsListener = (message: BackgroundFunctionMessage) => {
-    const tabData = tabDB[message.tabId] || {}
-
-    tabData.connection = devToolsConnection
-    tabDB[message.tabId] = tabData
-
+    tabStore.updateConnection(message.tabId, devToolsConnection)
     handleMessage(message)
   }
 
@@ -140,7 +131,7 @@ chrome.runtime.onMessage.addListener(
     sender: chrome.runtime.MessageSender,
   ) => {
     if (sender.tab?.id) {
-      tabDB[sender.tab.id].connection!.postMessage({
+      tabStore.getConnection(sender.tab.id)!.postMessage({
         type: 'test',
         data: message,
       } as DevtoolsTestMessage)
@@ -189,12 +180,11 @@ chrome.webRequest.onBeforeRequest.addListener(
       content: bodyContent,
     }
 
-    tabDB[details.tabId] = tabDB[details.tabId] || {}
-    tabDB[details.tabId].request = {
+    tabStore.updateBrowseRequest(details.tabId, {
       url,
       body,
       headers: [], // Ignored in UI part
-    }
+    })
 
     return undefined
   },
@@ -215,10 +205,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     }
 
     const contentType = (contentTypeHeader.value ?? '').split(';', 1)[0].trim()
-    const bodyObject = tabDB[details.tabId].request?.body
-    if (bodyObject) {
-      bodyObject.enctype = contentType
+    const request = tabStore.getBrowseRequest(details.tabId)
+    if (request?.body) {
+      request.body.enctype = contentType
     }
+    tabStore.updateBrowseRequest(details.tabId, request)
 
     return undefined
   },
@@ -259,7 +250,7 @@ chrome.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
 })
 
 chrome.tabs.onRemoved.addListener(tabId => {
-  delete tabDB[tabId]
+  tabStore.remove(tabId)
 })
 
 chrome.commands.onCommand.addListener(async command => {
@@ -270,7 +261,7 @@ chrome.commands.onCommand.addListener(async command => {
     return
   }
 
-  const connection = tabDB[tabId].connection
+  const connection = tabStore.getConnection(tabId)
   if (!connection) {
     return
   }
@@ -280,5 +271,3 @@ chrome.commands.onCommand.addListener(async command => {
     data: command,
   } as DevtoolsCommandMessage)
 })
-
-export {}

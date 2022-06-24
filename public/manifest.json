@@ -45,6 +45,6 @@
       "description": "Trigger 'Execute'"
     }
   },
-  "minimum_chrome_version": "92",
+  "minimum_chrome_version": "102",
   "manifest_version": 3
 }
