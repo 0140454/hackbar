@@ -7,9 +7,11 @@ class Store {
       _updatedAt: number
     }
   >
+  #encoder: TextEncoder
 
   constructor() {
     this.#records = {}
+    this.#encoder = new TextEncoder()
     this.#load()
   }
 
@@ -22,7 +24,7 @@ class Store {
   }
 
   getConnection(tabId: number) {
-    return this.#records[tabId].connection
+    return this.#records[tabId]?.connection
   }
 
   updateBrowseRequest(tabId: number, request: BrowseRequest | undefined) {
@@ -36,7 +38,7 @@ class Store {
   }
 
   getBrowseRequest(tabId: number) {
-    return this.#records[tabId].request
+    return this.#records[tabId]?.request
   }
 
   remove(tabId: number) {
@@ -61,7 +63,7 @@ class Store {
         return result
       }, {} as Record<string, BrowseRequest>)
 
-      const length = new TextEncoder().encode(JSON.stringify(pairs)).length
+      const length = this.#encoder.encode(JSON.stringify(pairs)).length
       if (length > chrome.storage.session.QUOTA_BYTES) {
         data.shift()
       } else {
