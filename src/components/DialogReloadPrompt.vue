@@ -3,12 +3,16 @@
     <VCard>
       <VCardTitle> Unable to fetch request information </VCardTitle>
       <VCardText>
-        After installing extension, it is required to reload the tab for
-        recording the request.<br /><br />
-
+        In the following scenario, reloading the tab is required to record
+        request.
+        <ul class="pl-6 pt-1 pb-3">
+          <li>After new installation</li>
+          <li>After updating / reloading this extension</li>
+          <li>After background worker restart</li>
+        </ul>
         Note that the extension cannot record sensitive requests. Please visit
         <a
-          href="https://developer.chrome.com/docs/extensions/reference/webRequest/#:~:text=In%20addition%2C%20even,to%20prevent%20deadlocks."
+          href="https://developer.chrome.com/docs/extensions/reference/webRequest/#:~:text=only%20the%20following,to%20prevent%20deadlocks."
           target="_blank"
           v-text="'here'"
         />
