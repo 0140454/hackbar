@@ -43,6 +43,11 @@ html.v-theme--dark > body::-webkit-scrollbar-track {
   background: linear-gradient(#212121, #212121 48px, #121212 48px, #121212);
 }
 
+body {
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 1rem !important;
+}
+
 header {
   overflow-x: auto !important;
 }
