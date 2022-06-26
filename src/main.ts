@@ -3,7 +3,6 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 
 // Styles
-import './styles/fonts.scss'
 import './styles/vuetify.scss'
 import './styles/hackbar.scss'
 
