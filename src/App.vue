@@ -385,11 +385,8 @@ export default defineComponent({
       const preferences = (await chrome.storage.local.get({
         darkThemeEnabled: systemDarkModeEnabled,
       })) as Preferences
-      theme.value = preferences.darkThemeEnabled ? 'dark' : 'light'
-    })
 
-    chrome.storage.local.onChanged.addListener(changes => {
-      theme.value = changes.darkThemeEnabled.newValue ? 'dark' : 'light'
+      enableDarkTheme(preferences.darkThemeEnabled)
     })
 
     /* Headers */
