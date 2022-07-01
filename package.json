@@ -14,33 +14,33 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.7",
-    "@mdi/font": "^6.7.96",
+    "@mdi/font": "^6.9.96",
     "crypto-js": "^4.1.1",
     "vue": "^3.2.37",
-    "vuetify": "^3.0.0-beta.4"
+    "vuetify": "^3.0.0-beta.5"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
     "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.3",
+    "@typescript-eslint/parser": "^5.30.3",
     "@vitejs/plugin-vue": "^2.3.3",
-    "chrome-types": "^0.1.118",
-    "eslint": "^8.18.0",
+    "chrome-types": "^0.1.119",
+    "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-require-sort": "^1.2.2",
     "eslint-plugin-vue": "^9.1.1",
     "glob": "^8.0.3",
     "prettier": "^2.7.1",
     "sass": "^1.53.0",
     "typescript": "^4.7.4",
-    "vite": "^2.9.12",
+    "vite": "^2.9.13",
     "vite-plugin-vuetify": "^1.0.0-alpha.12",
     "vue-cli-plugin-vuetify": "^2.5.1",
-    "vue-tsc": "^0.38.1",
+    "vue-tsc": "^0.38.2",
     "yarn-upgrade-all": "^0.7.1"
   }
 }
