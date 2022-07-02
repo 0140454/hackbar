@@ -14,7 +14,7 @@ module.exports = {
     camelcase: 'off',
     'import/no-cycle': 'error',
     'import/order': ['error', { alphabetize: { order: 'asc' } }],
-    'no-console': 'error',
+    'no-console': 'warn',
     'no-debugger': 'error',
     'no-unused-vars': ['error', { ignoreRestSiblings: true }],
     'prefer-const': ['error', { destructuring: 'all' }],
