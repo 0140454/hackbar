@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="shown" max-width="100%" :width="580" persistent>
     <VCard>
-      <VCardTitle> SQL Injection </VCardTitle>
+      <VCardTitle> SQL injection </VCardTitle>
       <VCardText>
         <VForm ref="form" v-model="valid">
           <template v-if="modelValue.positionRequired">

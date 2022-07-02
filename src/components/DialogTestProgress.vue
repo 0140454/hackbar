@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="shown" max-width="100%" :width="580" persistent>
     <VCard>
-      <VCardTitle> Test Progress </VCardTitle>
+      <VCardTitle> Test progress </VCardTitle>
       <VCardText>
         <div class="ellipsis">
           <template v-if="!modelValue.status">
