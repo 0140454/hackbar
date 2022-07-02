@@ -133,12 +133,13 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
+import { ApplyFunctionKey, OpenSqlInjectionPromptKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'MenuSqli',
   setup() {
-    const applyFunction = inject<any>('applyFunction')
-    const openSqlInjectionPrompt = inject<any>('openSqlInjectionPrompt')
+    const applyFunction = inject(ApplyFunctionKey)!
+    const openSqlInjectionPrompt = inject(OpenSqlInjectionPromptKey)!
 
     return {
       applyFunction,

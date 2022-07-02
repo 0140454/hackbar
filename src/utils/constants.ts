@@ -1,3 +1,5 @@
+import { InjectionKey } from 'vue'
+
 export const SUPPORTED_ENCTYPE = [
   'application/x-www-form-urlencoded',
   'application/x-www-form-urlencoded (raw)',
@@ -92,3 +94,22 @@ export const COMMON_REQUEST_HEADERS = [
   'X-UIDH',
   'X-Wap-Profile',
 ] as const
+
+export const ApplyFunctionKey: InjectionKey<
+  (
+    func: string,
+    insertWhenNoSelection?: boolean,
+    argument?: any,
+  ) => Promise<void>
+> = Symbol('applyFunction')
+
+export const OpenSqlInjectionPromptKey: InjectionKey<
+  (func: string, positionRequired?: boolean) => void
+> = Symbol('openSqlInjectionPrompt')
+
+export const OpenReverseShellPromptKey: InjectionKey<(func: string) => void> =
+  Symbol('openReverseShellPrompt')
+
+export const ControlTestKey: InjectionKey<
+  (action: string, script?: string, argument?: any) => void
+> = Symbol('controlTest')

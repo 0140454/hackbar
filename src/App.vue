@@ -149,7 +149,14 @@ import MenuSqli from './components/MenuSqli.vue'
 import MenuSsti from './components/MenuSsti.vue'
 import MenuTest from './components/MenuTest.vue'
 import MenuXss from './components/MenuXss.vue'
-import { COMMON_REQUEST_HEADERS, SUPPORTED_ENCTYPE } from './utils/constants'
+import {
+  ApplyFunctionKey,
+  COMMON_REQUEST_HEADERS,
+  ControlTestKey,
+  OpenReverseShellPromptKey,
+  OpenSqlInjectionPromptKey,
+  SUPPORTED_ENCTYPE,
+} from './utils/constants'
 
 export default defineComponent({
   name: 'App',
@@ -492,9 +499,9 @@ export default defineComponent({
       reverseShellDialog.value.show = true
     }
 
-    provide('applyFunction', applyFunction)
-    provide('openSqlInjectionPrompt', openSqlInjectionPrompt)
-    provide('openReverseShellPrompt', openReverseShellPrompt)
+    provide(ApplyFunctionKey, applyFunction)
+    provide(OpenSqlInjectionPromptKey, openSqlInjectionPrompt)
+    provide(OpenReverseShellPromptKey, openReverseShellPrompt)
 
     /* Test */
     const controlTest = (action: string, script?: string, argument?: any) => {
@@ -513,7 +520,7 @@ export default defineComponent({
       })
     }
 
-    provide('controlTest', controlTest)
+    provide(ControlTestKey, controlTest)
 
     /* Misc */
     const onFocus = (event: FocusEvent) => {

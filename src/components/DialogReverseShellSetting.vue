@@ -53,6 +53,7 @@ import {
   watch,
 } from 'vue'
 import { VForm } from 'vuetify'
+import { ApplyFunctionKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'DialogReverseShellSetting',
@@ -94,7 +95,7 @@ export default defineComponent({
       },
     )
 
-    const applyFunction = inject<any>('applyFunction')
+    const applyFunction = inject(ApplyFunctionKey)!
     const apply = () => {
       applyFunction(modelValue.value.func, true, result.value)
       shown.value = false
