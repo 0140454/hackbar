@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="shown" max-width="100%" :width="580" persistent>
     <VCard>
-      <VCardTitle> Reverse Shell </VCardTitle>
+      <VCardTitle> Reverse shell </VCardTitle>
       <VCardText>
         <VForm ref="form" v-model="valid">
           It generates a payload to connecting to your host.
