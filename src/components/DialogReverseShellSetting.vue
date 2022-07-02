@@ -9,7 +9,7 @@
             <VTextField
               v-model="result.host"
               label="Host"
-              :rules="[v => v.length || 'Invalid host']"
+              :rules="[v => !!v.length || 'Invalid host']"
               style="flex: 4 0"
               variant="underlined"
               required
