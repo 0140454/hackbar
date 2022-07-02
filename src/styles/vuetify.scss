@@ -1,23 +1,35 @@
 /* Place Vuetify overrides here */
 @use './variables' as *;
 
-.v-combobox .v-combobox__selection {
-  width: inherit;
+.v-combobox {
+  .v-combobox__selection {
+    width: inherit;
 
-  > .v-combobox__selection-text {
-    @include ellipsis;
+    > .v-combobox__selection-text {
+      @include ellipsis;
+    }
   }
-}
 
-.v-combobox .v-field__input {
-  height: 24px;
+  .v-field__input {
+    height: 24px;
+  }
 }
 
 .v-dialog .v-overlay__content {
   width: calc(100% - 48px);
 }
 
-.v-btn .v-btn__content {
-  align-items: center;
-  display: flex;
+.v-btn {
+  .v-btn__content {
+    align-items: center;
+    display: flex;
+  }
+
+  .v-btn__append {
+    margin-left: 0;
+  }
+}
+
+.v-tooltip .v-overlay__content {
+  background: rgba(var(--v-theme-surface-variant), 0.95);
 }
