@@ -21,7 +21,7 @@ function generateContentScriptsConfig() {
     }, {})
 }
 
-function removeLegacyFontFilesPlugin() {
+function removeLegacyFontFiles() {
   return {
     name: 'RemoveLegacyFontFiles',
     generateBundle: (
@@ -49,7 +49,7 @@ export default defineConfig({
     minify: false,
     polyfillModulePreload: false,
     rollupOptions: {
-      plugins: [removeLegacyFontFilesPlugin()],
+      plugins: [removeLegacyFontFiles()],
       input: {
         main: 'main.html',
         devtools: 'devtools.html',
