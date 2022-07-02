@@ -1,6 +1,7 @@
 import * as path from 'path'
 import vue from '@vitejs/plugin-vue'
 import * as glob from 'glob'
+import { NormalizedOutputOptions, OutputBundle } from 'rollup'
 import { defineConfig } from 'vite'
 
 // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
@@ -20,6 +21,22 @@ function generateContentScriptsConfig() {
     }, {})
 }
 
+function removeLegacyFontFilesPlugin() {
+  return {
+    name: 'RemoveLegacyFontFiles',
+    generateBundle: (
+      options: NormalizedOutputOptions,
+      bundle: OutputBundle,
+    ) => {
+      Object.keys(bundle)
+        .filter(name => /\.(eot|ttf)/.test(name))
+        .forEach(name => {
+          delete bundle[name]
+        })
+    },
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), vuetify({ autoImport: true })],
@@ -32,6 +49,7 @@ export default defineConfig({
     minify: false,
     polyfillModulePreload: false,
     rollupOptions: {
+      plugins: [removeLegacyFontFilesPlugin()],
       input: {
         main: 'main.html',
         devtools: 'devtools.html',
