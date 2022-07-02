@@ -116,12 +116,13 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
+import { ApplyFunctionKey, OpenReverseShellPromptKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'MenuShell',
   setup() {
-    const applyFunction = inject<any>('applyFunction')
-    const openReverseShellPrompt = inject<any>('openReverseShellPrompt')
+    const applyFunction = inject(ApplyFunctionKey)!
+    const openReverseShellPrompt = inject(OpenReverseShellPromptKey)!
 
     return {
       applyFunction,

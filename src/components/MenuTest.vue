@@ -32,11 +32,12 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
+import { ControlTestKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'MenuLfi',
   setup() {
-    const controlTest = inject<any>('controlTest')
+    const controlTest = inject(ControlTestKey)!
 
     const testCommonPathsFromRoot = () => {
       controlTest('start', 'test/paths.js', {

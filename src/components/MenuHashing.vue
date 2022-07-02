@@ -17,11 +17,12 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
+import { ApplyFunctionKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'MenuHashing',
   setup() {
-    const applyFunction = inject<any>('applyFunction')
+    const applyFunction = inject(ApplyFunctionKey)!
 
     return {
       applyFunction,

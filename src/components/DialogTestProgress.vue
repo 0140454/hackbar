@@ -70,6 +70,7 @@
 
 <script lang="ts">
 import { PropType, computed, defineComponent, inject, toRefs } from 'vue'
+import { ControlTestKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'DialogReloadPrompt',
@@ -99,7 +100,7 @@ export default defineComponent({
       },
     })
 
-    const controlTest = inject<any>('controlTest')
+    const controlTest = inject(ControlTestKey)!
 
     return {
       shown,
