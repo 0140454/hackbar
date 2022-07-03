@@ -1,7 +1,7 @@
 <template>
   <VMenu>
     <template #activator="{ props }">
-      <VBtn append-icon="mdi-menu-down" variant="text" v-bind="props">
+      <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
         SSTI
       </VBtn>
     </template>
@@ -9,7 +9,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="Jinja2 (Python)"
             v-bind="props"
             @click.stop=""
@@ -77,7 +77,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="Java"
             v-bind="props"
             @click.stop=""
@@ -99,6 +99,7 @@
 </template>
 
 <script lang="ts">
+import { mdiChevronRight, mdiMenuDown } from '@mdi/js'
 import { defineComponent, inject } from 'vue'
 import { ApplyFunctionKey, OpenReverseShellPromptKey } from '../utils/constants'
 
@@ -109,6 +110,9 @@ export default defineComponent({
     const openReverseShellPrompt = inject(OpenReverseShellPromptKey)!
 
     return {
+      mdiChevronRight,
+      mdiMenuDown,
+
       applyFunction,
       openReverseShellPrompt,
     }

@@ -1,7 +1,7 @@
 <template>
   <VMenu>
     <template #activator="{ props }">
-      <VBtn append-icon="mdi-menu-down" variant="text" v-bind="props">
+      <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
         Encoding
       </VBtn>
     </template>
@@ -58,6 +58,7 @@
 </template>
 
 <script lang="ts">
+import { mdiMenuDown } from '@mdi/js'
 import { defineComponent, inject } from 'vue'
 import { ApplyFunctionKey } from '../utils/constants'
 
@@ -67,6 +68,8 @@ export default defineComponent({
     const applyFunction = inject(ApplyFunctionKey)!
 
     return {
+      mdiMenuDown,
+
       applyFunction,
     }
   },

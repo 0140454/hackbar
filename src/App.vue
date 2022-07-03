@@ -23,7 +23,7 @@
         <VSpacer />
         <VMenu>
           <template #activator="{ props }">
-            <VBtn append-icon="mdi-menu-down" variant="text" v-bind="props">
+            <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
               Theme
             </VBtn>
           </template>
@@ -110,7 +110,7 @@
                   @keydown.stop
                 />
                 <VBtn
-                  icon="mdi-close"
+                  :icon="mdiClose"
                   size="small"
                   variant="text"
                   @click="deleteHeader(index)"
@@ -135,6 +135,7 @@
 </template>
 
 <script lang="ts">
+import { mdiClose, mdiMenuDown } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { VAppBar, VTextarea } from 'vuetify'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
@@ -532,6 +533,9 @@ export default defineComponent({
     }
 
     return {
+      mdiClose,
+      mdiMenuDown,
+
       supportedEnctype,
       commonRequestHeaders,
 
