@@ -80,7 +80,7 @@
               />
             </VCol>
             <VCol cols="12" md="6">
-              <div class="pt-2 pb-1">
+              <div class="pt-1 pb-1">
                 <VBtn @click="addHeader"> Add Header </VBtn>
               </div>
               <div
