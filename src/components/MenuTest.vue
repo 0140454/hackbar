@@ -1,7 +1,7 @@
 <template>
   <VMenu>
     <template #activator="{ props }">
-      <VBtn append-icon="mdi-menu-down" variant="text" v-bind="props">
+      <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
         Test
       </VBtn>
     </template>
@@ -9,7 +9,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="Common paths"
             v-bind="props"
             @click.stop=""
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import { mdiChevronRight, mdiMenuDown } from '@mdi/js'
 import { defineComponent, inject } from 'vue'
 import { ControlTestKey } from '../utils/constants'
 
@@ -54,6 +55,9 @@ export default defineComponent({
     }
 
     return {
+      mdiChevronRight,
+      mdiMenuDown,
+
       testCommonPathsFromRoot,
       testCommonPathsFromCurrent,
     }

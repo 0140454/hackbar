@@ -1,7 +1,7 @@
 <template>
   <VMenu>
     <template #activator="{ props }">
-      <VBtn append-icon="mdi-menu-down" variant="text" v-bind="props">
+      <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
         SQLi
       </VBtn>
     </template>
@@ -9,7 +9,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="MySQL"
             v-bind="props"
             @click.stop=""
@@ -53,7 +53,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="PostgreSQL"
             v-bind="props"
             @click.stop=""
@@ -96,7 +96,7 @@
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
-            append-icon="mdi-chevron-right"
+            :append-icon="mdiChevronRight"
             title="SQLite"
             v-bind="props"
             @click.stop=""
@@ -132,6 +132,7 @@
 </template>
 
 <script lang="ts">
+import { mdiChevronRight, mdiMenuDown } from '@mdi/js'
 import { defineComponent, inject } from 'vue'
 import { ApplyFunctionKey, OpenSqlInjectionPromptKey } from '../utils/constants'
 
@@ -142,6 +143,9 @@ export default defineComponent({
     const openSqlInjectionPrompt = inject(OpenSqlInjectionPromptKey)!
 
     return {
+      mdiChevronRight,
+      mdiMenuDown,
+
       applyFunction,
       openSqlInjectionPrompt,
     }
