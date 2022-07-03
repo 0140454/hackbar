@@ -5,11 +5,12 @@
       <VCardText>
         <VForm ref="form" v-model="valid">
           <template v-if="modelValue.positionRequired">
-            The number of columns must be <strong>larger than</strong> or
-            <strong>equal to</strong> output position.
+            The number of columns must be
+            <span class="font-weight-medium">larger than</span> or
+            <span class="font-weight-medium">equal to</span> output position.
           </template>
           <template v-else>
-            The number of columns to use in UNION SELECT statement.
+            Enter the number of columns used in UNION SELECT statement.
           </template>
           <div class="d-flex pt-3">
             <VTextField

@@ -4,7 +4,7 @@
       <VCardTitle> Reverse shell </VCardTitle>
       <VCardText>
         <VForm ref="form" v-model="valid">
-          It generates a payload to connecting to your host.
+          Enter the address and port for the host that you want to connect to.
           <div class="d-flex pt-3">
             <VTextField
               v-model="result.host"
