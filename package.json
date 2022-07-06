@@ -10,7 +10,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue ./src/ && prettier --write .",
     "types:check": "vue-tsc --noEmit",
-    "dist": "rm -f $npm_package_name.zip && (cd dist ; zip -r ../$npm_package_name.zip *)"
+    "dist": "rm -f $npm_package_name.zip && env -C dist zip -r ../$npm_package_name.zip ."
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.7",
@@ -42,5 +42,6 @@
     "vue-cli-plugin-vuetify": "^2.5.1",
     "vue-tsc": "^0.38.2",
     "yarn-upgrade-all": "^0.7.1"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
