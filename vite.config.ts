@@ -2,9 +2,10 @@ import * as path from 'path'
 import vue from '@vitejs/plugin-vue'
 import * as glob from 'glob'
 import { defineConfig } from 'vite'
-
-// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
 import vuetify from 'vite-plugin-vuetify'
+import webExtensionManifest, {
+  ManifestTarget,
+} from './build/vite-plugin-webextension-manifest'
 
 function generateContentScriptsConfig() {
   const contentScriptsDir = `${__dirname}/src/content-scripts`
@@ -20,9 +21,14 @@ function generateContentScriptsConfig() {
     }, {})
 }
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vuetify({ autoImport: true })],
+  plugins: [
+    vue(),
+    vuetify({ autoImport: true }),
+    webExtensionManifest({
+      target: (process.env.TARGET as ManifestTarget) ?? 'chrome',
+    }),
+  ],
   css: {
     modules: {
       generateScopedName: '[name]__[local]',

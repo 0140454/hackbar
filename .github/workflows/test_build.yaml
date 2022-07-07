@@ -20,4 +20,4 @@ jobs:
       - name: Check types
         run: yarn types:check
       - name: Build
-        run: yarn build
+        run: yarn build:chrome

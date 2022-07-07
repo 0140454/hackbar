@@ -1,16 +1,19 @@
 {
-  "name": "hackbar",
+  "name": "HackBar",
+  "description": "A browser extension for Penetration Testing",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "vite build",
+    "build:chrome": "vite build",
+    "build:firefox": "TARGET=firefox vite build",
     "build:watch": "vite build --watch",
     "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue ./src/ && prettier --write .",
     "types:check": "vue-tsc --noEmit",
-    "dist": "rm -f $npm_package_name.zip && env -C dist zip -r ../$npm_package_name.zip ."
+    "dist:chrome": "run build:chrome && env -C dist zip ../${npm_package_name}-chrome.zip -FS -r .",
+    "dist:firefox": "run build:firefox && env -C dist zip ../${npm_package_name}-firefox.zip -FS -r ."
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.7",
@@ -22,6 +25,7 @@
     "@mdi/js": "^6.9.96",
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
@@ -34,6 +38,7 @@
     "eslint-plugin-require-sort": "^1.2.2",
     "eslint-plugin-vue": "^9.2.0",
     "glob": "^8.0.3",
+    "lodash": "^4.17.21",
     "prettier": "^2.7.1",
     "sass": "^1.53.0",
     "typescript": "^4.7.4",
