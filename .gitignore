@@ -28,4 +28,4 @@ dist-ssr
 .yarn/install-state.gz
 
 # Release
-hackbar.zip
+HackBar-*.zip

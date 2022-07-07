@@ -172,6 +172,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.182":
+  version: 4.14.182
+  resolution: "@types/lodash@npm:4.14.182"
+  checksum: 7dd137aa9dbabd632408bd37009d984655164fa1ecc3f2b6eb94afe35bf0a5852cbab6183148d883e9c73a958b7fec9a9bcf7c8e45d41195add6a18c34958209
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*":
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
@@ -485,6 +492,42 @@ __metadata:
   checksum: 791abd0df9f6bef5c3eb1cdd8f958dd14ce3ad013ea32ec0c98a6278863363bab80040bcb06ff75494abb15a3177ea013b09b31d8a1c9173873789745424cb51
   languageName: node
   linkType: hard
+
+"HackBar@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "HackBar@workspace:."
+  dependencies:
+    "@fontsource/roboto": ^4.5.7
+    "@mdi/js": ^6.9.96
+    "@types/crypto-js": ^4.1.1
+    "@types/glob": ^7.2.0
+    "@types/lodash": ^4.14.182
+    "@types/node": ^18.0.3
+    "@typescript-eslint/eslint-plugin": ^5.30.5
+    "@typescript-eslint/parser": ^5.30.5
+    "@vitejs/plugin-vue": ^2.3.3
+    chrome-types: ^0.1.120
+    crypto-js: ^4.1.1
+    eslint: ^8.19.0
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-require-sort: ^1.2.2
+    eslint-plugin-vue: ^9.2.0
+    glob: ^8.0.3
+    lodash: ^4.17.21
+    prettier: ^2.7.1
+    sass: ^1.53.0
+    typescript: ^4.7.4
+    vite: ^2.9.13
+    vite-plugin-vuetify: ^1.0.0-alpha.12
+    vue: ^3.2.37
+    vue-cli-plugin-vuetify: ^2.5.1
+    vue-tsc: ^0.38.2
+    vuetify: ^3.0.0-beta.5
+    yarn-upgrade-all: ^0.7.1
+  languageName: unknown
+  linkType: soft
 
 "abbrev@npm:1":
   version: 1.1.1
@@ -1801,40 +1844,6 @@ __metadata:
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
   languageName: node
   linkType: hard
-
-"hackbar@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "hackbar@workspace:."
-  dependencies:
-    "@fontsource/roboto": ^4.5.7
-    "@mdi/js": ^6.9.96
-    "@types/crypto-js": ^4.1.1
-    "@types/glob": ^7.2.0
-    "@types/node": ^18.0.3
-    "@typescript-eslint/eslint-plugin": ^5.30.5
-    "@typescript-eslint/parser": ^5.30.5
-    "@vitejs/plugin-vue": ^2.3.3
-    chrome-types: ^0.1.120
-    crypto-js: ^4.1.1
-    eslint: ^8.19.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-prettier: ^4.2.1
-    eslint-plugin-require-sort: ^1.2.2
-    eslint-plugin-vue: ^9.2.0
-    glob: ^8.0.3
-    prettier: ^2.7.1
-    sass: ^1.53.0
-    typescript: ^4.7.4
-    vite: ^2.9.13
-    vite-plugin-vuetify: ^1.0.0-alpha.12
-    vue: ^3.2.37
-    vue-cli-plugin-vuetify: ^2.5.1
-    vue-tsc: ^0.38.2
-    vuetify: ^3.0.0-beta.5
-    yarn-upgrade-all: ^0.7.1
-  languageName: unknown
-  linkType: soft
 
 "has-bigints@npm:^1.0.1, has-bigints@npm:^1.0.2":
   version: 1.0.2
