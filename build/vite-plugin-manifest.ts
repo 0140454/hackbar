@@ -10,14 +10,11 @@ const baseManifest = {
     '128': 'icon.png',
   },
   permissions: ['storage', 'scripting', 'webRequest'],
-  host_permissions: ['<all_urls>'],
-  background: {
-    service_worker: 'background.js',
-  },
+  host_permissions: ['*://*/*'],
   web_accessible_resources: [
     {
       resources: ['payloads/*'],
-      matches: ['<all_urls>'],
+      matches: ['*://*/*'],
     },
   ],
   commands: {
@@ -47,11 +44,17 @@ const baseManifest = {
 }
 
 const chromeManifest = {
+  background: {
+    service_worker: 'background.js',
+  },
   permissions: ['declarativeNetRequest'],
   minimum_chrome_version: '102',
 }
 
 const firefoxManifest = {
+  background: {
+    scripts: ['background.js'],
+  },
   browser_specific_settings: {
     gecko: {
       id: '{e369192d-43df-486e-aca0-d771eaed541d}',

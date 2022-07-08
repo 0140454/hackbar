@@ -33,6 +33,7 @@
 <script lang="ts">
 import { mdiChevronRight, mdiMenuDown } from '@mdi/js'
 import { defineComponent, inject } from 'vue'
+import browser from 'webextension-polyfill'
 import { ControlTestKey } from '../utils/constants'
 
 export default defineComponent({
@@ -42,14 +43,14 @@ export default defineComponent({
 
     const testCommonPathsFromRoot = () => {
       controlTest('start', 'test/paths.js', {
-        payloadsPath: chrome.runtime.getURL('payloads/paths.txt'),
+        payloadsPath: browser.runtime.getURL('payloads/paths.txt'),
         fromWebRoot: true,
       })
     }
 
     const testCommonPathsFromCurrent = () => {
       controlTest('start', 'test/paths.js', {
-        payloadsPath: chrome.runtime.getURL('payloads/paths.txt'),
+        payloadsPath: browser.runtime.getURL('payloads/paths.txt'),
         fromWebRoot: false,
       })
     }

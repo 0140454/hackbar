@@ -1,13 +1,14 @@
-import * as path from 'path'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import * as glob from 'glob'
+import glob from 'glob'
 import { defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
-import webExtensionManifest, {
+import iife from './build/vite-plugin-iife'
+import webextensionManifest, {
   ManifestTarget,
-} from './build/vite-plugin-webextension-manifest'
+} from './build/vite-plugin-manifest'
 
-function generateContentScriptsConfig() {
+function contentScriptNames() {
   const contentScriptsDir = `${__dirname}/src/content-scripts`
 
   return glob
@@ -21,34 +22,39 @@ function generateContentScriptsConfig() {
     }, {})
 }
 
-export default defineConfig({
-  plugins: [
-    vue(),
-    vuetify({ autoImport: true }),
-    webExtensionManifest({
-      target: (process.env.TARGET as ManifestTarget) ?? 'chrome',
-    }),
-  ],
-  css: {
-    modules: {
-      generateScopedName: '[name]__[local]',
-    },
-  },
-  build: {
-    minify: false,
-    polyfillModulePreload: false,
-    rollupOptions: {
-      input: {
-        main: 'main.html',
-        devtools: 'devtools.html',
-        background: 'src/background-workers/background.ts',
-        ...generateContentScriptsConfig(),
-      },
-      output: {
-        assetFileNames: 'assets/[name].[ext]',
-        chunkFileNames: '[name].js',
-        entryFileNames: '[name].js',
+export default defineConfig(() => {
+  const input = {
+    main: 'main.html',
+    devtools: 'devtools.html',
+    background: 'src/background-workers/background.ts',
+    ...contentScriptNames(),
+  }
+
+  return {
+    plugins: [
+      vue(),
+      vuetify({ autoImport: true }),
+      iife(Object.keys(input)),
+      webextensionManifest({
+        target: (process.env.TARGET as ManifestTarget) ?? 'chrome',
+      }),
+    ],
+    css: {
+      modules: {
+        generateScopedName: '[name]__[local]',
       },
     },
-  },
+    build: {
+      minify: false,
+      polyfillModulePreload: false,
+      rollupOptions: {
+        input,
+        output: {
+          assetFileNames: 'assets/[name].[ext]',
+          chunkFileNames: '[name].js',
+          entryFileNames: '[name].js',
+        },
+      },
+    },
+  }
 })

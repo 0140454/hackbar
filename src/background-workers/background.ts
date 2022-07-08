@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill'
 import tabStore from './store'
 
 const decoder = new TextDecoder()
@@ -50,7 +51,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     const sessionRules = modifiedHeaders
       .filter(header => header.enabled && header.name.length > 0)
       .map(
-        (header): chrome.declarativeNetRequest.ModifyHeaderInfo => ({
+        (header): browser.declarativeNetRequest.ModifyHeaderInfo => ({
           header: header.name,
           operation: 'set',
           value: header.value,
@@ -58,7 +59,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       )
 
     if (sessionRules.length > 0) {
-      await chrome.declarativeNetRequest.updateSessionRules({
+      await browser.declarativeNetRequest.updateSessionRules({
         removeRuleIds: [message.tabId],
         addRules: [
           {
@@ -77,14 +78,14 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     }
 
     if (message.data.body.enabled) {
-      await chrome.scripting.executeScript({
+      await browser.scripting.executeScript({
         target: {
           tabId: message.tabId,
         },
         files: ['core/post.js'],
       })
 
-      const error = (await chrome.tabs.sendMessage(
+      const error = (await browser.tabs.sendMessage(
         message.tabId,
         message.data,
       )) as string
@@ -95,13 +96,13 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
         } as DevtoolsErrorMessage)
       }
     } else {
-      await chrome.tabs.update(message.tabId, {
+      await browser.tabs.update(message.tabId, {
         url: message.data.url,
       })
     }
   } else if (isTestMessage(message)) {
     if (message.data.action === 'start') {
-      await chrome.scripting.executeScript({
+      await browser.scripting.executeScript({
         target: {
           tabId: message.tabId,
         },
@@ -109,11 +110,11 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       })
     }
 
-    await chrome.tabs.sendMessage(message.tabId, message.data)
+    await browser.tabs.sendMessage(message.tabId, message.data)
   }
 }
 
-chrome.runtime.onConnect.addListener(devToolsConnection => {
+browser.runtime.onConnect.addListener(devToolsConnection => {
   const devToolsListener = (message: BackgroundFunctionMessage) => {
     tabStore.updateConnection(message.tabId, devToolsConnection)
     handleMessage(message)
@@ -125,10 +126,10 @@ chrome.runtime.onConnect.addListener(devToolsConnection => {
   })
 })
 
-chrome.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
   (
     message: DevtoolsTestMessage['data'],
-    sender: chrome.runtime.MessageSender,
+    sender: browser.Runtime.MessageSender,
   ) => {
     if (sender.tab?.id) {
       tabStore.getConnection(sender.tab.id)!.postMessage({
@@ -136,12 +137,10 @@ chrome.runtime.onMessage.addListener(
         data: message,
       } as DevtoolsTestMessage)
     }
-
-    return undefined
   },
 )
 
-chrome.webRequest.onBeforeRequest.addListener(
+browser.webRequest.onBeforeRequest.addListener(
   details => {
     const requestBody = details.requestBody
     let bodyContent = ''
@@ -185,17 +184,15 @@ chrome.webRequest.onBeforeRequest.addListener(
       body,
       headers: [], // Ignored in UI part
     })
-
-    return undefined
   },
   {
-    urls: ['<all_urls>'],
+    urls: ['*://*/*'],
     types: ['main_frame'],
   },
   ['extraHeaders', 'requestBody'],
 )
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
+browser.webRequest.onBeforeSendHeaders.addListener(
   details => {
     const contentTypeHeader = details.requestHeaders?.find(header => {
       return header.name.toLowerCase() === 'content-type'
@@ -210,11 +207,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       request.body.enctype = contentType
     }
     tabStore.updateBrowseRequest(details.tabId, request)
-
-    return undefined
   },
   {
-    urls: ['<all_urls>'],
+    urls: ['*://*/*'],
     types: ['main_frame'],
   },
   ['extraHeaders', 'requestHeaders'],
@@ -223,38 +218,36 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 const handleResponseCompleted = async (
   details:
     | Parameters<
-        Parameters<typeof chrome.webRequest.onBeforeRedirect['addListener']>[0]
+        Parameters<typeof browser.webRequest.onBeforeRedirect['addListener']>[0]
       >[0]
     | Parameters<
-        Parameters<typeof chrome.webRequest.onCompleted['addListener']>[0]
+        Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
       >[0]
     | Parameters<
-        Parameters<typeof chrome.webRequest.onErrorOccurred['addListener']>[0]
+        Parameters<typeof browser.webRequest.onErrorOccurred['addListener']>[0]
       >[0],
 ) => {
-  await chrome.declarativeNetRequest.updateSessionRules({
+  await browser.declarativeNetRequest.updateSessionRules({
     removeRuleIds: [details.tabId],
   })
-
-  return undefined
 }
 
-chrome.webRequest.onBeforeRedirect.addListener(handleResponseCompleted, {
-  urls: ['<all_urls>'],
+browser.webRequest.onBeforeRedirect.addListener(handleResponseCompleted, {
+  urls: ['*://*/*'],
 })
-chrome.webRequest.onCompleted.addListener(handleResponseCompleted, {
-  urls: ['<all_urls>'],
+browser.webRequest.onCompleted.addListener(handleResponseCompleted, {
+  urls: ['*://*/*'],
 })
-chrome.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
-  urls: ['<all_urls>'],
+browser.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
+  urls: ['*://*/*'],
 })
 
-chrome.tabs.onRemoved.addListener(tabId => {
+browser.tabs.onRemoved.addListener(tabId => {
   tabStore.remove(tabId)
 })
 
-chrome.commands.onCommand.addListener(async command => {
-  const tabs = await chrome.tabs.query({ currentWindow: true, active: true })
+browser.commands.onCommand.addListener(async command => {
+  const tabs = await browser.tabs.query({ currentWindow: true, active: true })
 
   const tabId = tabs[0].id
   if (!tabId) {
