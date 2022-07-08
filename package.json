@@ -6,7 +6,6 @@
   "scripts": {
     "build:chrome": "vite build",
     "build:firefox": "TARGET=firefox vite build",
-    "build:watch": "vite build --watch",
     "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
@@ -23,14 +22,16 @@
   },
   "devDependencies": {
     "@mdi/js": "^6.9.96",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-virtual": "^2.1.0",
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.3",
+    "@types/webextension-polyfill": "^0.9.0",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "@vitejs/plugin-vue": "^2.3.3",
-    "chrome-types": "^0.1.120",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -46,6 +47,7 @@
     "vite-plugin-vuetify": "^1.0.0-alpha.12",
     "vue-cli-plugin-vuetify": "^2.5.1",
     "vue-tsc": "^0.38.2",
+    "webextension-polyfill": "^0.9.0",
     "yarn-upgrade-all": "^0.7.1"
   },
   "packageManager": "yarn@3.2.1"

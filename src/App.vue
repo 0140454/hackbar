@@ -138,6 +138,7 @@
 import { mdiClose, mdiMenuDown } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { VAppBar, VTextarea } from 'vuetify'
+import browser from 'webextension-polyfill'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
 import DialogReverseShellSetting from './components/DialogReverseShellSetting.vue'
 import DialogSqlInjectionSetting from './components/DialogSqlInjectionSetting.vue'
@@ -240,11 +241,11 @@ export default defineComponent({
       chrome = noopProxy
     }
 
-    let backgroundPageConnection: chrome.runtime.Port | null = null
+    let backgroundPageConnection: browser.Runtime.Port | null = null
 
     const load = () => {
       backgroundPageConnection!.postMessage({
-        tabId: chrome.devtools.inspectedWindow.tabId,
+        tabId: browser.devtools.inspectedWindow.tabId,
         type: 'load',
       })
     }
@@ -273,7 +274,7 @@ export default defineComponent({
       }
 
       backgroundPageConnection!.postMessage({
-        tabId: chrome.devtools.inspectedWindow.tabId,
+        tabId: browser.devtools.inspectedWindow.tabId,
         type: 'execute',
         data: request.value,
       })
@@ -359,9 +360,13 @@ export default defineComponent({
     }
 
     const connectToBackgroundPage = () => {
-      backgroundPageConnection = chrome.runtime.connect()
+      backgroundPageConnection = browser.runtime.connect()
       backgroundPageConnection.onMessage.addListener(handleMessage)
       backgroundPageConnection.onDisconnect.addListener(connectToBackgroundPage)
+      backgroundPageConnection.postMessage({
+        tabId: browser.devtools.inspectedWindow.tabId,
+        type: 'init',
+      })
     }
 
     connectToBackgroundPage()
@@ -370,7 +375,7 @@ export default defineComponent({
     const theme = ref<'light' | 'dark'>('light')
 
     const enableDarkTheme = (enabled: boolean) => {
-      chrome.storage.local.set({
+      browser.storage.local.set({
         darkThemeEnabled: enabled,
       })
       theme.value = enabled ? 'dark' : 'light'
@@ -390,7 +395,7 @@ export default defineComponent({
       const systemDarkModeEnabled = window.matchMedia(
         '(prefers-color-scheme: dark)',
       ).matches
-      const preferences = (await chrome.storage.local.get({
+      const preferences = (await browser.storage.local.get({
         darkThemeEnabled: systemDarkModeEnabled,
       })) as Preferences
 
@@ -515,7 +520,7 @@ export default defineComponent({
       }
 
       backgroundPageConnection!.postMessage({
-        tabId: chrome.devtools.inspectedWindow.tabId,
+        tabId: browser.devtools.inspectedWindow.tabId,
         type: 'test',
         data: { action, script, argument },
       })

@@ -1,8 +1,10 @@
+import browser from 'webextension-polyfill'
+
 class Store {
   #records: Record<
     number,
     {
-      connection?: chrome.runtime.Port
+      connection?: browser.Runtime.Port
       request?: BrowseRequest
       _updatedAt: number
     }
@@ -15,7 +17,7 @@ class Store {
     this.#load()
   }
 
-  updateConnection(tabId: number, connection: chrome.runtime.Port) {
+  updateConnection(tabId: number, connection: browser.Runtime.Port) {
     const tabData = this.#records[tabId] || {}
 
     tabData.connection = connection
@@ -64,20 +66,20 @@ class Store {
       }, {} as Record<string, BrowseRequest>)
 
       const length = this.#encoder.encode(JSON.stringify(pairs)).length
-      if (length > chrome.storage.session.QUOTA_BYTES) {
+      if (length > browser.storage.session.QUOTA_BYTES) {
         data.shift()
       } else {
         break
       }
     }
 
-    await chrome.storage.session.clear()
-    await chrome.storage.session.set(pairs)
+    await browser.storage.session.clear()
+    await browser.storage.session.set(pairs)
   }
 
   async #load() {
     const data: Record<string, BrowseRequest> =
-      await chrome.storage.session.get()
+      await browser.storage.session.get()
 
     for (const tabId in data) {
       this.#records[parseInt(tabId)] = {

@@ -1,3 +1,3 @@
-chrome.devtools.panels.create('HackBar', 'icon.png', 'main.html')
+import browser from 'webextension-polyfill'
 
-export {}
+browser.devtools.panels.create('HackBar', 'icon.png', 'main.html')
