@@ -6,8 +6,7 @@
   "scripts": {
     "build:chrome": "vite build",
     "build:firefox": "TARGET=firefox vite build",
-    "dev": "vite",
-    "preview": "vite preview",
+    "dev:ui": "vite",
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue ./src/ && prettier --write .",
     "types:check": "vue-tsc --noEmit",

@@ -1,7 +1,7 @@
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import glob from 'glob'
-import { defineConfig } from 'vite'
+import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugin-iife'
 import webextensionManifest, {
@@ -22,13 +22,19 @@ function contentScriptNames() {
     }, {})
 }
 
-export default defineConfig(() => {
+export default defineConfig((env: ConfigEnv) => {
   const input = {
     main: 'main.html',
     devtools: 'devtools.html',
     background: 'src/background-workers/background.ts',
     ...contentScriptNames(),
   }
+  const alias =
+    env.mode === 'development'
+      ? {
+          'webextension-polyfill': path.join(__dirname, 'build', 'noop.ts'),
+        }
+      : {}
 
   return {
     plugins: [
@@ -43,6 +49,9 @@ export default defineConfig(() => {
       modules: {
         generateScopedName: '[name]__[local]',
       },
+    },
+    resolve: {
+      alias,
     },
     build: {
       minify: false,

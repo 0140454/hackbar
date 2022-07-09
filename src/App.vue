@@ -225,22 +225,6 @@ export default defineComponent({
     })
 
     /* Communication */
-    if (process.env.NODE_ENV === 'development') {
-      const noopProxy = new Proxy(
-        {},
-        {
-          get(target, property, receiver) {
-            const fn = () => receiver
-            Object.setPrototypeOf(fn, receiver)
-            return fn
-          },
-        },
-      )
-      // @ts-ignore
-      // eslint-disable-next-line no-global-assign
-      chrome = noopProxy
-    }
-
     let backgroundPageConnection: browser.Runtime.Port | null = null
 
     const load = () => {
