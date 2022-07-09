@@ -51,7 +51,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     const sessionRules = modifiedHeaders
       .filter(header => header.enabled && header.name.length > 0)
       .map(
-        (header): browser.declarativeNetRequest.ModifyHeaderInfo => ({
+        (header): browser.DeclarativeNetRequest.ModifyHeaderInfo => ({
           header: header.name,
           operation: 'set',
           value: header.value,
