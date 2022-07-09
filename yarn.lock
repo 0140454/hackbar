@@ -3642,6 +3642,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vuetify@patch:vuetify@npm:^3.0.0-beta.5#.yarn/patches/vuetify.patch::locator=HackBar%40workspace%3A.":
+  version: 3.0.0-beta.5
+  resolution: "vuetify@patch:vuetify@npm%3A3.0.0-beta.5#.yarn/patches/vuetify.patch::version=3.0.0-beta.5&hash=2d46b2&locator=HackBar%40workspace%3A."
+  peerDependencies:
+    "@formatjs/intl": ^1.0.0 || ^2.0.0
+    vite-plugin-vuetify: 1.0.0-alpha.12
+    vue: ^3.2.0
+    vue-i18n: ^9.0.0
+    webpack-plugin-vuetify: 2.0.0-alpha.11
+  peerDependenciesMeta:
+    "@formatjs/intl":
+      optional: true
+    vite-plugin-vuetify:
+      optional: true
+    vue-i18n:
+      optional: true
+    webpack-plugin-vuetify:
+      optional: true
+  checksum: f286e21756feede06913efc4dd53c97f0f1ed7bb5d8b235faf53ab9a3f444fe68289cd5d6da0e52b7096816b449e7222ff8071d31a8ca9cd74f5c4387d689ee1
+  languageName: node
+  linkType: hard
+
 "webextension-polyfill@npm:^0.9.0":
   version: 0.9.0
   resolution: "webextension-polyfill@npm:0.9.0"
