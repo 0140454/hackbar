@@ -569,6 +569,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.30.5
     "@typescript-eslint/parser": ^5.30.5
     "@vitejs/plugin-vue": ^2.3.3
+    chrome-types: ^0.1.122
     crypto-js: ^4.1.1
     eslint: ^8.19.0
     eslint-config-prettier: ^8.5.0
@@ -882,6 +883,13 @@ __metadata:
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
   checksum: c57cf9dd0791e2f18a5ee9c1a299ae6e801ff58fee96dc8bfd0dcb4738a6ce58dd252a3605b1c93c6418fe4f9d5093b28ffbf4d66648cb2a9c67eaef9679be2f
+  languageName: node
+  linkType: hard
+
+"chrome-types@npm:^0.1.122":
+  version: 0.1.122
+  resolution: "chrome-types@npm:0.1.122"
+  checksum: dfbed5e2ad7e68cf68c6d86e45fc68ba1a679111c7a1970aea082e757b8d3d4cf28afd38fc374a85230c3f4edb170bab5135d825509a2c4d9043f0d7e7c79554
   languageName: node
   linkType: hard
 
