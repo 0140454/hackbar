@@ -5,13 +5,14 @@ import {
   NormalizedOutputOptions,
   OutputBundle,
   OutputChunk,
-  PluginContext,
+  Plugin as RollupPlugin,
   rollup,
 } from 'rollup'
+import { Plugin } from 'vite'
 
 const VIRTUAL_PREFIX = '\0virtual:'
 
-const resolve = (bundle: OutputBundle) => ({
+const resolve = (bundle: OutputBundle): RollupPlugin => ({
   name: 'resolve',
   resolveId(source: string, importer: string | undefined) {
     if (importer === undefined) {
@@ -32,13 +33,6 @@ const resolve = (bundle: OutputBundle) => ({
       return null
     }
 
-    const importers = Object.values(bundle).filter(
-      c => c.type === 'chunk' && c.imports.includes(chunk.fileName),
-    )
-    if (importers.length <= 1) {
-      delete bundle[id]
-    }
-
     return {
       code: chunk.code,
       map: chunk.map,
@@ -46,47 +40,66 @@ const resolve = (bundle: OutputBundle) => ({
   },
 })
 
-export default function (names: Array<string>) {
+const iifeify = async (chunk: OutputChunk, bundle: OutputBundle) => {
+  const virtualName = chunk.fileName
+
+  const build = await rollup({
+    input: virtualName,
+    plugins: [
+      virtual({
+        [virtualName]: chunk.code,
+      }),
+      resolve(bundle),
+      commonjs(),
+    ],
+  })
+  const outputs = (
+    await build.generate({
+      name: chunk.name,
+      format: 'iife',
+      extend: true,
+    })
+  ).output
+
+  if (outputs.length != 1) {
+    throw new Error(
+      `One chunk expected, but ${outputs.length} chunks received.`,
+    )
+  }
+
+  return outputs[0]
+}
+
+export default function (names: Array<string>): Plugin {
   return {
+    name: 'iife',
     async generateBundle(
-      this: PluginContext,
       options: NormalizedOutputOptions,
       bundle: OutputBundle,
     ) {
-      const entries = Object.values(bundle).filter(
+      const removedImports = new Set<string>()
+      const chunks = Object.values(bundle).filter(
         c => c.type === 'chunk' && names.includes(c.name),
       ) as Array<OutputChunk>
 
-      for (const entry of entries) {
-        const virtualName = entry.fileName
+      for (const chunk of chunks) {
+        const renderedChunk = await iifeify(chunk, bundle)
 
-        const build = await rollup({
-          input: virtualName,
-          plugins: [
-            virtual({
-              [virtualName]: entry.code,
-            }),
-            resolve(bundle),
-            commonjs(),
-          ],
-        })
-        const outputs = (
-          await build.generate({
-            name: entry.name,
-            format: 'iife',
-            extend: true,
-          })
-        ).output
+        chunk.imports.forEach(removedImports.add, removedImports)
 
-        if (outputs.length != 1) {
-          throw new Error(
-            `One chunk expected, but ${outputs.length} chunks received.`,
-          )
+        chunk.code = renderedChunk.code
+        chunk.imports = []
+        chunk.importedBindings = {}
+      }
+
+      for (const fileName of removedImports) {
+        const importers = Object.values(bundle).filter(
+          c => c.type === 'chunk' && c.imports.includes(fileName),
+        )
+
+        if (importers.length === 0) {
+          delete bundle[fileName]
         }
-
-        entry.code = outputs[0].code
-        entry.imports = []
-        entry.importedBindings = {}
       }
     },
   }
