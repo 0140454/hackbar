@@ -1,4 +1,5 @@
 import { isArray, mergeWith } from 'lodash'
+import { Plugin } from 'vite'
 import packageJson from '../package.json'
 
 const baseManifest = {
@@ -75,8 +76,9 @@ const mergeCustomizer = (objValue, srcValue) => {
 
 export type ManifestTarget = keyof typeof extendedManifest
 
-export default function ({ target }: { target: ManifestTarget }) {
+export default function ({ target }: { target: ManifestTarget }): Plugin {
   return {
+    name: 'manifest',
     generateBundle() {
       this.emitFile({
         type: 'asset',
