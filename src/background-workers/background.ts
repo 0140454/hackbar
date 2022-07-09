@@ -140,6 +140,8 @@ browser.runtime.onMessage.addListener(
   },
 )
 
+const onBeforeRequestOptions: Array<browser.WebRequest.OnBeforeRequestOptions> =
+  ['requestBody', chrome.webRequest.OnBeforeRequestOptions.EXTRA_HEADERS]
 browser.webRequest.onBeforeRequest.addListener(
   details => {
     const requestBody = details.requestBody
@@ -189,9 +191,11 @@ browser.webRequest.onBeforeRequest.addListener(
     urls: ['*://*/*'],
     types: ['main_frame'],
   },
-  ['extraHeaders', 'requestBody'],
+  onBeforeRequestOptions.filter(Boolean),
 )
 
+const onBeforeSendHeadersOptions: Array<browser.WebRequest.OnBeforeSendHeadersOptions> =
+  ['requestHeaders', chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS]
 browser.webRequest.onBeforeSendHeaders.addListener(
   details => {
     const contentTypeHeader = details.requestHeaders?.find(header => {
@@ -212,7 +216,7 @@ browser.webRequest.onBeforeSendHeaders.addListener(
     urls: ['*://*/*'],
     types: ['main_frame'],
   },
-  ['extraHeaders', 'requestHeaders'],
+  onBeforeSendHeadersOptions.filter(Boolean),
 )
 
 const handleResponseCompleted = async (
