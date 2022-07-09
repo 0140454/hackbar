@@ -1,0 +1,45 @@
+diff --git a/dist/vuetify.esm.js b/dist/vuetify.esm.js
+index 5d190799e515c2a4ad7d868dbb6099e4852af45c..9e741255e1296956c1006e747721d2432f71dfbe 100644
+--- a/dist/vuetify.esm.js
++++ b/dist/vuetify.esm.js
+@@ -17619,8 +17619,8 @@ const VTextarea = defineComponent({
+       nextTick(() => {
+         if (!sizerRef.value) return;
+         const style = getComputedStyle(sizerRef.value);
+-        const padding = parseFloat(style.getPropertyValue('--v-field-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
+-        const height = sizerRef.value.scrollHeight;
++        const padding = parseFloat(style.getPropertyValue('--v-input-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
++        const height = sizerRef.value.scrollHeight + padding;
+         const lineHeight = parseFloat(style.lineHeight);
+         const minHeight = parseFloat(props.rows) * lineHeight + padding;
+         const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;
+diff --git a/dist/vuetify.js b/dist/vuetify.js
+index 3f4f96c059b8a235a6665dce8138296178cefe9c..593025d4c412f322a18b9a30da0eac6ec9cf2bda 100644
+--- a/dist/vuetify.js
++++ b/dist/vuetify.js
+@@ -17623,8 +17623,8 @@
+         vue.nextTick(() => {
+           if (!sizerRef.value) return;
+           const style = getComputedStyle(sizerRef.value);
+-          const padding = parseFloat(style.getPropertyValue('--v-field-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
+-          const height = sizerRef.value.scrollHeight;
++          const padding = parseFloat(style.getPropertyValue('--v-input-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
++          const height = sizerRef.value.scrollHeight + padding;
+           const lineHeight = parseFloat(style.lineHeight);
+           const minHeight = parseFloat(props.rows) * lineHeight + padding;
+           const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;
+diff --git a/lib/components/VTextarea/VTextarea.mjs b/lib/components/VTextarea/VTextarea.mjs
+index f8bc76bc60eca03b319e29bb360ea4c276778a7d..e97b364dcb00464416d4557dea87e25a79ebdff3 100644
+--- a/lib/components/VTextarea/VTextarea.mjs
++++ b/lib/components/VTextarea/VTextarea.mjs
+@@ -116,8 +116,8 @@ export const VTextarea = defineComponent({
+       nextTick(() => {
+         if (!sizerRef.value) return;
+         const style = getComputedStyle(sizerRef.value);
+-        const padding = parseFloat(style.getPropertyValue('--v-field-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
+-        const height = sizerRef.value.scrollHeight;
++        const padding = parseFloat(style.getPropertyValue('--v-input-padding-top')) + parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
++        const height = sizerRef.value.scrollHeight + padding;
+         const lineHeight = parseFloat(style.lineHeight);
+         const minHeight = parseFloat(props.rows) * lineHeight + padding;
+         const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;

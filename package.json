@@ -51,7 +51,8 @@
     "yarn-upgrade-all": "^0.7.1"
   },
   "resolutions": {
-    "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#.yarn/patches/@types-webextension-polyfill.patch"
+    "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#.yarn/patches/@types-webextension-polyfill.patch",
+    "vuetify": "patch:vuetify@npm:^3.0.0-beta.5#.yarn/patches/vuetify.patch"
   },
   "packageManager": "yarn@3.2.1"
 }
