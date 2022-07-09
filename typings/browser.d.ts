@@ -3,15 +3,15 @@
 import browser from 'webextension-polyfill'
 
 declare module 'webextension-polyfill' {
-  export const declarativeNetRequest: any
+  export const declarativeNetRequest: typeof chrome.declarativeNetRequest
 
   namespace DeclarativeNetRequest {
-    interface ModifyHeaderInfo {}
+    type ModifyHeaderInfo = chrome.declarativeNetRequest.ModifyHeaderInfo
   }
 
   namespace Storage {
     interface Static {
-      session: any
+      session: typeof chrome.storage.session
     }
   }
 }
