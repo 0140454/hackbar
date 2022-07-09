@@ -1,0 +1,13 @@
+diff --git a/namespaces/webRequest.d.ts b/namespaces/webRequest.d.ts
+index c105847b6d9bf4a5a1b98171f86d9cd7965a157e..30fcfc280a96ac2920e36e6b80fd752f14a07509 100755
+--- a/namespaces/webRequest.d.ts
++++ b/namespaces/webRequest.d.ts
+@@ -1467,7 +1467,7 @@ export namespace WebRequest {
+          * the dictionary is not present. An example value of this dictionary is {'key': ['value1', 'value2']}.
+          * Optional.
+          */
+-        formData?: Record<string, string>;
++        formData?: Record<string, ArrayBuffer[] | string[]>;
+
+         /**
+          * If the request method is PUT or POST, and the body is not already parsed in formData,

@@ -253,10 +253,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webextension-polyfill@npm:^0.9.0":
+"@types/webextension-polyfill@npm:*":
   version: 0.9.0
   resolution: "@types/webextension-polyfill@npm:0.9.0"
   checksum: 7e266d0bb08ccdb6d7f49e1312600ae7471cfce053dc5843a0309e1f58f98f4234ffead76473261fa34e03069f4da74c6ffa312ddbcf915c0229a869188dcc1c
+  languageName: node
+  linkType: hard
+
+"@types/webextension-polyfill@patch:@types/webextension-polyfill@*#.yarn/patches/@types-webextension-polyfill.patch::locator=HackBar%40workspace%3A.":
+  version: 0.9.0
+  resolution: "@types/webextension-polyfill@patch:@types/webextension-polyfill@npm%3A0.9.0#.yarn/patches/@types-webextension-polyfill.patch::version=0.9.0&hash=be7ad6&locator=HackBar%40workspace%3A."
+  checksum: d02907c2e7db93dc6a83d65e823d7427967449717d83cb8569fdb8a2f24e13ed0083fd6eaa7b169e3bf841da325710d5a454f4668348d38092c52f40acdd802b
   languageName: node
   linkType: hard
 
