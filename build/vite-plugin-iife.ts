@@ -63,7 +63,7 @@ const iifeify = async (chunk: OutputChunk, bundle: OutputBundle) => {
 
   if (outputs.length != 1) {
     throw new Error(
-      `One chunk expected, but ${outputs.length} chunks received.`,
+      `One chunk expected, but ${outputs.length} chunks generated.`,
     )
   }
 
