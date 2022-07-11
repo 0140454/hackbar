@@ -60,13 +60,9 @@ child_process.execFileSync(
   ['config', 'set', 'nodeLinker', 'node-modules'],
   { cwd: buildDir },
 )
-child_process.execFileSync(
-  'env',
-  ['YARN_ENABLE_IMMUTABLE_INSTALLS=false', 'yarn', 'install'],
-  {
-    cwd: buildDir,
-  },
-)
+child_process.execFileSync('yarn', ['install'], {
+  cwd: buildDir,
+})
 child_process.execFileSync('yarn', ['run', 'compile'], { cwd: buildDir })
 
 // Cleanup
