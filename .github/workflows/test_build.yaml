@@ -14,7 +14,11 @@ jobs:
         with:
           node-version: '16'
       - name: Install dependencies
-        run: yarn install
+        run: |
+          if ! yarn install; then
+            cat /tmp/xfs-*/buildfile.log 2>/dev/null || true
+            exit 1
+          fi
       - name: Lint
         run: yarn lint
       - name: Check types
