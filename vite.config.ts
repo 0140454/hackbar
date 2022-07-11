@@ -1,6 +1,8 @@
 import path from 'path'
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import vue from '@vitejs/plugin-vue'
 import glob from 'glob'
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
 import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugin-iife'
@@ -34,7 +36,11 @@ export default defineConfig((env: ConfigEnv) => {
       ? {
           'webextension-polyfill': path.join(__dirname, 'build', 'noop.ts'),
         }
-      : {}
+      : {
+          querystring: 'rollup-plugin-node-polyfills/polyfills/qs',
+          url: 'rollup-plugin-node-polyfills/polyfills/url',
+          util: 'rollup-plugin-node-polyfills/polyfills/util',
+        }
 
   return {
     plugins: [
@@ -53,10 +59,16 @@ export default defineConfig((env: ConfigEnv) => {
     resolve: {
       alias,
     },
+    optimizeDeps: {
+      esbuildOptions: {
+        plugins: [NodeModulesPolyfillPlugin()],
+      },
+    },
     build: {
       minify: false,
       polyfillModulePreload: false,
       rollupOptions: {
+        plugins: [rollupNodePolyFill()],
         input,
         output: {
           assetFileNames: 'assets/[name].[ext]',
