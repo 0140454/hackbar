@@ -26,7 +26,11 @@ jobs:
         with:
           node-version: '16'
       - name: Install dependencies
-        run: yarn install
+        run: |
+          if ! env YARN_ENABLE_IMMUTABLE_INSTALLS=false YARN_CHECKSUM_BEHAVIOR=update yarn install; then
+            cat /tmp/xfs-*/buildfile.log 2>/dev/null || true
+            exit 1
+          fi
       - name: Pack extension
         run: |
           yarn dist:chrome
