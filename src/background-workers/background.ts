@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import { DEFAULT_ENCTYPE } from '../utils/constants'
 import tabStore from './store'
 
 const decoder = new TextDecoder()
@@ -177,7 +178,7 @@ browser.webRequest.onBeforeRequest.addListener(
     const url = details.url
     const body: BrowseRequest['body'] = {
       enabled: !!requestBody,
-      enctype: 'application/x-www-form-urlencoded', // Updated in onBeforeSendHeaders
+      enctype: DEFAULT_ENCTYPE, // Updated in onBeforeSendHeaders
       content: bodyContent,
     }
 

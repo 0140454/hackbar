@@ -1,23 +1,34 @@
 # HackBar
 
-HackBar for Chrome.
+A browser extension for Penetration Testing.
 
 Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackbar/ginpbkfigcoaokgflihfhhmglmbchinc).
 
 ## Requested Permissions
 
 - storage
+
   - Save theme preferences
+
 - scripting
+
   - Perform POST request
   - Run test function
+
 - webRequest
+
   - Remember request information
   - Listen finish event to clean up
+
 - declarativeNetRequest
   - Set HTTP header value based on settings
 
 ## Features
+
+- Load
+
+  - From tab (default)
+  - From cURL command
 
 - Supported methods
 
