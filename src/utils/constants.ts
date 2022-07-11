@@ -7,6 +7,8 @@ export const SUPPORTED_ENCTYPE = [
   'application/json',
 ] as const
 
+export const DEFAULT_ENCTYPE = SUPPORTED_ENCTYPE[0]
+
 export type SupportedEnctype = typeof SUPPORTED_ENCTYPE[number]
 
 export const COMMON_REQUEST_HEADERS = [
@@ -94,6 +96,10 @@ export const COMMON_REQUEST_HEADERS = [
   'X-UIDH',
   'X-Wap-Profile',
 ] as const
+
+export const LoadFromKey: InjectionKey<
+  (source: BrowseRequest, overwriteHeaders?: boolean) => void
+> = Symbol('loadFrom')
 
 export const ApplyFunctionKey: InjectionKey<
   (

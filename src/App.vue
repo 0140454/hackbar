@@ -9,10 +9,28 @@
         @wheel.prevent="onScrollAppBar"
       >
         <VBtn variant="text" @click="load">Load</VBtn>
+        <VDivider vertical />
+        <VMenu>
+          <template #activator="{ props }">
+            <VBtn
+              variant="text"
+              v-bind="props"
+              :class="$style.loadMoreActionBtn"
+            >
+              <VIcon :icon="mdiMenuDown" />
+            </VBtn>
+          </template>
+          <VList>
+            <VListItem title="From tab (default)" @click="load" />
+            <VListItem
+              title="From cURL command"
+              @click="requestLoaderDialog.show = true"
+            />
+          </VList>
+        </VMenu>
         <VBtn variant="text" @click="split">Split</VBtn>
         <VBtn variant="text" @click="execute">Execute</VBtn>
         <MenuTest />
-        <VDivider vertical />
         <MenuSqli />
         <MenuXss />
         <MenuLfi />
@@ -121,6 +139,10 @@
         </VContainer>
       </VMain>
       <DialogReloadPrompt v-model="reloadDialog" />
+      <DialogRequestLoader
+        v-if="requestLoaderDialog.show"
+        v-model="requestLoaderDialog"
+      />
       <DialogSqlInjectionSetting v-model="sqlInjectionDialog" />
       <DialogReverseShellSetting v-model="reverseShellDialog" />
       <DialogTestProgress v-model="testProgressDialog" />
@@ -140,6 +162,7 @@ import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { VAppBar, VTextarea } from 'vuetify'
 import browser from 'webextension-polyfill'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
+import DialogRequestLoader from './components/DialogRequestLoader.vue'
 import DialogReverseShellSetting from './components/DialogReverseShellSetting.vue'
 import DialogSqlInjectionSetting from './components/DialogSqlInjectionSetting.vue'
 import DialogTestProgress from './components/DialogTestProgress.vue'
@@ -155,6 +178,8 @@ import {
   ApplyFunctionKey,
   COMMON_REQUEST_HEADERS,
   ControlTestKey,
+  DEFAULT_ENCTYPE,
+  LoadFromKey,
   OpenReverseShellPromptKey,
   OpenSqlInjectionPromptKey,
   SUPPORTED_ENCTYPE,
@@ -175,6 +200,7 @@ export default defineComponent({
     DialogSqlInjectionSetting,
     DialogTestProgress,
     DialogReverseShellSetting,
+    DialogRequestLoader,
   },
   setup() {
     /* Constants */
@@ -189,6 +215,9 @@ export default defineComponent({
 
     /* Dialog */
     const reloadDialog = ref({
+      show: false,
+    })
+    const requestLoaderDialog = ref({
       show: false,
     })
     const sqlInjectionDialog = ref({
@@ -218,7 +247,7 @@ export default defineComponent({
       url: '',
       body: {
         content: '',
-        enctype: 'application/x-www-form-urlencoded',
+        enctype: DEFAULT_ENCTYPE,
         enabled: false,
       },
       headers: [],
@@ -232,6 +261,14 @@ export default defineComponent({
         tabId: browser.devtools.inspectedWindow.tabId,
         type: 'load',
       })
+    }
+
+    const loadFrom = (source: BrowseRequest, overwriteHeaders = false) => {
+      request.value.url = source.url
+      request.value.body = source.body
+      if (overwriteHeaders) {
+        request.value.headers = source.headers
+      }
     }
 
     const split = () => {
@@ -300,8 +337,7 @@ export default defineComponent({
           message.data.body.enctype = request.value.body.enctype
         }
 
-        request.value.url = message.data.url
-        request.value.body = message.data.body
+        loadFrom(message.data)
         urlInput.value?.focus()
       } else if (isCommandMessage(message)) {
         switch (message.data) {
@@ -354,6 +390,8 @@ export default defineComponent({
     }
 
     connectToBackgroundPage()
+
+    provide(LoadFromKey, loadFrom)
 
     /* Theme */
     const theme = ref<'light' | 'dark'>('light')
@@ -534,6 +572,7 @@ export default defineComponent({
       theme,
 
       reloadDialog,
+      requestLoaderDialog,
       sqlInjectionDialog,
       reverseShellDialog,
       testProgressDialog,
@@ -556,5 +595,10 @@ export default defineComponent({
 <style lang="scss" module>
 .postSwitch :global .v-selection-control .v-label {
   width: unset;
+}
+
+.loadMoreActionBtn {
+  padding: 0;
+  min-width: unset;
 }
 </style>
