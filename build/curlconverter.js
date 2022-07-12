@@ -8,15 +8,27 @@ const buildDir = execEnv.buildDir
 const packageJsonPath = path.join(buildDir, 'package.json')
 const projectDir = process.env.PROJECT_CWD
 
-// Get tarball URL
-const tarballUrl = child_process
-  .execFileSync('npm', ['view', 'curlconverter', 'dist.tarball'])
+// Get URLs
+const version = child_process
+  .execFileSync('npm', ['view', 'curlconverter', 'dist-tags.latest'])
   .toString()
   .trim()
+const tarballUrl = child_process
+  .execFileSync('npm', ['view', `curlconverter@${version}`, 'dist.tarball'])
+  .toString()
+  .trim()
+const packageLockUrl = `https://raw.githubusercontent.com/curlconverter/curlconverter/v${version}/package-lock.json`
 
-// Download tarball
+// Download files
 const tarballPath = path.join(execEnv.tempDir, 'tarball.tgz')
+const packageLockPath = path.join(buildDir, 'package-lock.json')
 child_process.execFileSync('curl', ['-s', tarballUrl, '-o', tarballPath])
+child_process.execFileSync('curl', [
+  '-s',
+  packageLockUrl,
+  '-o',
+  packageLockPath,
+])
 
 // Extract tarball
 child_process.execFileSync(
@@ -33,7 +45,7 @@ child_process.execFileSync(
 )
 const newPackageJson = child_process
   .execFileSync('jq', [
-    'del(.bin) | del(.browser) | del(.dependencies."tree-sitter")',
+    'del(.bin) | del(.browser) | del(.dependencies."tree-sitter") | del(.scripts.prepare)',
     packageJsonPath,
   ])
   .toString()
@@ -52,18 +64,10 @@ child_process.execFileSync('rm', [
 ])
 
 // Prepare package
-child_process.execFileSync('yarn', ['set', 'version', 'berry'], {
+child_process.execFileSync('npm', ['install'], {
   cwd: buildDir,
 })
-child_process.execFileSync(
-  'yarn',
-  ['config', 'set', 'nodeLinker', 'node-modules'],
-  { cwd: buildDir },
-)
-child_process.execFileSync('yarn', ['install'], {
-  cwd: buildDir,
-})
-child_process.execFileSync('yarn', ['run', 'compile'], { cwd: buildDir })
+child_process.execFileSync('npm', ['run', 'compile'], { cwd: buildDir })
 
 // Cleanup
 child_process.execFileSync('rm', ['-rf', path.join(buildDir, 'node_modules')])

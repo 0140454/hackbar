@@ -595,7 +595,7 @@ __metadata:
     "@vitejs/plugin-vue": ^2.3.3
     chrome-types: ^0.1.123
     crypto-js: ^4.1.1
-    curlconverter: ^4.0.0
+    curlconverter: "*"
     eslint: ^8.19.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-import: ^2.26.0
@@ -1073,7 +1073,7 @@ __metadata:
 
 "curlconverter@exec:build/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.0.0
-  resolution: "curlconverter@exec:build/curlconverter.js#build/curlconverter.js::hash=627ea4&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/curlconverter.js#build/curlconverter.js::hash=ece654&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": ^0.0.2
     jsesc: ^3.0.2
@@ -1081,7 +1081,7 @@ __metadata:
     query-string: ^7.1.1
     web-tree-sitter: ^0.20.5
     yamljs: ^0.3.0
-  checksum: fbb855b395318f80e6c7e354c1e6665e82470f1693e6e88a92e41280f5762a4cc4ff5515ddb93508baefcfafa340ac71017cc6f893928e6e7814dd45ba6f8eef
+  checksum: d02046ad231f673e57ab3f71cd8918f7cd974bf5d06a8a4f6f8a452c4275f60251370d9d7f562aad9c13c50b4eb92c9dfe7f8bd935cafc34ac14c45a9a73d97a
   languageName: node
   linkType: hard
 
