@@ -10,6 +10,8 @@ const web_dir = 'lib/binding_web'
 // Clone the repository
 child_process.execFileSync('git', [
   'clone',
+  '--depth',
+  '1',
   'https://github.com/tree-sitter/tree-sitter.git',
   repo,
 ])
