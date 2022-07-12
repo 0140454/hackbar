@@ -1073,16 +1073,15 @@ __metadata:
 
 "curlconverter@exec:build/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.0.0
-  resolution: "curlconverter@exec:build/curlconverter.js#build/curlconverter.js::hash=fbc995&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/curlconverter.js#build/curlconverter.js::hash=627ea4&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": ^0.0.2
     jsesc: ^3.0.2
     nunjucks: ^3.2.3
     query-string: ^7.1.1
-    tree-sitter: ^0.20.0
     web-tree-sitter: ^0.20.5
     yamljs: ^0.3.0
-  checksum: 87e3e100a6e07ebeda9495f240a32ee028fd041ee7c9180b9f1beb1bd9758057d65f44e2aa71c31d6220c5a89a87b02763b169020563c557077966d29900fee2
+  checksum: fbb855b395318f80e6c7e354c1e6665e82470f1693e6e88a92e41280f5762a4cc4ff5515ddb93508baefcfafa340ac71017cc6f893928e6e7814dd45ba6f8eef
   languageName: node
   linkType: hard
 
@@ -3776,12 +3775,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tree-sitter@link:node_modules/.blocked.package::locator=HackBar%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "tree-sitter@link:node_modules/.blocked.package::locator=HackBar%40workspace%3A."
-  languageName: node
-  linkType: soft
-
 "tsconfig-paths@npm:^3.14.1":
   version: 3.14.1
   resolution: "tsconfig-paths@npm:3.14.1"
@@ -4066,7 +4059,7 @@ __metadata:
 
 "web-tree-sitter@exec:build/web-tree-sitter.js::locator=HackBar%40workspace%3A.":
   version: 0.20.6
-  resolution: "web-tree-sitter@exec:build/web-tree-sitter.js#build/web-tree-sitter.js::hash=972bc2&locator=HackBar%40workspace%3A."
+  resolution: "web-tree-sitter@exec:build/web-tree-sitter.js#build/web-tree-sitter.js::hash=276310&locator=HackBar%40workspace%3A."
   checksum: 84d5b7bde521ff24e04a13e1d8bd280362bcad3f02d40ca0aedafd9d233573f49484c7f124c5c4bc119c718aef69cf8bdcdc88987787ce7e6e263db4a0d3cee5
   languageName: node
   linkType: hard

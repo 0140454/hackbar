@@ -33,7 +33,7 @@ child_process.execFileSync(
 )
 const newPackageJson = child_process
   .execFileSync('jq', [
-    'del(.bin) | del(.browser) | .resolutions."tree-sitter" = "link:node_modules/.blocked.package"',
+    'del(.bin) | del(.browser) | del(.dependencies."tree-sitter")',
     packageJsonPath,
   ])
   .toString()

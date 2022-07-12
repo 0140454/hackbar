@@ -56,7 +56,6 @@
   "resolutions": {
     "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#.yarn/patches/@types-webextension-polyfill.patch",
     "curlconverter": "exec:build/curlconverter.js",
-    "tree-sitter": "link:node_modules/.blocked.package",
     "vuetify": "patch:vuetify@npm:^3.0.0-beta.5#.yarn/patches/vuetify.patch",
     "web-tree-sitter": "exec:build/web-tree-sitter.js"
   },
