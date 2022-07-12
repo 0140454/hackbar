@@ -110,9 +110,13 @@ export default defineComponent({
 
       let content = parsed?.data ?? ''
       if (!isString(content)) {
-        content = Object.entries(content)
-          .map(e => e.join('='))
-          .join('&')
+        const dataEntries = Object.entries<string>(content)
+
+        if (enctype === DEFAULT_ENCTYPE || dataEntries.length > 1) {
+          content = dataEntries.map(e => e.join('=')).join('&')
+        } else {
+          content = dataEntries[0].join('')
+        }
       }
 
       const request: BrowseRequest = {
