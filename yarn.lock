@@ -1071,9 +1071,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"curlconverter@exec:build/curlconverter.js::locator=HackBar%40workspace%3A.":
+"curlconverter@exec:build/package-generators/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.0.0
-  resolution: "curlconverter@exec:build/curlconverter.js#build/curlconverter.js::hash=ece654&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=4b1bd9&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": ^0.0.2
     jsesc: ^3.0.2
@@ -4057,9 +4057,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-tree-sitter@exec:build/web-tree-sitter.js::locator=HackBar%40workspace%3A.":
+"web-tree-sitter@exec:build/package-generators/web-tree-sitter.js::locator=HackBar%40workspace%3A.":
   version: 0.20.6
-  resolution: "web-tree-sitter@exec:build/web-tree-sitter.js#build/web-tree-sitter.js::hash=276310&locator=HackBar%40workspace%3A."
+  resolution: "web-tree-sitter@exec:build/package-generators/web-tree-sitter.js#build/package-generators/web-tree-sitter.js::hash=276310&locator=HackBar%40workspace%3A."
   checksum: 84d5b7bde521ff24e04a13e1d8bd280362bcad3f02d40ca0aedafd9d233573f49484c7f124c5c4bc119c718aef69cf8bdcdc88987787ce7e6e263db4a0d3cee5
   languageName: node
   linkType: hard

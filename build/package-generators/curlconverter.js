@@ -40,7 +40,12 @@ child_process.execFileSync(
 // Patch packages
 child_process.execFileSync(
   'patch',
-  ['-p', '1', '-i', path.join(projectDir, 'build/curlconverter.patch')],
+  [
+    '-p',
+    '1',
+    '-i',
+    path.join(projectDir, 'build/package-generators/curlconverter.patch'),
+  ],
   { cwd: buildDir },
 )
 const newPackageJson = child_process

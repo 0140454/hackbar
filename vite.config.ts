@@ -5,10 +5,10 @@ import glob from 'glob'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
 import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
-import iife from './build/vite-plugin-iife'
+import iife from './build/vite-plugins/vite-plugin-iife'
 import webextensionManifest, {
   ManifestTarget,
-} from './build/vite-plugin-manifest'
+} from './build/vite-plugins/vite-plugin-manifest'
 
 function contentScriptNames() {
   const contentScriptsDir = `${__dirname}/src/content-scripts`
@@ -34,7 +34,10 @@ export default defineConfig((env: ConfigEnv) => {
   const alias =
     env.mode === 'development'
       ? {
-          'webextension-polyfill': path.join(__dirname, 'build', 'noop.ts'),
+          'webextension-polyfill': path.join(
+            __dirname,
+            'build/modules/noop.ts',
+          ),
         }
       : {
           querystring: 'rollup-plugin-node-polyfills/polyfills/qs',

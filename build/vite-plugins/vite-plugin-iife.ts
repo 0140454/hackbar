@@ -13,7 +13,7 @@ import { Plugin } from 'vite'
 const VIRTUAL_PREFIX = '\0virtual:'
 
 const resolve = (bundle: OutputBundle): RollupPlugin => ({
-  name: 'resolve',
+  name: 'rollup-plugin-resolve',
   resolveId(source: string, importer: string | undefined) {
     if (importer === undefined) {
       return source
@@ -72,7 +72,7 @@ const iifeify = async (chunk: OutputChunk, bundle: OutputBundle) => {
 
 export default function (names: Array<string>): Plugin {
   return {
-    name: 'iife',
+    name: 'vite-plugin-iife',
     async generateBundle(
       options: NormalizedOutputOptions,
       bundle: OutputBundle,
