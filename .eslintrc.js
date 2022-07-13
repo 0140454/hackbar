@@ -6,8 +6,8 @@ module.exports = {
     webextensions: true,
   },
   extends: [
-    './eslint-config',
-    './eslint-config/typescript',
-    './eslint-config/vue',
+    './build/eslint-config',
+    './build/eslint-config/typescript',
+    './build/eslint-config/vue',
   ],
 }
