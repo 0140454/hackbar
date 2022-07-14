@@ -2,7 +2,6 @@ import path from 'path'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import vue from '@vitejs/plugin-vue'
 import glob from 'glob'
-import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
 import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugins/vite-plugin-iife'
@@ -65,13 +64,15 @@ export default defineConfig((env: ConfigEnv) => {
     optimizeDeps: {
       esbuildOptions: {
         plugins: [NodeModulesPolyfillPlugin()],
+        loader: {
+          '.wasm': 'binary',
+        },
       },
     },
     build: {
       minify: false,
       polyfillModulePreload: false,
       rollupOptions: {
-        plugins: [rollupNodePolyFill()],
         input,
         output: {
           assetFileNames: 'assets/[name].[ext]',

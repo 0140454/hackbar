@@ -6,12 +6,36 @@ const path = require('path')
 
 const repo = path.join(execEnv.tempDir, 'tree-sitter')
 const web_dir = 'lib/binding_web'
+const projectDir = process.env.PROJECT_CWD
+
+// Get version
+let version = undefined
+try {
+  const info = child_process
+    .execFileSync('yarn', ['info', '--json', '-R', 'web-tree-sitter'], {
+      cwd: projectDir,
+    })
+    .toString()
+    .trim()
+  version = JSON.parse(info)['children']['Version']
+} catch (err) {
+  version = child_process
+    .execFileSync('npm', ['view', 'web-tree-sitter', 'dist-tags.latest'])
+    .toString()
+    .trim()
+}
+
+if (!version) {
+  throw new Error('Failed to get version')
+}
 
 // Clone the repository
 child_process.execFileSync('git', [
   'clone',
   '--depth',
   '1',
+  '--branch',
+  `v${version}`,
   'https://github.com/tree-sitter/tree-sitter.git',
   repo,
 ])

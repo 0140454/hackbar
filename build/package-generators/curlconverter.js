@@ -8,11 +8,28 @@ const buildDir = execEnv.buildDir
 const packageJsonPath = path.join(buildDir, 'package.json')
 const projectDir = process.env.PROJECT_CWD
 
+// Get version
+let version = undefined
+try {
+  const info = child_process
+    .execFileSync('yarn', ['info', '--json', '-R', 'curlconverter'], {
+      cwd: projectDir,
+    })
+    .toString()
+    .trim()
+  version = JSON.parse(info)['children']['Version']
+} catch (err) {
+  version = child_process
+    .execFileSync('npm', ['view', 'curlconverter', 'dist-tags.latest'])
+    .toString()
+    .trim()
+}
+
+if (!version) {
+  throw new Error('Failed to get version')
+}
+
 // Get URLs
-const version = child_process
-  .execFileSync('npm', ['view', 'curlconverter', 'dist-tags.latest'])
-  .toString()
-  .trim()
 const tarballUrl = child_process
   .execFileSync('npm', ['view', `curlconverter@${version}`, 'dist.tarball'])
   .toString()
