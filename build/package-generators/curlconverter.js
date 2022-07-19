@@ -8,6 +8,17 @@ const buildDir = execEnv.buildDir
 const packageJsonPath = path.join(buildDir, 'package.json')
 const projectDir = process.env.PROJECT_CWD
 
+process.on('uncaughtException', err => {
+  if (err.stdout?.length) {
+    console.error(`stdout: ${err.stdout}\n`)
+  }
+  if (err.stderr?.length) {
+    console.error(`stderr: ${err.stderr}\n`)
+  }
+
+  throw err
+})
+
 // Get version
 let version = undefined
 try {
@@ -73,10 +84,6 @@ const newPackageJson = child_process
   .toString()
   .trim()
 fs.writeFileSync(packageJsonPath, newPackageJson)
-fs.writeFileSync(
-  path.join(buildDir, 'tree-sitter-bash.wasm?url.ts'),
-  'export default ""',
-)
 child_process.execFileSync('rm', [
   '-rf',
   path.join(buildDir, 'dist/src'),
@@ -93,13 +100,3 @@ child_process.execFileSync('npm', ['run', 'compile'], { cwd: buildDir })
 
 // Cleanup
 child_process.execFileSync('rm', ['-rf', path.join(buildDir, 'node_modules')])
-child_process.execFileSync('find', [
-  path.join(buildDir, 'dist'),
-  '-name',
-  'tree-sitter-bash.wasm?url.*',
-  '-exec',
-  'rm',
-  '-rf',
-  '{}',
-  ';',
-])
