@@ -1,23 +1,36 @@
 diff -Naur a/src/bash-parser-web.ts b/src/bash-parser-web.ts
 --- a/src/bash-parser-web.ts	2022-07-11 20:18:07.194735001 +0800
-+++ b/src/bash-parser-web.ts	2022-07-11 22:51:05.123684600 +0800
-@@ -1,11 +1,16 @@
++++ b/src/bash-parser-web.ts	2022-07-20 02:41:55.792403919 +0800
+@@ -1,11 +1,29 @@
++/* eslint-disable @typescript-eslint/ban-ts-comment */
++
  import Parser from "web-tree-sitter";
-+import wasmBinary from "../tree-sitter-bash.wasm?url";
- 
++// @ts-ignore
++import wasmParser from "../../../web-tree-sitter/tree-sitter.wasm?url";
++// @ts-ignore
++import wasmBash from "../tree-sitter-bash.wasm?url";
++
++export default new Promise<Parser>(async (resolve, reject) => {
++  try {
++    await Parser.init({
++      locateFile: () => {
++        if (typeof wasmParser === 'string') {
++          return wasmParser;
++        }
+
 -// NOTE: Top-level await is not available in Safari until Safari 15
 -// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#browser_compatibility
 -await Parser.init();
 -const Bash = await Parser.Language.load("tree-sitter-bash.wasm");
 -const parser = new Parser();
 -parser.setLanguage(Bash);
-+export default new Promise<Parser>(async (resolve, reject) => {
-+  try {
-+    await Parser.init();
-+    const Bash = await Parser.Language.load(wasmBinary);
++        return URL.createObjectURL(new Blob([wasmParser]));
++      }
++    });
++    const Bash = await Parser.Language.load(wasmBash);
 +    const parser = new Parser();
 +    parser.setLanguage(Bash);
- 
+
 -export default parser;
 +    resolve(parser);
 +  } catch (err) {
@@ -54,7 +67,7 @@ diff -Naur a/src/generators/cfml.ts b/src/generators/cfml.ts
 @@ -136,15 +136,15 @@
    return cfmlCode;
  };
- 
+
 -export const toCFMLWarn = (
 +export const toCFMLWarn = async (
    curlCommand: string | string[],
@@ -66,7 +79,7 @@ diff -Naur a/src/generators/cfml.ts b/src/generators/cfml.ts
    const cfml = _toCFML(request, warnings);
    return [cfml, warnings];
  };
- 
+
 -export const toCFML = (curlCommand: string | string[]): string => {
 -  return toCFMLWarn(curlCommand)[0];
 +export const toCFML = async (curlCommand: string | string[]): Promise<string> => {
@@ -76,7 +89,7 @@ diff -Naur a/src/generators/dart.ts b/src/generators/dart.ts
 --- a/src/generators/dart.ts	2022-07-11 20:18:07.189735049 +0800
 +++ b/src/generators/dart.ts	2022-07-11 21:59:47.020080222 +0800
 @@ -142,14 +142,14 @@
- 
+
    return s + "\n";
  };
 -export const toDartWarn = (
@@ -99,7 +112,7 @@ diff -Naur a/src/generators/elixir.ts b/src/generators/elixir.ts
 --- a/src/generators/elixir.ts	2022-07-11 20:18:07.189735049 +0800
 +++ b/src/generators/elixir.ts	2022-07-11 21:59:47.040080638 +0800
 @@ -249,15 +249,15 @@
- 
+
    return template;
  };
 -export const toElixirWarn = (
@@ -113,7 +126,7 @@ diff -Naur a/src/generators/elixir.ts b/src/generators/elixir.ts
    const elixir = _toElixir(request, warnings);
    return [elixir, warnings];
  };
- 
+
 -export const toElixir = (curlCommand: string | string[]): string => {
 -  return toElixirWarn(curlCommand)[0];
 +export const toElixir = async (curlCommand: string | string[]): Promise<string> => {
@@ -123,7 +136,7 @@ diff -Naur a/src/generators/go.ts b/src/generators/go.ts
 --- a/src/generators/go.ts	2022-07-11 20:18:07.189735049 +0800
 +++ b/src/generators/go.ts	2022-07-11 21:59:47.042080680 +0800
 @@ -93,14 +93,14 @@
- 
+
    return goCode + "\n";
  };
 -export const toGoWarn = (
@@ -146,7 +159,7 @@ diff -Naur a/src/generators/javascript/axios.ts b/src/generators/javascript/axio
 --- a/src/generators/javascript/axios.ts	2022-07-11 20:18:07.185735088 +0800
 +++ b/src/generators/javascript/axios.ts	2022-07-11 21:59:47.161083156 +0800
 @@ -377,14 +377,14 @@
- 
+
    return importCode + "\n" + code;
  };
 -export const toNodeAxiosWarn = (
@@ -171,7 +184,7 @@ diff -Naur a/src/generators/javascript/javascript.ts b/src/generators/javascript
 @@ -320,32 +320,32 @@
    return _toJavaScriptOrNode(request, warnings, true);
  };
- 
+
 -export const toJavaScriptWarn = (
 +export const toJavaScriptWarn = async (
    curlCommand: string | string[],
@@ -191,7 +204,7 @@ diff -Naur a/src/generators/javascript/javascript.ts b/src/generators/javascript
 +export const toJavaScript = async (curlCommand: string | string[]): Promise<string> => {
 +  return (await toJavaScriptWarn(curlCommand))[0];
  };
- 
+
 -export const toNodeWarn = (
 +export const toNodeWarn = async (
    curlCommand: string | string[],
@@ -215,7 +228,7 @@ diff -Naur a/src/generators/javascript/node-request.ts b/src/generators/javascri
 --- a/src/generators/javascript/node-request.ts	2022-07-11 20:18:07.186735078 +0800
 +++ b/src/generators/javascript/node-request.ts	2022-07-11 21:59:47.165083239 +0800
 @@ -99,16 +99,16 @@
- 
+
    return nodeRequestCode + "\n";
  };
 -export const toNodeRequestWarn = (
@@ -227,7 +240,7 @@ diff -Naur a/src/generators/javascript/node-request.ts b/src/generators/javascri
 +): Promise<[string, Warnings]> => {
 +  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
    warnings.unshift(["node-request", "the request package is deprecated"]);
- 
+
    const nodeRequests = _toNodeRequest(request, warnings);
    return [nodeRequests, warnings];
  };
@@ -240,7 +253,7 @@ diff -Naur a/src/generators/java.ts b/src/generators/java.ts
 --- a/src/generators/java.ts	2022-07-11 20:18:07.190735040 +0800
 +++ b/src/generators/java.ts	2022-07-11 21:59:47.047080783 +0800
 @@ -114,15 +114,15 @@
- 
+
    return javaCode + "\n";
  };
 -export const toJavaWarn = (
@@ -254,7 +267,7 @@ diff -Naur a/src/generators/java.ts b/src/generators/java.ts
    const java = _toJava(request, warnings);
    return [java, warnings];
  };
- 
+
 -export const toJava = (curlCommand: string | string[]): string => {
 -  return toJavaWarn(curlCommand)[0];
 +export const toJava = async (curlCommand: string | string[]): Promise<string> => {
@@ -310,7 +323,7 @@ diff -Naur a/src/generators/php/php-requests.ts b/src/generators/php/php-request
 --- a/src/generators/php/php-requests.ts	2022-07-11 20:18:07.191735030 +0800
 +++ b/src/generators/php/php-requests.ts	2022-07-11 21:59:47.181083572 +0800
 @@ -114,14 +114,14 @@
- 
+
    return phpCode + "\n";
  };
 -export const toPhpRequestsWarn = (
@@ -335,7 +348,7 @@ diff -Naur a/src/generators/php/php.ts b/src/generators/php/php.ts
 @@ -156,14 +156,14 @@
    return phpCode;
  };
- 
+
 -export const toPhpWarn = (
 +export const toPhpWarn = async (
    curlCommand: string | string[],
@@ -358,7 +371,7 @@ diff -Naur a/src/generators/python.ts b/src/generators/python.ts
 @@ -1026,15 +1026,15 @@
    return pythonCode + "\n";
  };
- 
+
 -export const toPythonWarn = (
 +export const toPythonWarn = async (
    curlCommand: string | string[],
@@ -370,7 +383,7 @@ diff -Naur a/src/generators/python.ts b/src/generators/python.ts
    const python = _toPython(request, warnings);
    return [python, warnings];
  };
- 
+
 -export const toPython = (curlCommand: string | string[]): string => {
 -  return toPythonWarn(curlCommand)[0];
 +export const toPython = async (curlCommand: string | string[]): Promise<string> => {
@@ -380,7 +393,7 @@ diff -Naur a/src/generators/r.ts b/src/generators/r.ts
 --- a/src/generators/r.ts	2022-07-11 20:18:07.192735020 +0800
 +++ b/src/generators/r.ts	2022-07-11 21:59:47.129082490 +0800
 @@ -221,14 +221,14 @@
- 
+
    return rstatsCode + "\n";
  };
 -export const toRWarn = (
@@ -403,7 +416,7 @@ diff -Naur a/src/generators/rust.ts b/src/generators/rust.ts
 --- a/src/generators/rust.ts	2022-07-11 20:18:07.193735011 +0800
 +++ b/src/generators/rust.ts	2022-07-11 21:59:47.144082802 +0800
 @@ -135,14 +135,14 @@
- 
+
    return lines.join("\n") + "\n";
  };
 -export const toRustWarn = (
@@ -426,7 +439,7 @@ diff -Naur a/src/generators/strest.ts b/src/generators/strest.ts
 --- a/src/generators/strest.ts	2022-07-11 20:18:07.193735011 +0800
 +++ b/src/generators/strest.ts	2022-07-11 21:59:47.161083156 +0800
 @@ -140,14 +140,14 @@
- 
+
    return yaml.stringify(response, 100, 2);
  };
 -export const toStrestWarn = (
@@ -447,16 +460,16 @@ diff -Naur a/src/generators/strest.ts b/src/generators/strest.ts
  };
 diff -Naur a/src/util.ts b/src/util.ts
 --- a/src/util.ts	2022-07-11 20:18:07.197734972 +0800
-+++ b/src/util.ts	2022-07-11 21:53:17.221746093 +0800
++++ b/src/util.ts	2022-07-11 23:50:59.194544078 +0800
 @@ -2,8 +2,8 @@
- 
+
  import nunjucks from "nunjucks";
- 
+
 -import parser from "./bash-parser.js";
 -import type { Parser } from "./bash-parser.js";
 +import parserPromise from "./bash-parser-web.js";
 +import type { Parser } from "./bash-parser-web.js";
- 
+
  const env = nunjucks.configure(["templates/"], {
    // set folders with templates
 @@ -987,10 +987,11 @@
@@ -476,7 +489,7 @@ diff -Naur a/src/util.ts b/src/util.ts
 @@ -1734,11 +1735,11 @@
    return request;
  }
- 
+
 -function parseCurlCommand(
 +async function parseCurlCommand(
    curlCommand: string | string[],
@@ -496,3 +509,14 @@ diff -Naur a/src/util.ts b/src/util.ts
      if (typeof cmdName === "undefined") {
        throw new CCError("failed to parse input");
      }
+--- a/tsconfig.json	2022-07-11 20:18:07.181735127 +0800
++++ b/tsconfig.json	2022-07-20 02:42:35.717439733 +0800
+@@ -6,7 +6,7 @@
+     "sourceMap": true,
+     "strict": true,
+     "target": "es2018",
+-    "lib": ["es2018"],
++    "lib": ["es2018", "dom"],
+     "moduleResolution": "node",
+     "module": "es2022",
+     "esModuleInterop": true,
