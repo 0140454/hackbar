@@ -239,12 +239,15 @@ const handleResponseCompleted = async (
 
 browser.webRequest.onBeforeRedirect.addListener(handleResponseCompleted, {
   urls: ['*://*/*'],
+  types: ['main_frame'],
 })
 browser.webRequest.onCompleted.addListener(handleResponseCompleted, {
   urls: ['*://*/*'],
+  types: ['main_frame'],
 })
 browser.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
   urls: ['*://*/*'],
+  types: ['main_frame'],
 })
 
 browser.tabs.onRemoved.addListener(tabId => {
