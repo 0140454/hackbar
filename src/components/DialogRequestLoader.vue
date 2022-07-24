@@ -4,7 +4,7 @@
       <VCardTitle> Load request manually </VCardTitle>
       <VCardText>
         <VForm ref="form" v-model="valid">
-          Paste your command or code for sending request here.<br />
+          Paste your cURL command for sending request here.<br />
           It will be parsed and used to overwrite current URL, body and headers
           settings.
           <VTooltip location="bottom start">
@@ -16,16 +16,17 @@
                 v-bind="props"
               />
             </template>
-            You can get command or code by right-clicking a request<br />
-            in "Network" tab and then clicking "Copy as ..."
+            You can get a command by right-clicking a request<br />
+            in "Network" tab and then clicking "Copy as cURL"
           </VTooltip>
           <div class="d-flex pt-3">
             <VTextarea
               v-model="userInput"
-              label="Command or code"
+              label="Command"
               :rows="3"
-              :rules="[v => !!v.length || 'Invalid command or code']"
+              :rules="[v => !!v.length || 'Invalid command']"
               variant="underlined"
+              auto-grow
               required
             />
           </div>
@@ -98,16 +99,26 @@ export default defineComponent({
       const parsed = JSON.parse(
         await curlconverter.toJsonString(userInput.value),
       )
-
+      // check method
       const isPostMethod = parsed?.method.toLowerCase() !== 'get'
+      // extract content-type
+      const contentTypeHeader = Object.entries<string>(
+        parsed?.headers ?? {},
+      ).find(([name, _]) => {
+        return name.toLowerCase() === 'content-type'
+      }) ?? ['content-type', DEFAULT_ENCTYPE]
 
-      let enctype = parsed?.headers?.['content-type']
-        ?.split(';', 1)?.[0]
-        ?.trim()
-      if (!SUPPORTED_ENCTYPE.includes(enctype)) {
+      const contentTypeName = contentTypeHeader[0]
+      const contentTypeValue = contentTypeHeader[1]
+
+      let enctype = contentTypeValue.split(';', 1)[0].trim()
+
+      if (!SUPPORTED_ENCTYPE.includes(enctype as any)) {
         enctype = DEFAULT_ENCTYPE
+      } else if (parsed?.headers && contentTypeName in parsed.headers) {
+        delete parsed.headers[contentTypeName]
       }
-
+      // extract request body
       let content = parsed?.data ?? ''
       if (!isString(content)) {
         const dataEntries = Object.entries<string>(content)
@@ -118,7 +129,7 @@ export default defineComponent({
           content = dataEntries[0].join('')
         }
       }
-
+      // convert to BrowseRequest
       const request: BrowseRequest = {
         url: parsed?.url,
         body: {
