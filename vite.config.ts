@@ -27,7 +27,7 @@ export default defineConfig((env: ConfigEnv) => {
   const input = {
     main: 'main.html',
     devtools: 'devtools.html',
-    background: 'src/background-workers/background.ts',
+    background: 'src/background-worker/background.ts',
     ...contentScriptNames(),
   }
   const alias =
