@@ -1,8 +1,8 @@
 diff --git a/dist/vuetify.esm.js b/dist/vuetify.esm.js
-index 5d190799e515c2a4ad7d868dbb6099e4852af45c..9e741255e1296956c1006e747721d2432f71dfbe 100644
+index 355ece368e2f8dfdb7eef62bc57d1f500ed99c96..296001905aee628504467cce6b43b20ec658ea7b 100644
 --- a/dist/vuetify.esm.js
 +++ b/dist/vuetify.esm.js
-@@ -17619,8 +17619,8 @@ const VTextarea = defineComponent({
+@@ -17669,8 +17669,8 @@ const VTextarea = defineComponent({
        nextTick(() => {
          if (!sizerRef.value) return;
          const style = getComputedStyle(sizerRef.value);
@@ -14,10 +14,10 @@ index 5d190799e515c2a4ad7d868dbb6099e4852af45c..9e741255e1296956c1006e747721d243
          const minHeight = parseFloat(props.rows) * lineHeight + padding;
          const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;
 diff --git a/dist/vuetify.js b/dist/vuetify.js
-index 3f4f96c059b8a235a6665dce8138296178cefe9c..593025d4c412f322a18b9a30da0eac6ec9cf2bda 100644
+index f66c02ff8279318548e720f35e5f7e7205e1796e..a852382c5925f2d1f2a0f3b51bd3b1bddc1978ae 100644
 --- a/dist/vuetify.js
 +++ b/dist/vuetify.js
-@@ -17623,8 +17623,8 @@
+@@ -17673,8 +17673,8 @@
          vue.nextTick(() => {
            if (!sizerRef.value) return;
            const style = getComputedStyle(sizerRef.value);
@@ -28,11 +28,29 @@ index 3f4f96c059b8a235a6665dce8138296178cefe9c..593025d4c412f322a18b9a30da0eac6e
            const lineHeight = parseFloat(style.lineHeight);
            const minHeight = parseFloat(props.rows) * lineHeight + padding;
            const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;
+diff --git a/lib/components/VTextarea/VTextarea.css b/lib/components/VTextarea/VTextarea.css
+index 29a1a87921c897d4b8a636d95670170592378b26..421ab296996ae10cae4b46fcb1a8e8db166f1c19 100644
+--- a/lib/components/VTextarea/VTextarea.css
++++ b/lib/components/VTextarea/VTextarea.css
+@@ -1,4 +1,5 @@
+ .v-textarea .v-field__input {
++  align-self: stretch;
+   flex: 1 1 auto;
+   line-height: 1.75;
+   outline: none;
+@@ -11,6 +12,7 @@
+   resize: none;
+ }
+ .v-textarea__sizer {
++  width: 100%;
+   visibility: hidden;
+   position: absolute;
+   top: 0;
 diff --git a/lib/components/VTextarea/VTextarea.mjs b/lib/components/VTextarea/VTextarea.mjs
-index f8bc76bc60eca03b319e29bb360ea4c276778a7d..e97b364dcb00464416d4557dea87e25a79ebdff3 100644
+index fd4a9c01b7972ff7f9721f9c73e845402b3e0f49..0894d5a6287e59f0ea40abbe8a599776e8e0e57a 100644
 --- a/lib/components/VTextarea/VTextarea.mjs
 +++ b/lib/components/VTextarea/VTextarea.mjs
-@@ -116,8 +116,8 @@ export const VTextarea = defineComponent({
+@@ -120,8 +120,8 @@ export const VTextarea = defineComponent({
        nextTick(() => {
          if (!sizerRef.value) return;
          const style = getComputedStyle(sizerRef.value);
@@ -43,3 +61,23 @@ index f8bc76bc60eca03b319e29bb360ea4c276778a7d..e97b364dcb00464416d4557dea87e25a
          const lineHeight = parseFloat(style.lineHeight);
          const minHeight = parseFloat(props.rows) * lineHeight + padding;
          const maxHeight = parseFloat(props.maxRows) * lineHeight + padding || Infinity;
+diff --git a/lib/components/VTextarea/VTextarea.sass b/lib/components/VTextarea/VTextarea.sass
+index 28b807a0792e11067cbeab6a3860f35583364d0d..015b6361529addc8dd96ca06da27b74395c3a870 100644
+--- a/lib/components/VTextarea/VTextarea.sass
++++ b/lib/components/VTextarea/VTextarea.sass
+@@ -6,6 +6,7 @@
+ 
+ .v-textarea
+   .v-field__input
++    align-self: stretch
+     flex: 1 1 auto
+     line-height: $textarea-line-height
+     outline: none
+@@ -20,6 +21,7 @@
+       resize: none
+ 
+   &__sizer
++    width: 100%
+     visibility: hidden
+     position: absolute
+     top: 0

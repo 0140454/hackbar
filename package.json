@@ -19,7 +19,7 @@
     "crypto-js": "^4.1.1",
     "curlconverter": "^4.0.0",
     "vue": "^3.2.37",
-    "vuetify": "^3.0.0-beta.5"
+    "vuetify": "^3.0.0-beta.6"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
@@ -28,34 +28,34 @@
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
     "@types/lodash": "^4.14.182",
-    "@types/node": "^18.0.6",
+    "@types/node": "^18.6.2",
     "@types/webextension-polyfill": "^0.9.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "@vitejs/plugin-vue": "^3.0.1",
-    "chrome-types": "^0.1.130",
+    "chrome-types": "^0.1.131",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-require-sort": "^1.2.2",
-    "eslint-plugin-vue": "^9.2.0",
+    "eslint-plugin-vue": "^9.3.0",
     "glob": "^8.0.3",
     "lodash": "^4.17.21",
     "prettier": "^2.7.1",
     "sass": "^1.54.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2",
-    "vite-plugin-vuetify": "^1.0.0-alpha.13",
+    "vite": "^3.0.4",
+    "vite-plugin-vuetify": "^1.0.0-alpha.14",
     "vue-cli-plugin-vuetify": "^2.5.1",
-    "vue-tsc": "^0.39.0",
+    "vue-tsc": "^0.39.2",
     "webextension-polyfill": "^0.9.0",
     "yarn-upgrade-all": "^0.7.1"
   },
   "resolutions": {
     "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#build/package-patches/@types-webextension-polyfill.patch",
     "curlconverter": "exec:build/package-generators/curlconverter.js",
-    "vuetify": "patch:vuetify@npm:^3.0.0-beta.5#build/package-patches/vuetify.patch"
+    "vuetify": "patch:vuetify@npm:^3.0.0-beta.6#build/package-patches/vuetify.patch"
   },
   "packageManager": "yarn@3.2.1"
 }
