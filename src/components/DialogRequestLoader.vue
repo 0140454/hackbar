@@ -24,7 +24,9 @@
               v-model="userInput"
               label="Command"
               :rows="3"
-              :rules="[v => !!v.length || 'Invalid command']"
+              :rules="[
+                v => (!!v.length && !parsingError.length) || parsingError,
+              ]"
               variant="underlined"
               auto-grow
               required
@@ -89,16 +91,28 @@ export default defineComponent({
     const form = ref<InstanceType<typeof VForm>>()
     const valid = ref(false)
     const userInput = ref('')
+    const parsingError = ref('')
+    let parsed: any = undefined
 
     watch(userInput, () => {
-      nextTick(() => form.value?.validate())
+      nextTick(async () => {
+        try {
+          parsed = JSON.parse(await curlconverter.toJsonString(userInput.value))
+
+          parsingError.value = ''
+        } catch (err) {
+          let errMessage = (err as Error).message
+          errMessage = errMessage.charAt(0).toUpperCase() + errMessage.slice(1)
+
+          parsingError.value = errMessage
+        }
+
+        form.value?.validate()
+      })
     })
 
     const loadFrom = inject(LoadFromKey)!
     const apply = async () => {
-      const parsed = JSON.parse(
-        await curlconverter.toJsonString(userInput.value),
-      )
       // check method
       const isPostMethod = parsed?.method.toLowerCase() !== 'get'
       // extract content-type
@@ -159,6 +173,7 @@ export default defineComponent({
       form,
       valid,
       userInput,
+      parsingError,
 
       apply,
     }
