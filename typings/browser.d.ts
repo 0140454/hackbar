@@ -7,6 +7,7 @@ declare module 'webextension-polyfill' {
 
   namespace DeclarativeNetRequest {
     type ModifyHeaderInfo = chrome.declarativeNetRequest.ModifyHeaderInfo
+    type UpdateRuleOptions = chrome.declarativeNetRequest.UpdateRuleOptions
   }
 
   namespace Storage {

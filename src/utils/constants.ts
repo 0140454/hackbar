@@ -1,17 +1,6 @@
 import { InjectionKey } from 'vue'
 
-export const SUPPORTED_ENCTYPE = [
-  'application/x-www-form-urlencoded',
-  'application/x-www-form-urlencoded (raw)',
-  'multipart/form-data',
-  'application/json',
-] as const
-
-export const DEFAULT_ENCTYPE = SUPPORTED_ENCTYPE[0]
-
-export type SupportedEnctype = typeof SUPPORTED_ENCTYPE[number]
-
-export const COMMON_REQUEST_HEADERS = [
+export const CommonRequestHeaders = [
   'Accept',
   'Accept-Charset',
   'Accept-Datetime',

@@ -1,13 +1,8 @@
 import browser from 'webextension-polyfill'
-import { DEFAULT_ENCTYPE } from '../utils/constants'
+import bodyProcessors from '../processors'
 import tabStore from './store'
 
 const decoder = new TextDecoder()
-
-const enctypeNeededToOverrideHeader = [
-  'application/json',
-  'application/x-www-form-urlencoded (raw)',
-]
 
 function isLoadMessage(
   m: BackgroundFunctionMessage,
@@ -35,18 +30,21 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     } as DevtoolsLoadMessage)
   } else if (isExecuteMessage(message)) {
     const modifiedHeaders = message.data.headers
-    if (
-      message.data.body.enabled &&
-      enctypeNeededToOverrideHeader.includes(message.data.body.enctype)
-    ) {
-      const enctype = message.data.body.enctype.split(' ', 1)[0]
 
-      modifiedHeaders.push({
-        enabled: true,
-        name: 'content-type',
-        value: enctype,
-        _createdAt: 0, // Useless in background
-      })
+    if (message.data.body.enabled) {
+      const processor = bodyProcessors.find(message.data.body.enctype)
+      if (!processor) {
+        throw new Error('Unsupported enctype')
+      }
+
+      if (processor.getFormEnctype() != processor.getHttpContentType()) {
+        modifiedHeaders.push({
+          enabled: true,
+          name: 'content-type',
+          value: processor.getHttpContentType(),
+          _createdAt: 0, // Useless in background
+        })
+      }
     }
 
     const sessionRules = modifiedHeaders
@@ -58,25 +56,26 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
           value: header.value,
         }),
       )
+    const updateRuleOptions: browser.DeclarativeNetRequest.UpdateRuleOptions = {
+      removeRuleIds: [message.tabId],
+    }
 
     if (sessionRules.length > 0) {
-      await browser.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: [message.tabId],
-        addRules: [
-          {
-            id: message.tabId,
-            action: {
-              type: 'modifyHeaders',
-              requestHeaders: sessionRules,
-            },
-            condition: {
-              tabIds: [message.tabId],
-              resourceTypes: ['main_frame'],
-            },
+      updateRuleOptions['addRules'] = [
+        {
+          id: message.tabId,
+          action: {
+            type: 'modifyHeaders',
+            requestHeaders: sessionRules,
           },
-        ],
-      })
+          condition: {
+            tabIds: [message.tabId],
+            resourceTypes: ['main_frame'],
+          },
+        },
+      ]
     }
+    await browser.declarativeNetRequest.updateSessionRules(updateRuleOptions)
 
     if (message.data.body.enabled) {
       await browser.scripting.executeScript({
@@ -178,14 +177,14 @@ browser.webRequest.onBeforeRequest.addListener(
     const url = details.url
     const body: BrowseRequest['body'] = {
       enabled: !!requestBody,
-      enctype: DEFAULT_ENCTYPE, // Updated in onBeforeSendHeaders
+      enctype: bodyProcessors.getDefaultProcessorName(), // Updated in onBeforeSendHeaders
       content: bodyContent,
     }
 
     tabStore.updateBrowseRequest(details.tabId, {
       url,
       body,
-      headers: [], // Ignored in UI part
+      headers: [], // Ignored in UI
     })
   },
   {
@@ -207,10 +206,12 @@ browser.webRequest.onBeforeSendHeaders.addListener(
     }
 
     const contentType = (contentTypeHeader.value ?? '').split(';', 1)[0].trim()
-    const request = tabStore.getBrowseRequest(details.tabId)
-    if (request?.body) {
-      request.body.enctype = contentType
-    }
+    const request = tabStore.getBrowseRequest(details.tabId)!
+    const processor =
+      bodyProcessors.findByContentType(contentType) ??
+      bodyProcessors.getDefaultProcessor()
+
+    request.body.enctype = processor.getName()
     tabStore.updateBrowseRequest(details.tabId, request)
   },
   {
