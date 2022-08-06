@@ -5,7 +5,7 @@ export default class UrlencodedFormDataProcessor extends BodyProcessor {
     return 'application/x-www-form-urlencoded'
   }
 
-  getFormEnctype(): string {
+  getFormEnctype() {
     return 'application/x-www-form-urlencoded'
   }
 
