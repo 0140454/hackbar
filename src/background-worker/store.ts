@@ -90,4 +90,6 @@ class Store {
   }
 }
 
-export default new Store()
+const tabStore = new Store()
+
+export default tabStore

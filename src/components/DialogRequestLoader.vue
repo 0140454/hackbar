@@ -58,11 +58,9 @@ import {
   watch,
 } from 'vue'
 import { VForm } from 'vuetify'
-import {
-  DEFAULT_ENCTYPE,
-  LoadFromKey,
-  SUPPORTED_ENCTYPE,
-} from '../utils/constants'
+import bodyProcessors from '../processors'
+import UrlencodedFormDataProcessor from '../processors/application-x-www-form-urlencoded'
+import { LoadFromKey } from '../utils/constants'
 
 export default defineComponent({
   name: 'DialogRequestLoader',
@@ -115,29 +113,36 @@ export default defineComponent({
     const apply = async () => {
       // check method
       const isPostMethod = parsed?.method.toLowerCase() !== 'get'
-      // extract content-type
+      // find processor
       const contentTypeHeader = Object.entries<string>(
         parsed?.headers ?? {},
       ).find(([name, _]) => {
         return name.toLowerCase() === 'content-type'
-      }) ?? ['content-type', DEFAULT_ENCTYPE]
+      }) ?? [
+        'content-type',
+        bodyProcessors.getDefaultProcessorHttpContentType(),
+      ]
 
       const contentTypeName = contentTypeHeader[0]
-      const contentTypeValue = contentTypeHeader[1]
+      const contentTypeValue = contentTypeHeader[1].split(';', 1)[0].trim()
 
-      let enctype = contentTypeValue.split(';', 1)[0].trim()
+      const processor =
+        bodyProcessors.findByContentType(contentTypeValue) ??
+        bodyProcessors.getDefaultProcessor()
 
-      if (!SUPPORTED_ENCTYPE.includes(enctype as any)) {
-        enctype = DEFAULT_ENCTYPE
-      } else if (parsed?.headers && contentTypeName in parsed.headers) {
+      if (
+        processor.getHttpContentType() === contentTypeValue &&
+        parsed?.headers &&
+        contentTypeName in parsed.headers
+      ) {
         delete parsed.headers[contentTypeName]
       }
-      // extract request body
+      // convert request body
       let content = parsed?.data ?? ''
       if (!isString(content)) {
         const dataEntries = Object.entries<string>(content)
 
-        if (enctype === DEFAULT_ENCTYPE || dataEntries.length > 1) {
+        if (processor instanceof UrlencodedFormDataProcessor) {
           content = dataEntries.map(e => e.join('=')).join('&')
         } else {
           content = dataEntries[0].join('')
@@ -148,7 +153,7 @@ export default defineComponent({
         url: parsed?.url,
         body: {
           enabled: isPostMethod,
-          enctype,
+          enctype: processor.getName(),
           content,
         },
         headers: Object.entries<string>(parsed?.headers ?? {}).map(

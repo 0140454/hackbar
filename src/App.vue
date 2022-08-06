@@ -174,15 +174,14 @@ import MenuSqli from './components/MenuSqli.vue'
 import MenuSsti from './components/MenuSsti.vue'
 import MenuTest from './components/MenuTest.vue'
 import MenuXss from './components/MenuXss.vue'
+import bodyProcessors from './processors'
 import {
   ApplyFunctionKey,
-  COMMON_REQUEST_HEADERS,
+  CommonRequestHeaders,
   ControlTestKey,
-  DEFAULT_ENCTYPE,
   LoadFromKey,
   OpenReverseShellPromptKey,
   OpenSqlInjectionPromptKey,
-  SUPPORTED_ENCTYPE,
 } from './utils/constants'
 
 export default defineComponent({
@@ -204,9 +203,9 @@ export default defineComponent({
   },
   setup() {
     /* Constants */
-    const supportedEnctype = SUPPORTED_ENCTYPE as unknown as Array<string>
+    const supportedEnctype = bodyProcessors.getNames()
     const commonRequestHeaders =
-      COMMON_REQUEST_HEADERS as unknown as Array<string>
+      CommonRequestHeaders as unknown as Array<string>
 
     /* DOM element and refs */
     let domFocusedInput: HTMLInputElement | null = null
@@ -247,7 +246,7 @@ export default defineComponent({
       url: '',
       body: {
         content: '',
-        enctype: DEFAULT_ENCTYPE,
+        enctype: bodyProcessors.getDefaultProcessorName(),
         enabled: false,
       },
       headers: [],
@@ -276,17 +275,9 @@ export default defineComponent({
         return str[0] + '\n' + str[1]
       })
 
-      if (
-        request.value.body.content &&
-        request.value.body.enctype !== 'multipart/form-data'
-      ) {
-        request.value.body.content = request.value.body.content.replace(
-          /[^\n][?&#]/g,
-          str => {
-            return str[0] + '\n' + str[1]
-          },
-        )
-      }
+      request.value.body.content = bodyProcessors
+        .find(request.value.body.enctype)!
+        .format(request.value.body.content)
     }
 
     const execute = () => {
@@ -330,11 +321,6 @@ export default defineComponent({
         if (!message.data) {
           reloadDialog.value.show = true
           return
-        }
-
-        if (!supportedEnctype.includes(message.data.body.enctype)) {
-          // Limit enctype
-          message.data.body.enctype = request.value.body.enctype
         }
 
         loadFrom(message.data)
