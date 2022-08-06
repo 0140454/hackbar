@@ -6,7 +6,7 @@ export default class JsonProcessor extends BodyProcessor {
   }
 
   getFormEnctype() {
-    return 'application/json'
+    return 'text/plain'
   }
 
   getHttpContentType() {

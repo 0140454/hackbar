@@ -5,8 +5,8 @@ export default class MultipartFormDataProcessor extends BodyProcessor {
     return 'multipart/form-data'
   }
 
-  getFormEnctype(): string {
-    return 'text/plain'
+  getFormEnctype() {
+    return 'multipart/form-data'
   }
 
   getHttpContentType() {
