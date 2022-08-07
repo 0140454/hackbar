@@ -67,7 +67,7 @@
           />
           <VRow>
             <VCol cols="12" md="6">
-              <div class="d-flex align-center">
+              <div class="d-flex flex-wrap align-center">
                 <VSwitch
                   v-model="request.body.enabled"
                   :class="$style.postSwitch"
@@ -78,6 +78,7 @@
                 <VSelect
                   v-show="request.body.enabled"
                   v-model="request.body.enctype"
+                  :class="postWrappedCls"
                   density="compact"
                   :items="supportedEnctype"
                   label="enctype"
@@ -88,6 +89,7 @@
               <VTextarea
                 v-show="request.body.enabled"
                 v-model="request.body.content"
+                :class="postWrappedCls"
                 label="Body"
                 :rows="1"
                 variant="underlined"
@@ -104,7 +106,8 @@
               <div
                 v-for="(header, index) in request.headers"
                 :key="header._createdAt"
-                class="d-flex pt-3 align-center"
+                class="d-flex align-center"
+                :class="index === 0 ? 'pt-3' : 'pt-5'"
               >
                 <VCheckboxBtn v-model="header.enabled" hide-details />
                 <VCombobox
@@ -537,6 +540,15 @@ export default defineComponent({
     provide(ControlTestKey, controlTest)
 
     /* Misc */
+    const postWrappedCls = ref('')
+    window
+      .matchMedia(
+        '(max-width: 498px) or ((min-width: 960px) and (max-width: 983px))',
+      )
+      .addEventListener('change', ({ matches }) => {
+        postWrappedCls.value = matches ? 'pt-4' : ''
+      })
+
     const onFocus = (event: FocusEvent) => {
       domFocusedInput = event.target as HTMLInputElement | null
     }
@@ -564,6 +576,8 @@ export default defineComponent({
       testProgressDialog,
       snackbar,
       request,
+
+      postWrappedCls,
 
       load,
       split,

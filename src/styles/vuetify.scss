@@ -3,7 +3,7 @@
 
 .v-combobox {
   .v-combobox__selection {
-    width: inherit;
+    width: 100%;
 
     > .v-combobox__selection-text {
       @include ellipsis;
