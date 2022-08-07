@@ -59,7 +59,7 @@ import {
 } from 'vue'
 import { VForm } from 'vuetify'
 import bodyProcessors from '../processors'
-import UrlencodedFormDataProcessor from '../processors/application-x-www-form-urlencoded'
+import UrlencodedFormDataProcessor from '../processors/implementations/1-application-x-www-form-urlencoded'
 import { LoadFromKey } from '../utils/constants'
 
 export default defineComponent({

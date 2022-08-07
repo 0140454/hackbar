@@ -1,4 +1,4 @@
-import { BodyProcessor } from './processor'
+import { BodyProcessor } from '../processor'
 
 export default class MultipartFormDataProcessor extends BodyProcessor {
   getName() {

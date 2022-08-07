@@ -1,4 +1,4 @@
-import { BodyProcessor } from './processor'
+import { BodyProcessor } from '../processor'
 
 export default class UrlencodedFormDataProcessor extends BodyProcessor {
   getName() {
