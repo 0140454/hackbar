@@ -7,6 +7,10 @@ $data = array(
     'files' => $_FILES,
     'input' => file_get_contents('php://input'),
 );
+$mode = strtolower($_GET['mode']);
 
 header('Content-Type: text/plain');
+if ($mode === 'csp') {
+    header("Content-Security-Policy: default-src *; script-src 'self'; form-action 'self';");
+}
 print_r($data);
