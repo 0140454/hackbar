@@ -2,6 +2,7 @@
 @use './variables' as *;
 
 .v-combobox {
+  // FIXME: remove after upgrading to v3.0.0-beta.7
   .v-combobox__selection {
     width: 100%;
 
