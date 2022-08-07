@@ -13,6 +13,7 @@ const buildForm = (url: string, body: string, selectedEnctype: string) => {
   form.setAttribute('method', 'POST')
   form.setAttribute('style', 'display: none;')
   form.setAttribute('enctype', enctype)
+  form.setAttribute('autocomplete', 'off')
 
   fields.forEach(field => {
     const input = document.createElement(
