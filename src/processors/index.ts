@@ -1,19 +1,19 @@
-import JsonProcessor from './application-json'
-import UrlencodedFormDataProcessor from './application-x-www-form-urlencoded'
-import RawUrlencodedFormDataProcessor from './application-x-www-form-urlencoded-raw'
-import MultipartFormDataProcessor from './multipart-form-data'
 import { BodyProcessor } from './processor'
+
+const constructors = Object.entries(
+  import.meta.glob<new () => BodyProcessor>('./implementations/*.ts', {
+    eager: true,
+    import: 'default',
+  }),
+)
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(e => e[1])
 
 class BodyProcessors {
   #registeredProcessors: Array<BodyProcessor> = []
 
   constructor() {
-    this.#registeredProcessors.push(
-      new UrlencodedFormDataProcessor(),
-      new RawUrlencodedFormDataProcessor(),
-      new JsonProcessor(),
-      new MultipartFormDataProcessor(),
-    )
+    this.#registeredProcessors.push(...constructors.map(c => new c()))
   }
 
   find(name: string) {
