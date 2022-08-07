@@ -48,7 +48,7 @@ export default class MultipartFormDataProcessor extends BodyProcessor {
         const fileField = field as FilePostField
 
         matched = header.match(/content-type:\s([^\r\n]+)/i)
-        fileField.file.type = matched !== null ? matched[1] : ''
+        fileField.file.type = matched?.[1] || 'application/octet-stream'
         fileField.file.data = new Blob([
           content.substring(0, content.length - 1 - Number(crlf)),
         ])
