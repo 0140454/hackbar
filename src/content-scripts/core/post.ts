@@ -45,20 +45,62 @@ const buildForm = (url: string, body: string, selectedEnctype: string) => {
 
 /* Message listener */
 
-const messageListener = (message: BrowseRequest) => {
+const messageListener = async (message: BrowseRequest) => {
   let response = null
 
   browser.runtime.onMessage.removeListener(messageListener)
 
   try {
+    let resolver: ((value: void | PromiseLike<void>) => void) | null = null
+    let rejecter: ((reason: any) => void) | null = null
+    const waitPromise = new Promise<void>((resolve, reject) => {
+      resolver = resolve
+      rejecter = reject
+    })
+
     const form = buildForm(
       message.url,
       message.body.content,
       message.body.enctype,
     )
 
+    const cspViolationEventName = 'securitypolicyviolation'
+    const windowUnloadEventName = 'unload'
+    let violationListener:
+      | ((event: WindowEventMap[typeof cspViolationEventName]) => void)
+      | null = null
+    let unloadListener:
+      | ((event: WindowEventMap[typeof windowUnloadEventName]) => void)
+      | null = null
+
+    violationListener = event => {
+      window.removeEventListener(cspViolationEventName, violationListener!)
+      window.removeEventListener(windowUnloadEventName, unloadListener!)
+
+      const violatedPolicy = event.originalPolicy
+        .match(`${event.violatedDirective}[^;]+`)!
+        .toString()
+      const errorMessage =
+        `Failed to send data to '${event.blockedURI}' because it violates the following ` +
+        `Content Security Policy directive: "${violatedPolicy}".`
+
+      rejecter!(new Error(errorMessage))
+    }
+    unloadListener = () => {
+      window.removeEventListener(cspViolationEventName, violationListener!)
+      window.removeEventListener(windowUnloadEventName, unloadListener!)
+
+      resolver!()
+    }
+
+    window.addEventListener(cspViolationEventName, violationListener)
+    window.addEventListener(windowUnloadEventName, unloadListener)
+
     document.body.appendChild(form)
     form.submit()
+    document.body.removeChild(form)
+
+    await waitPromise
   } catch (error) {
     response = (error as Error).message
   }
