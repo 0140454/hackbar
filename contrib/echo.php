@@ -11,6 +11,6 @@ $mode = strtolower($_GET['mode']);
 
 header('Content-Type: text/plain');
 if ($mode === 'csp') {
-    header("Content-Security-Policy: default-src *; script-src 'self'; form-action 'self';");
+    header("Content-Security-Policy: script-src 'self'; form-action 'self';");
 }
 print_r($data);
