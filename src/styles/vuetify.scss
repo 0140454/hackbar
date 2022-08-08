@@ -1,34 +1,20 @@
-/* Place Vuetify overrides here */
 @use './variables' as *;
 
-.v-combobox {
-  // FIXME: remove after upgrading to v3.0.0-beta.7
-  .v-combobox__selection {
-    width: 100%;
+// FIXME: remove after upgrading to v3.0.0-beta.8
+.v-field {
+  overflow: unset;
+}
 
-    > .v-combobox__selection-text {
-      @include ellipsis;
-    }
-  }
-
-  .v-field__input {
-    height: 24px;
-  }
+.v-combobox .v-combobox__selection-text {
+  @include ellipsis;
 }
 
 .v-dialog .v-overlay__content {
   width: calc(100% - 48px);
 }
 
-.v-btn {
-  .v-btn__content {
-    align-items: center;
-    display: flex;
-  }
-
-  .v-btn__append {
-    margin-left: 0;
-  }
+.v-btn .v-btn__append {
+  margin-left: 0;
 }
 
 .v-tooltip .v-overlay__content {
