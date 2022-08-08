@@ -15,27 +15,27 @@
     "dist:firefox": "run build:firefox && env -C dist zip ../${npm_package_name}-firefox.zip -FS -r ."
   },
   "dependencies": {
-    "@fontsource/roboto": "^4.5.7",
+    "@fontsource/roboto": "^4.5.8",
     "@mdi/js": "^7.0.96",
     "crypto-js": "^4.1.1",
-    "curlconverter": "^4.0.0",
+    "curlconverter": "^4.1.0",
     "vue": "^3.2.37",
-    "vuetify": "^3.0.0-beta.6"
+    "vuetify": "^3.0.0-beta.7"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
-    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-virtual": "^2.1.0",
     "@types/crypto-js": "^4.1.1",
     "@types/glob": "^7.2.0",
     "@types/lodash": "^4.14.182",
-    "@types/node": "^18.6.2",
+    "@types/node": "^18.6.5",
     "@types/webextension-polyfill": "^0.9.0",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@vitejs/plugin-vue": "^3.0.1",
     "chrome-types": "^0.1.131",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -44,19 +44,18 @@
     "glob": "^8.0.3",
     "lodash": "^4.17.21",
     "prettier": "^2.7.1",
-    "sass": "^1.54.0",
+    "sass": "^1.54.4",
     "typescript": "^4.7.4",
-    "vite": "^3.0.4",
+    "vite": "^3.0.5",
     "vite-plugin-vuetify": "^1.0.0-alpha.14",
     "vue-cli-plugin-vuetify": "^2.5.1",
-    "vue-tsc": "^0.39.2",
+    "vue-tsc": "^0.40.0",
     "webextension-polyfill": "^0.9.0",
     "yarn-upgrade-all": "^0.7.1"
   },
   "resolutions": {
     "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#build/package-patches/@types-webextension-polyfill.patch",
-    "curlconverter": "exec:build/package-generators/curlconverter.js",
-    "vuetify": "patch:vuetify@npm:^3.0.0-beta.6#build/package-patches/vuetify.patch"
+    "curlconverter": "exec:build/package-generators/curlconverter.js"
   },
   "packageManager": "yarn@3.2.1"
 }

@@ -9,7 +9,7 @@
         @wheel.prevent="onScrollAppBar"
       >
         <VBtn variant="text" @click="load">Load</VBtn>
-        <VDivider vertical />
+        <VDivider vertical inset />
         <VMenu>
           <template #activator="{ props }">
             <VBtn
@@ -80,7 +80,7 @@
                   v-show="request.body.enabled"
                   ref="enctypeSelect"
                   v-model="request.body.enctype"
-                  :class="postWrappedCls"
+                  :class="postControlWrapped ? 'pt-3' : ''"
                   density="compact"
                   :items="supportedEnctype"
                   label="enctype"
@@ -91,7 +91,7 @@
               <VTextarea
                 v-show="request.body.enabled"
                 v-model="request.body.content"
-                :class="postWrappedCls"
+                :class="postControlWrapped ? 'pt-3' : 'pt-1'"
                 label="Body"
                 :rows="1"
                 variant="underlined"
@@ -108,8 +108,7 @@
               <div
                 v-for="(header, index) in request.headers"
                 :key="header._createdAt"
-                class="d-flex align-center"
-                :class="index === 0 ? 'pt-3' : 'pt-5'"
+                class="d-flex align-center pt-3"
               >
                 <VCheckboxBtn v-model="header.enabled" hide-details />
                 <VCombobox
@@ -544,7 +543,7 @@ export default defineComponent({
     provide(ControlTestKey, controlTest)
 
     /* Misc */
-    const postWrappedCls = ref('')
+    const postControlWrapped = ref(false)
     const enctypeResizeObserver = new ResizeObserver(() => {
       const selectRect: DOMRect =
         enctypeSelect.value.$el.getBoundingClientRect()
@@ -554,7 +553,7 @@ export default defineComponent({
       const selectCenter = selectRect.top + selectRect.height / 2
       const switchCenter = switchRect.top + switchRect.height / 2
 
-      postWrappedCls.value = selectCenter != switchCenter ? 'pt-4' : ''
+      postControlWrapped.value = selectCenter != switchCenter
     })
     onMounted(() => {
       enctypeResizeObserver.observe(enctypeSelect.value.$el)
@@ -590,7 +589,7 @@ export default defineComponent({
       snackbar,
       request,
 
-      postWrappedCls,
+      postControlWrapped,
 
       load,
       split,
