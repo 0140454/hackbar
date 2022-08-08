@@ -82,7 +82,9 @@ const messageListener = async (message: BrowseRequest) => {
         .toString()
       const errorMessage =
         `Failed to send data to '${event.blockedURI}' because it violates the following ` +
-        `Content Security Policy directive: "${violatedPolicy}".`
+        `Content Security Policy directive: "${violatedPolicy}". You can execute the request ` +
+        `again after going to a page without directive "${violatedPolicy}". ` +
+        `For example, https://www.google.com`
 
       rejecter!(new Error(errorMessage))
     }
