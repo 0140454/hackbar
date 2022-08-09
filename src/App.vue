@@ -69,6 +69,7 @@
             <VCol cols="12" md="6">
               <div class="d-flex flex-wrap align-center">
                 <VSwitch
+                  ref="postEnabledSwitch"
                   v-model="request.body.enabled"
                   :class="$style.postSwitch"
                   :color="theme === 'dark' ? 'white' : 'black'"
@@ -77,6 +78,7 @@
                 />
                 <VSelect
                   v-show="request.body.enabled"
+                  ref="enctypeSelect"
                   v-model="request.body.enctype"
                   :class="postWrappedCls"
                   density="compact"
@@ -162,7 +164,7 @@
 <script lang="ts">
 import { mdiClose, mdiMenuDown } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
-import { VAppBar, VTextarea } from 'vuetify'
+import { VAppBar, VSelect, VSwitch, VTextarea } from 'vuetify'
 import browser from 'webextension-polyfill'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
 import DialogRequestLoader from './components/DialogRequestLoader.vue'
@@ -214,6 +216,8 @@ export default defineComponent({
     let domFocusedInput: HTMLInputElement | null = null
     const appBar = ref<InstanceType<typeof VAppBar>>()
     const urlInput = ref<InstanceType<typeof VTextarea>>()
+    const postEnabledSwitch = ref<InstanceType<typeof VSwitch>>()
+    const enctypeSelect = ref<InstanceType<typeof VSelect>>()
 
     /* Dialog */
     const reloadDialog = ref({
@@ -541,13 +545,20 @@ export default defineComponent({
 
     /* Misc */
     const postWrappedCls = ref('')
-    window
-      .matchMedia(
-        '(max-width: 498px) or ((min-width: 960px) and (max-width: 983px))',
-      )
-      .addEventListener('change', ({ matches }) => {
-        postWrappedCls.value = matches ? 'pt-4' : ''
-      })
+    const enctypeResizeObserver = new ResizeObserver(() => {
+      const selectRect: DOMRect =
+        enctypeSelect.value.$el.getBoundingClientRect()
+      const switchRect: DOMRect =
+        postEnabledSwitch.value.$el.getBoundingClientRect()
+
+      const selectCenter = selectRect.top + selectRect.height / 2
+      const switchCenter = switchRect.top + switchRect.height / 2
+
+      postWrappedCls.value = selectCenter != switchCenter ? 'pt-4' : ''
+    })
+    onMounted(() => {
+      enctypeResizeObserver.observe(enctypeSelect.value.$el)
+    })
 
     const onFocus = (event: FocusEvent) => {
       domFocusedInput = event.target as HTMLInputElement | null
@@ -566,6 +577,8 @@ export default defineComponent({
 
       appBar,
       urlInput,
+      postEnabledSwitch,
+      enctypeSelect,
 
       theme,
 
