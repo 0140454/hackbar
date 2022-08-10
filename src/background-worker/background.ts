@@ -42,6 +42,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
           enabled: true,
           name: 'content-type',
           value: processor.getHttpContentType(),
+          removeIfEmptyValue: false,
           _createdAt: 0, // Useless in background
         })
       }
@@ -49,13 +50,20 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
     const sessionRules = modifiedHeaders
       .filter(header => header.enabled && header.name.length > 0)
-      .map(
-        (header): browser.DeclarativeNetRequest.ModifyHeaderInfo => ({
-          header: header.name,
-          operation: 'set',
-          value: header.value,
-        }),
-      )
+      .map((header): browser.DeclarativeNetRequest.ModifyHeaderInfo => {
+        if (header.value.length !== 0 || !header.removeIfEmptyValue) {
+          return {
+            header: header.name,
+            operation: 'set',
+            value: header.value,
+          }
+        } else {
+          return {
+            header: header.name,
+            operation: 'remove',
+          }
+        }
+      })
     const updateRuleOptions: browser.DeclarativeNetRequest.UpdateRuleOptions = {
       removeRuleIds: [message.tabId],
     }

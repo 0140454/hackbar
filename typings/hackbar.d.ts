@@ -10,6 +10,7 @@ type Header = {
   enabled: boolean
   name: string
   value: string
+  removeIfEmptyValue: boolean
   _createdAt: number
 }
 

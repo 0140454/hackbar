@@ -162,6 +162,7 @@ export default defineComponent({
             enabled: true,
             name,
             value,
+            removeIfEmptyValue: true,
             _createdAt: Date.now() * 1000 + idx,
           }),
         ),
