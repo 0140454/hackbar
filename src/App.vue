@@ -103,40 +103,68 @@
             </VCol>
             <VCol cols="12" md="6">
               <div class="pt-2 pb-1">
-                <VBtn @click="addHeader"> Add Header </VBtn>
+                <VBtn @click="addHeader"> Modify Header </VBtn>
               </div>
               <div
                 v-for="(header, index) in request.headers"
                 :key="header._createdAt"
-                class="d-flex align-center pt-3"
+                class="d-flex align-baseline"
+                :class="
+                  index === 0
+                    ? 'pt-3'
+                    : request.headers[index - 1].value.length === 0
+                    ? 'pt-2'
+                    : 'pt-2'
+                "
               >
                 <VCheckboxBtn v-model="header.enabled" hide-details />
-                <VCombobox
-                  v-model="header.name"
-                  :items="commonRequestHeaders"
-                  label="Name"
-                  :menu-props="{ maxHeight: 200 }"
-                  style="flex: 1 0"
-                  variant="underlined"
-                  hide-details
-                  @focus="onFocus"
-                />
-                <VTextField
-                  v-model="header.value"
-                  class="pl-2"
-                  style="flex: 1 0"
-                  label="Value"
-                  variant="underlined"
-                  hide-details
-                  @focus="onFocus"
-                  @keydown.stop
-                />
-                <VBtn
-                  :icon="mdiClose"
-                  size="small"
-                  variant="text"
-                  @click="deleteHeader(index)"
-                />
+                <div class="d-flex flex-column flex-fill">
+                  <div class="d-flex align-center">
+                    <VCombobox
+                      v-model="header.name"
+                      :items="commonRequestHeaders"
+                      label="Name"
+                      :menu-props="{ maxHeight: 200 }"
+                      style="flex: 1 0"
+                      variant="underlined"
+                      hide-details
+                      @focus="onFocus"
+                    />
+                    <VTextField
+                      v-model="header.value"
+                      class="pl-2"
+                      style="flex: 1 0"
+                      label="Value"
+                      variant="underlined"
+                      hide-details
+                      @focus="onFocus"
+                      @keydown.stop
+                    />
+                    <VBtn
+                      :icon="mdiClose"
+                      size="small"
+                      variant="text"
+                      @click="deleteHeader(index)"
+                    />
+                  </div>
+                  <div class="pt-1">
+                    <VChip
+                      v-if="!header.value.length"
+                      :prepend-icon="mdiSync"
+                      size="small"
+                      @click="
+                        header.removeIfEmptyValue = !header.removeIfEmptyValue
+                      "
+                    >
+                      Action:
+                      {{
+                        header.removeIfEmptyValue
+                          ? 'Remove header'
+                          : 'Send empty value'
+                      }}
+                    </VChip>
+                  </div>
+                </div>
               </div>
             </VCol>
           </VRow>
@@ -161,7 +189,7 @@
 </template>
 
 <script lang="ts">
-import { mdiClose, mdiMenuDown } from '@mdi/js'
+import { mdiClose, mdiMenuDown, mdiSync } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { VAppBar, VSelect, VSwitch, VTextarea } from 'vuetify'
 import browser from 'webextension-polyfill'
@@ -422,6 +450,7 @@ export default defineComponent({
         enabled: true,
         name: '',
         value: '',
+        removeIfEmptyValue: true,
         _createdAt: Date.now(),
       })
     }
@@ -570,6 +599,7 @@ export default defineComponent({
     return {
       mdiClose,
       mdiMenuDown,
+      mdiSync,
 
       supportedEnctype,
       commonRequestHeaders,
