@@ -1,10 +1,5 @@
 @use './variables' as *;
 
-// FIXME: remove after upgrading to v3.0.0-beta.8
-.v-field {
-  overflow: unset;
-}
-
 // See also: https://github.com/vuetifyjs/vuetify/issues/15614
 .v-combobox .v-combobox__selection-text {
   @include ellipsis;

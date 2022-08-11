@@ -22,7 +22,6 @@
           <div class="d-flex pt-3">
             <VTextarea
               v-model="userInput"
-              class="v-text-field--flush-details"
               label="Command"
               :rows="3"
               :rules="[
