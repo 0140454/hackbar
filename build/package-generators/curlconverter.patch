@@ -88,13 +88,37 @@ index 52243e2..919f4dc 100644
 +export const toCFML = async (curlCommand: string | string[]): Promise<string> => {
 +  return (await toCFMLWarn(curlCommand))[0];
  };
+diff --git a/src/generators/csharp.ts b/src/generators/csharp.ts
+index 47474f2..b4052b8 100644
+--- a/src/generators/csharp.ts
++++ b/src/generators/csharp.ts
+@@ -306,14 +306,14 @@ export const _toCSharp = (
+   }
+   return s;
+ };
+-export const toCSharpWarn = (
++export const toCSharpWarn = async (
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] => {
+-  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> => {
++  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
+   const cSharp = _toCSharp(request, warnings);
+   return [cSharp, warnings];
+ };
+-export const toCSharp = (curlCommand: string | string[]): string => {
+-  return toCSharpWarn(curlCommand)[0];
++export const toCSharp = async (curlCommand: string | string[]): Promise<string> => {
++  return (await toCSharpWarn(curlCommand))[0];
+ };
 diff --git a/src/generators/dart.ts b/src/generators/dart.ts
-index 9c370b3..0e719c1 100644
+index 0ef03b1..30cbab3 100644
 --- a/src/generators/dart.ts
 +++ b/src/generators/dart.ts
-@@ -142,14 +142,14 @@ export const _toDart = (request: Request, warnings: Warnings = []): string => {
- 
-   return s + "\n";
+@@ -214,14 +214,14 @@ export const _toDart = (request: Request, warnings: Warnings = []): string => {
+   importString += "import 'package:http/http.dart' as http;\n";
+   return importString + "\n" + s + "\n";
  };
 -export const toDartWarn = (
 +export const toDartWarn = async (
@@ -428,6 +452,31 @@ index 8ce5305..7601028 100644
 +export const toR = async (curlCommand: string | string[]): Promise<string> => {
 +  return (await toRWarn(curlCommand))[0];
  };
+diff --git a/src/generators/ruby.ts b/src/generators/ruby.ts
+index ee929cf..03d31e5 100644
+--- a/src/generators/ruby.ts
++++ b/src/generators/ruby.ts
+@@ -424,15 +424,15 @@ export const _toRuby = (request: Request, warnings: Warnings = []): string => {
+   return prelude + "\n" + code + "\n";
+ };
+ 
+-export const toRubyWarn = (
++export const toRubyWarn = async (
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] => {
+-  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> => {
++  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
+   const ruby = _toRuby(request, warnings);
+   return [ruby, warnings];
+ };
+ 
+-export const toRuby = (curlCommand: string | string[]): string => {
+-  return toRubyWarn(curlCommand)[0];
++export const toRuby = async (curlCommand: string | string[]): Promise<string> => {
++  return (await toRubyWarn(curlCommand))[0];
+ };
 diff --git a/src/generators/rust.ts b/src/generators/rust.ts
 index 8403be7..883e08c 100644
 --- a/src/generators/rust.ts
@@ -477,7 +526,7 @@ index 3089f68..9340684 100644
 +  return (await toStrestWarn(curlCommand))[0];
  };
 diff --git a/src/util.ts b/src/util.ts
-index 140075c..5748af0 100644
+index ce1f1c6..3a170e8 100644
 --- a/src/util.ts
 +++ b/src/util.ts
 @@ -1,7 +1,7 @@
@@ -490,7 +539,7 @@ index 140075c..5748af0 100644
  
  // TODO: this type doesn't work.
  function has<T, K extends PropertyKey>(
-@@ -985,10 +985,11 @@ interface TokenizeResult {
+@@ -993,10 +993,11 @@ interface TokenizeResult {
    stdin?: string;
    stdinFile?: string;
  }
@@ -504,7 +553,7 @@ index 140075c..5748af0 100644
    const ast = parser.parse(curlCommand);
    // https://github.com/tree-sitter/tree-sitter-bash/blob/master/grammar.js
    // The AST must be in a nice format, i.e.
-@@ -1789,11 +1790,11 @@ function buildRequest(
+@@ -1805,11 +1806,11 @@ function buildRequest(
    return request;
  }
  
@@ -518,7 +567,7 @@ index 140075c..5748af0 100644
    let cmdName: string,
      args: string[],
      stdin: undefined | string,
-@@ -1804,7 +1805,7 @@ function parseCurlCommand(
+@@ -1820,7 +1821,7 @@ function parseCurlCommand(
        throw new CCError("no arguments provided");
      }
    } else {
