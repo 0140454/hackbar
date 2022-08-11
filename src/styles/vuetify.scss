@@ -5,6 +5,7 @@
   overflow: unset;
 }
 
+// See also: https://github.com/vuetifyjs/vuetify/issues/15614
 .v-combobox .v-combobox__selection-text {
   @include ellipsis;
 }
