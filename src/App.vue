@@ -102,8 +102,8 @@
               />
             </VCol>
             <VCol cols="12" md="6">
-              <div class="pt-2 pb-1">
-                <VBtn @click="addHeader"> Modify Header </VBtn>
+              <div style="padding: 11px 0 1px">
+                <VBtn :elevation="2" @click="addHeader"> Modify Header </VBtn>
               </div>
               <div
                 v-for="(header, index) in request.headers"
@@ -113,13 +113,13 @@
                   index === 0
                     ? 'pt-3'
                     : request.headers[index - 1].value.length === 0
-                    ? 'pt-2'
+                    ? 'pt-3'
                     : 'pt-2'
                 "
               >
                 <VCheckboxBtn v-model="header.enabled" hide-details />
                 <div class="d-flex flex-column flex-fill">
-                  <div class="d-flex align-center">
+                  <div class="d-flex align-end">
                     <VCombobox
                       v-model="header.name"
                       :items="commonRequestHeaders"
@@ -152,6 +152,7 @@
                       v-if="!header.value.length"
                       :prepend-icon="mdiSync"
                       size="small"
+                      style="user-select: none"
                       @click="
                         header.removeIfEmptyValue = !header.removeIfEmptyValue
                       "
