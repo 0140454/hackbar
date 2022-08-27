@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['plugin:vue/recommended', 'prettier'],
+  extends: ['plugin:vue/vue3-recommended', 'prettier'],
   overrides: [{ files: '*.vue' }],
   rules: {
     'vue/component-definition-name-casing': 'error',

@@ -37,6 +37,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
     const { modelValue } = toRefs(props)
     const shown = computed<boolean>({
