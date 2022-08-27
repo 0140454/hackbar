@@ -68,7 +68,7 @@ import {
   toRefs,
   watch,
 } from 'vue'
-import { VForm } from 'vuetify'
+import { VForm } from 'vuetify/components'
 import { ApplyFunctionKey } from '../utils/constants'
 
 export default defineComponent({

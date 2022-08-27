@@ -57,7 +57,7 @@ import {
   toRefs,
   watch,
 } from 'vue'
-import { VForm } from 'vuetify'
+import { VForm } from 'vuetify/components'
 import bodyProcessors from '../processors'
 import UrlencodedFormDataProcessor from '../processors/implementations/1-application-x-www-form-urlencoded'
 import { LoadFromKey } from '../utils/constants'

@@ -192,7 +192,7 @@
 <script lang="ts">
 import { mdiClose, mdiMenuDown, mdiSync } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
-import { VAppBar, VSelect, VSwitch, VTextarea } from 'vuetify'
+import { VAppBar, VSelect, VSwitch, VTextarea } from 'vuetify/components'
 import browser from 'webextension-polyfill'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
 import DialogRequestLoader from './components/DialogRequestLoader.vue'
@@ -303,6 +303,10 @@ export default defineComponent({
       if (overwriteHeaders) {
         request.value.headers = source.headers
       }
+
+      nextTick(() => {
+        urlInput.value!.$el.getElementsByTagName('textarea')[0].focus()
+      })
     }
 
     const split = () => {
@@ -359,7 +363,6 @@ export default defineComponent({
         }
 
         loadFrom(message.data)
-        urlInput.value?.focus()
       } else if (isCommandMessage(message)) {
         switch (message.data) {
           case 'load_url':
@@ -576,9 +579,9 @@ export default defineComponent({
     const postControlWrapped = ref(false)
     const enctypeResizeObserver = new ResizeObserver(() => {
       const selectRect: DOMRect =
-        enctypeSelect.value.$el.getBoundingClientRect()
+        enctypeSelect.value!.$el.getBoundingClientRect()
       const switchRect: DOMRect =
-        postEnabledSwitch.value.$el.getBoundingClientRect()
+        postEnabledSwitch.value!.$el.getBoundingClientRect()
 
       const selectCenter = selectRect.top + selectRect.height / 2
       const switchCenter = switchRect.top + switchRect.height / 2
@@ -586,7 +589,7 @@ export default defineComponent({
       postControlWrapped.value = selectCenter != switchCenter
     })
     onMounted(() => {
-      enctypeResizeObserver.observe(enctypeSelect.value.$el)
+      enctypeResizeObserver.observe(enctypeSelect.value!.$el)
     })
 
     const onFocus = (event: FocusEvent) => {
@@ -594,7 +597,7 @@ export default defineComponent({
     }
 
     const onScrollAppBar = (event: WheelEvent) => {
-      appBar.value.$el.scrollLeft += event.deltaY
+      appBar.value!.$el.scrollLeft += event.deltaY
     }
 
     return {
