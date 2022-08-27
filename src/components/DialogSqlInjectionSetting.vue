@@ -26,6 +26,7 @@
               style="flex: 1 0"
               type="number"
               variant="underlined"
+              autofocus
               required
             />
             <VTextField
