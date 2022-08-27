@@ -12,6 +12,7 @@
               :rules="[v => !!v.length || 'Invalid host']"
               style="flex: 4 0"
               variant="underlined"
+              autofocus
               required
             />
             <VTextField
