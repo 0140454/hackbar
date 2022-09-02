@@ -116,8 +116,8 @@ export default defineComponent({
 
     const applyFunction = inject(ApplyFunctionKey)!
     const apply = () => {
-      applyFunction(modelValue.value.func, true, result.value)
       shown.value = false
+      applyFunction(modelValue.value.func, true, result.value)
     }
 
     return {
