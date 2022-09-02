@@ -169,8 +169,8 @@ export default defineComponent({
         ),
       }
 
-      loadFrom(request, true)
       shown.value = false
+      loadFrom(request, true)
     }
 
     return {
