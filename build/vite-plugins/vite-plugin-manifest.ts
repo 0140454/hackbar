@@ -52,7 +52,7 @@ const chromeManifest = {
     service_worker: 'background.js',
   },
   permissions: ['declarativeNetRequest'],
-  minimum_chrome_version: '102',
+  minimum_chrome_version: '107',
 }
 
 const firefoxManifest = {
