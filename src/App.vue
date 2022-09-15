@@ -124,7 +124,7 @@
                       v-model="header.name"
                       :items="commonRequestHeaders"
                       label="Name"
-                      :menu-props="{ maxHeight: 200 }"
+                      :menu-props="{ maxHeight: 200 } as any"
                       style="flex: 1 0"
                       variant="underlined"
                       hide-details
