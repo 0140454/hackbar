@@ -290,10 +290,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.7.17":
-  version: 18.7.17
-  resolution: "@types/node@npm:18.7.17"
-  checksum: bb1b832f4ad42a106d189d87e95aef117f0026a7ea291f34c5d106a25419d6d4c9d39099688ad46746cc3c2307c263be4adec1049a35dc12c9e48f19975b2dc6
+"@types/node@npm:^18.7.18":
+  version: 18.7.18
+  resolution: "@types/node@npm:18.7.18"
+  checksum: 8aec61f0f96e2a69ce51f1f40f949ca578bbb4fe05d7c0b8ce3aeeb848e90f755837f17f6ac132ca404d974fe9b2974150ad3b4984fc9dc7c3ceddb10bae0167
   languageName: node
   linkType: hard
 
@@ -645,8 +645,8 @@ __metadata:
     "@types/crypto-js": ^4.1.1
     "@types/glob": ^8.0.0
     "@types/lodash": ^4.14.185
-    "@types/node": ^18.7.17
-    "@types/webextension-polyfill": ^0.9.0
+    "@types/node": ^18.7.18
+    "@types/webextension-polyfill": ^0.9.1
     "@typescript-eslint/eslint-plugin": ^5.37.0
     "@typescript-eslint/parser": ^5.37.0
     "@vitejs/plugin-vue": ^3.1.0
@@ -664,12 +664,12 @@ __metadata:
     prettier: ^2.7.1
     sass: ^1.54.9
     typescript: ^4.8.3
-    vite: ^3.1.0
+    vite: ^3.1.1
     vite-plugin-vuetify: ^1.0.0-alpha.17
     vue: ^3.2.39
-    vue-cli-plugin-vuetify: ^2.5.5
+    vue-cli-plugin-vuetify: ^2.5.8
     vue-tsc: ^0.40.13
-    vuetify: ^3.0.0-beta.10
+    vuetify: ^3.0.0-beta.11
     webextension-polyfill: ^0.10.0
     yarn-upgrade-all: ^0.7.1
   languageName: unknown
@@ -4022,9 +4022,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "vite@npm:3.1.0"
+"vite@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "vite@npm:3.1.1"
   dependencies:
     esbuild: ^0.15.6
     fsevents: ~2.3.2
@@ -4050,13 +4050,13 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 1a343e3d46450181f79f34ff49cca5ff59bb7472de51ea2c4a042aa076f597d27d25c49f48405e82f607af7d8c1c13a9e789402ccb1b23570132382132ec3903
+  checksum: a7f402e1b07d62dc46254d3b38b24b0174e77318900fb72a9623d38b58217ab93f79a3b10594368d64f08d1e080e50e0f07b171202c6141de8b1be1144ada011
   languageName: node
   linkType: hard
 
-"vue-cli-plugin-vuetify@npm:^2.5.5":
-  version: 2.5.5
-  resolution: "vue-cli-plugin-vuetify@npm:2.5.5"
+"vue-cli-plugin-vuetify@npm:^2.5.8":
+  version: 2.5.8
+  resolution: "vue-cli-plugin-vuetify@npm:2.5.8"
   dependencies:
     null-loader: ^4.0.1
     semver: ^7.1.2
@@ -4068,7 +4068,7 @@ __metadata:
       optional: true
     vuetify-loader:
       optional: true
-  checksum: f73377f9bad5cd4c9fb3e541e25ce75515035161700776627ea78b279a62ffc24e3cf72839fe879f137e71b1879994a7ec3fa582d00b169c42f4e3a0f454c138
+  checksum: d71654fb4ab0518a6bebb39c1de266f2d4e5a113bad60652369d8187d8f9fc7570dc2e616366d82b9965bb10bd856ea131d712ef16e13a13007141a0bada2a56
   languageName: node
   linkType: hard
 
@@ -4116,9 +4116,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuetify@npm:^3.0.0-beta.10":
-  version: 3.0.0-beta.10
-  resolution: "vuetify@npm:3.0.0-beta.10"
+"vuetify@npm:^3.0.0-beta.11":
+  version: 3.0.0-beta.11
+  resolution: "vuetify@npm:3.0.0-beta.11"
   peerDependencies:
     "@formatjs/intl": ^1.0.0 || ^2.0.0
     vite-plugin-vuetify: ^1.0.0-alpha.12
@@ -4134,7 +4134,7 @@ __metadata:
       optional: true
     webpack-plugin-vuetify:
       optional: true
-  checksum: 396d8aa1a96af61c0d07682dea20c25c87f2c14d7148598fafc6b8102c1f04d5290df9b818e5ae463363e22d53e4103c3087bf2f99a1460d2d6317c9879960ea
+  checksum: af0b281d0993653e737926ba063283739f1d433c03eb0381061e98ffb472c6407c844aa3f1b9da915255bcacc07a973456b3170a92a3c8a021f895d569c0ed33
   languageName: node
   linkType: hard
 
