@@ -1,5 +1,5 @@
 <template>
-  <VDialog v-model="shown" max-width="100%" :width="650" persistent>
+  <VDialog v-model="shown" max-width="100%" :width="670" persistent>
     <VCard>
       <VCardTitle> Load request manually </VCardTitle>
       <VCardText>
