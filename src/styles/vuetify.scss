@@ -5,10 +5,6 @@
   @include ellipsis;
 }
 
-.v-dialog .v-overlay__content {
-  width: calc(100% - 48px);
-}
-
 .v-btn .v-btn__append {
   margin-left: 0;
 }
