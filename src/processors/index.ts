@@ -23,8 +23,10 @@ class BodyProcessors {
   }
 
   findByContentType(contentType: string) {
+    const pureContentType = contentType.split(';', 1)[0].trim()
+
     return this.#registeredProcessors.find(
-      processor => processor.getHttpContentType() === contentType,
+      processor => processor.getHttpContentType() === pureContentType,
     )
   }
 

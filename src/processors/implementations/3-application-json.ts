@@ -51,7 +51,10 @@ export default class JsonProcessor extends BodyProcessor {
       })
     }
 
-    return fields
+    return {
+      contentTypeArguments: {},
+      fields,
+    }
   }
 
   format(body: string) {

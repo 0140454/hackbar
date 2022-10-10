@@ -213,10 +213,9 @@ browser.webRequest.onBeforeSendHeaders.addListener(
       return
     }
 
-    const contentType = (contentTypeHeader.value ?? '').split(';', 1)[0].trim()
     const request = tabStore.getBrowseRequest(details.tabId)!
     const processor =
-      bodyProcessors.findByContentType(contentType) ??
+      bodyProcessors.findByContentType(contentTypeHeader.value ?? '') ??
       bodyProcessors.getDefaultProcessor()
 
     request.body.enctype = processor.getName()
