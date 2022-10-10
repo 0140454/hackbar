@@ -7,7 +7,7 @@ const buildForm = (url: string, body: string, selectedEnctype: string) => {
   const form = document.createElement('form')
   const processor = bodyProcessors.find(selectedEnctype)!
   const enctype = processor.getFormEnctype()
-  const fields = processor.parse(body)
+  const { fields } = processor.parse(body)
 
   form.setAttribute('action', url)
   form.setAttribute('method', 'POST')
