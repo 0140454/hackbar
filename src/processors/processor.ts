@@ -5,7 +5,7 @@ export abstract class BodyProcessor {
 
   abstract getHttpContentType(): string
 
-  abstract parse(body: string): Array<PostField>
+  abstract parse(body: string): PostInfo
 
   abstract format(body: string): string
 }

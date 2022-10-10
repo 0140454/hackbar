@@ -44,6 +44,11 @@ type FilePostField = {
 
 type PostField = TextPostField | FilePostField
 
+type PostInfo = {
+  contentTypeArguments: Record<string, string>
+  fields: Array<PostField>
+}
+
 type TestRequest = {
   action: 'start' | 'toggle' | 'stop'
   script: string

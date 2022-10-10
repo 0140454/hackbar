@@ -28,6 +28,9 @@ export default class RawUrlencodedFormDataProcessor extends UrlencodedFormDataPr
       value: value,
     })
 
-    return fields
+    return {
+      contentTypeArguments: {},
+      fields,
+    }
   }
 }

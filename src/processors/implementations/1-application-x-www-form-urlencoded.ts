@@ -30,7 +30,10 @@ export default class UrlencodedFormDataProcessor extends BodyProcessor {
       })
     })
 
-    return fields
+    return {
+      contentTypeArguments: {},
+      fields,
+    }
   }
 
   format(body: string) {

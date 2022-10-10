@@ -57,7 +57,12 @@ export default class MultipartFormDataProcessor extends BodyProcessor {
       fields.push(field)
     }
 
-    return fields
+    return {
+      contentTypeArguments: {
+        boundary,
+      },
+      fields,
+    }
   }
 
   format(body: string) {
