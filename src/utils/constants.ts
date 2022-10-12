@@ -86,6 +86,28 @@ export const CommonRequestHeaders = [
   'X-Wap-Profile',
 ]
 
+export const DefaultSentRequestHeaders = [
+  'Accept-Encoding',
+  'Accept-Language',
+  'Accept',
+  'Cache-Control',
+  'Content-Length',
+  'Content-Type',
+  'Cookie',
+  'Host',
+  'Origin',
+  'Pragma',
+  'Sec-Ch-Ua-Mobile',
+  'Sec-Ch-Ua-Platform',
+  'Sec-Ch-Ua',
+  'Sec-Fetch-Dest',
+  'Sec-Fetch-Mode',
+  'Sec-Fetch-Site',
+  'Sec-Fetch-User',
+  'Upgrade-Insecure-Requests',
+  'User-Agent',
+]
+
 export const BodyAvailableMethods = ['POST', 'PUT', 'PATCH']
 
 export const LoadFromKey: InjectionKey<
