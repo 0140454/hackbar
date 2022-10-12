@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
+import { BodyAvailableMethods } from '../utils/constants'
 import tabStore from './store'
 
 const decoder = new TextDecoder()
@@ -31,7 +32,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
   } else if (isExecuteMessage(message)) {
     const modifiedHeaders = message.data.headers
 
-    if (message.data.body.enabled) {
+    if (BodyAvailableMethods.includes(message.data.method)) {
       const processor = bodyProcessors.find(message.data.body.enctype)
       if (!processor) {
         throw new Error('Unsupported enctype')
@@ -85,7 +86,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     }
     await browser.declarativeNetRequest.updateSessionRules(updateRuleOptions)
 
-    if (message.data.body.enabled) {
+    if (BodyAvailableMethods.includes(message.data.method)) {
       await browser.scripting.executeScript({
         target: {
           tabId: message.tabId,
@@ -184,7 +185,6 @@ browser.webRequest.onBeforeRequest.addListener(
 
     const url = details.url
     const body: BrowseRequest['body'] = {
-      enabled: !!requestBody,
       enctype: bodyProcessors.getDefaultProcessorName(), // Updated in onBeforeSendHeaders
       content: bodyContent,
     }
@@ -192,6 +192,7 @@ browser.webRequest.onBeforeRequest.addListener(
     tabStore.updateBrowseRequest(details.tabId, {
       url,
       body,
+      method: details.method.toUpperCase(),
       headers: [], // Ignored in UI
     })
   },

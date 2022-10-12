@@ -1,198 +1,96 @@
 <template>
-  <VThemeProvider :theme="theme" with-background>
-    <VApp>
-      <VAppBar
-        ref="appBar"
-        density="compact"
-        app
-        flat
-        @wheel.prevent="onScrollAppBar"
-      >
-        <VBtn variant="text" @click="load">Load</VBtn>
-        <VDivider vertical inset />
-        <VMenu>
-          <template #activator="{ props }">
-            <VBtn
-              variant="text"
-              v-bind="props"
-              :class="$style.loadMoreActionBtn"
-            >
-              <VIcon :icon="mdiMenuDown" />
-            </VBtn>
-          </template>
-          <VList>
-            <VListItem title="From tab (default)" @click="load" />
-            <VListItem
-              title="From cURL command"
-              @click="requestLoaderDialog.show = true"
-            />
-          </VList>
-        </VMenu>
-        <VBtn variant="text" @click="split">Split</VBtn>
-        <VBtn variant="text" @click="execute">Execute</VBtn>
-        <MenuTest />
-        <MenuSqli />
-        <MenuXss />
-        <MenuLfi />
-        <MenuSsti />
-        <MenuShell />
-        <MenuEncoding />
-        <MenuHashing />
-        <VSpacer />
-        <VMenu>
-          <template #activator="{ props }">
-            <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
-              Theme
-            </VBtn>
-          </template>
-          <VList>
-            <VListItem title="Light" @click="enableDarkTheme(false)" />
-            <VListItem title="Dark" @click="enableDarkTheme(true)" />
-          </VList>
-        </VMenu>
-      </VAppBar>
-      <VMain>
-        <VContainer fluid>
-          <VTextarea
-            ref="urlInput"
-            v-model="request.url"
-            auto-grow
-            class="pb-3"
-            hide-details
-            label="URL"
-            :rows="1"
-            variant="underlined"
-            @focus="onFocus"
-            @keydown.stop
-          />
-          <VRow>
-            <VCol cols="12" md="6">
-              <div class="d-flex flex-wrap align-center">
-                <VSwitch
-                  ref="postEnabledSwitch"
-                  v-model="request.body.enabled"
-                  :class="$style.postSwitch"
-                  :color="theme === 'dark' ? 'white' : 'black'"
-                  label="Enable POST"
-                  hide-details
-                />
-                <VSelect
-                  v-show="request.body.enabled"
-                  ref="enctypeSelect"
-                  v-model="request.body.enctype"
-                  :class="postControlWrapped ? 'pt-3' : ''"
-                  density="compact"
-                  :items="supportedEnctype"
-                  label="enctype"
-                  variant="underlined"
-                  hide-details
-                />
-              </div>
-              <VTextarea
-                v-show="request.body.enabled"
-                v-model="request.body.content"
-                :class="postControlWrapped ? 'pt-3' : 'pt-1'"
-                label="Body"
-                :rows="1"
-                variant="underlined"
-                auto-grow
-                hide-details
-                @focus="onFocus"
-                @keydown.stop
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <div style="padding: 11px 0 1px">
-                <VBtn :elevation="2" @click="addHeader"> Modify Header </VBtn>
-              </div>
-              <div
-                v-for="(header, index) in request.headers"
-                :key="header._createdAt"
-                class="d-flex align-baseline"
-                :class="
-                  index === 0
-                    ? 'pt-3'
-                    : request.headers[index - 1].value.length === 0
-                    ? 'pt-3'
-                    : 'pt-2'
-                "
-              >
-                <VCheckboxBtn v-model="header.enabled" hide-details />
-                <div class="d-flex flex-column flex-fill">
-                  <div class="d-flex align-end">
-                    <VCombobox
-                      v-model="header.name"
-                      :items="commonRequestHeaders"
-                      label="Name"
-                      :menu-props="{ maxHeight: 200 } as any"
-                      style="flex: 1 0"
-                      variant="underlined"
-                      hide-details
-                      @focus="onFocus"
-                    />
-                    <VTextField
-                      v-model="header.value"
-                      class="pl-2"
-                      style="flex: 1 0"
-                      label="Value"
-                      variant="underlined"
-                      hide-details
-                      @focus="onFocus"
-                      @keydown.stop
-                    />
-                    <VBtn
-                      :icon="mdiClose"
-                      size="small"
-                      variant="text"
-                      @click="deleteHeader(index)"
-                    />
-                  </div>
-                  <div class="pt-1">
-                    <VChip
-                      v-if="!header.value.length"
-                      :prepend-icon="mdiSync"
-                      size="small"
-                      style="user-select: none"
-                      @click="
-                        header.removeIfEmptyValue = !header.removeIfEmptyValue
-                      "
-                    >
-                      Action:
-                      {{
-                        header.removeIfEmptyValue
-                          ? 'Remove header'
-                          : 'Send empty value'
-                      }}
-                    </VChip>
-                  </div>
-                </div>
-              </div>
-            </VCol>
-          </VRow>
-        </VContainer>
-      </VMain>
-      <DialogReloadPrompt v-model="reloadDialog" />
-      <DialogRequestLoader
-        v-if="requestLoaderDialog.show"
-        v-model="requestLoaderDialog"
-      />
-      <DialogSqlInjectionSetting v-model="sqlInjectionDialog" />
-      <DialogReverseShellSetting v-model="reverseShellDialog" />
-      <DialogTestProgress v-model="testProgressDialog" />
-      <VSnackbar v-model="snackbar.show" color="error" :timeout="3000" bottom>
-        {{ snackbar.text }}
-        <template #actions>
-          <VBtn variant="text" @click="snackbar.show = false">Close</VBtn>
+  <VApp>
+    <VAppBar
+      ref="appBar"
+      density="compact"
+      app
+      flat
+      @wheel.prevent="onScrollAppBar"
+    >
+      <VBtn variant="text" @click="load">Load</VBtn>
+      <VDivider vertical inset />
+      <VMenu>
+        <template #activator="{ props }">
+          <VBtn variant="text" v-bind="props" :class="$style.loadMoreActionBtn">
+            <VIcon :icon="mdiMenuDown" />
+          </VBtn>
         </template>
-      </VSnackbar>
-    </VApp>
-  </VThemeProvider>
+        <VList>
+          <VListItem title="From tab (default)" @click="load" />
+          <VListItem
+            title="From cURL command"
+            @click="requestLoaderDialog.show = true"
+          />
+        </VList>
+      </VMenu>
+      <VBtn variant="text" :disabled="isRawMode" @click="split">Split</VBtn>
+      <VBtn variant="text" @click="execute">Execute</VBtn>
+      <MenuTest />
+      <MenuSqli />
+      <MenuXss />
+      <MenuLfi />
+      <MenuSsti />
+      <MenuShell />
+      <MenuEncoding />
+      <MenuHashing />
+      <VSpacer />
+      <VMenu>
+        <template #activator="{ props }">
+          <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
+            Mode
+          </VBtn>
+        </template>
+        <VList>
+          <VListItem title="Basic" @click="isRawMode = false" />
+          <VListItem title="Raw" @click="isRawMode = true" />
+        </VList>
+      </VMenu>
+      <VMenu>
+        <template #activator="{ props }">
+          <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
+            Theme
+          </VBtn>
+        </template>
+        <VList>
+          <VListItem title="Light" @click="enableDarkTheme(false)" />
+          <VListItem title="Dark" @click="enableDarkTheme(true)" />
+        </VList>
+      </VMenu>
+    </VAppBar>
+    <VMain>
+      <RequestPanelBasic v-if="!isRawMode" v-model="request" @focus="onFocus" />
+      <RequestPanelRaw v-else v-model="request" @focus="onFocus" />
+    </VMain>
+    <DialogReloadPrompt v-model="reloadDialog" />
+    <DialogRequestLoader
+      v-if="requestLoaderDialog.show"
+      v-model="requestLoaderDialog"
+    />
+    <DialogSqlInjectionSetting v-model="sqlInjectionDialog" />
+    <DialogReverseShellSetting v-model="reverseShellDialog" />
+    <DialogTestProgress v-model="testProgressDialog" />
+    <VSnackbar v-model="snackbar.show" color="error" :timeout="3000" bottom>
+      {{ snackbar.text }}
+      <template #actions>
+        <VBtn variant="text" @click="snackbar.show = false">Close</VBtn>
+      </template>
+    </VSnackbar>
+  </VApp>
 </template>
 
 <script lang="ts">
-import { mdiClose, mdiMenuDown, mdiSync } from '@mdi/js'
-import { defineComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
-import { VAppBar, VSelect, VSwitch, VTextarea } from 'vuetify/components'
+import { mdiMenuDown } from '@mdi/js'
+import {
+  defineComponent,
+  nextTick,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+import { VAppBar } from 'vuetify/components'
+import { useTheme } from 'vuetify/framework'
 import browser from 'webextension-polyfill'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
 import DialogRequestLoader from './components/DialogRequestLoader.vue'
@@ -207,10 +105,11 @@ import MenuSqli from './components/MenuSqli.vue'
 import MenuSsti from './components/MenuSsti.vue'
 import MenuTest from './components/MenuTest.vue'
 import MenuXss from './components/MenuXss.vue'
+import RequestPanelBasic from './components/RequestPanelBasic.vue'
+import RequestPanelRaw from './components/RequestPanelRaw.vue'
 import bodyProcessors from './processors'
 import {
   ApplyFunctionKey,
-  CommonRequestHeaders,
   ControlTestKey,
   LoadFromKey,
   OpenReverseShellPromptKey,
@@ -233,19 +132,13 @@ export default defineComponent({
     DialogTestProgress,
     DialogReverseShellSetting,
     DialogRequestLoader,
+    RequestPanelBasic,
+    RequestPanelRaw,
   },
   setup() {
-    /* Constants */
-    const supportedEnctype = bodyProcessors.getNames()
-    const commonRequestHeaders =
-      CommonRequestHeaders as unknown as Array<string>
-
     /* DOM element and refs */
     let domFocusedInput: HTMLInputElement | null = null
     const appBar = ref<InstanceType<typeof VAppBar>>()
-    const urlInput = ref<InstanceType<typeof VTextarea>>()
-    const postEnabledSwitch = ref<InstanceType<typeof VSwitch>>()
-    const enctypeSelect = ref<InstanceType<typeof VSelect>>()
 
     /* Dialog */
     const reloadDialog = ref({
@@ -277,15 +170,17 @@ export default defineComponent({
       text: '',
     })
     /* HTTP Request */
-    const request = ref<BrowseRequest>({
+    const request = reactive<BrowseRequest>({
+      method: 'GET',
       url: '',
       body: {
         content: '',
         enctype: bodyProcessors.getDefaultProcessorName(),
-        enabled: false,
       },
       headers: [],
     })
+    /* Mode */
+    const isRawMode = ref(true)
 
     /* Communication */
     let backgroundPageConnection: browser.Runtime.Port | null = null
@@ -298,36 +193,33 @@ export default defineComponent({
     }
 
     const loadFrom = (source: BrowseRequest, overwriteHeaders = false) => {
-      request.value.url = source.url
-      request.value.body = source.body
+      request.method = source.method
+      request.url = source.url
+      request.body = source.body
       if (overwriteHeaders) {
-        request.value.headers = source.headers
+        request.headers = source.headers
       }
-
-      nextTick(() => {
-        urlInput.value!.$el.getElementsByTagName('textarea')[0].focus()
-      })
     }
 
     const split = () => {
-      request.value.url = request.value.url.replace(/[^\n][?&#]/g, str => {
+      request.url = request.url.replace(/[^\n][?&#]/g, str => {
         return str[0] + '\n' + str[1]
       })
 
-      request.value.body.content = bodyProcessors
-        .find(request.value.body.enctype)!
-        .format(request.value.body.content)
+      request.body.content = bodyProcessors
+        .find(request.body.enctype)!
+        .format(request.body.content)
     }
 
     const execute = () => {
-      if (request.value.url.length === 0) {
+      if (request.url.length === 0) {
         return
       }
 
       backgroundPageConnection!.postMessage({
         tabId: browser.devtools.inspectedWindow.tabId,
         type: 'execute',
-        data: request.value,
+        data: request,
       })
     }
 
@@ -418,24 +310,24 @@ export default defineComponent({
     provide(LoadFromKey, loadFrom)
 
     /* Theme */
-    const theme = ref<'light' | 'dark'>('light')
+    const theme = useTheme()
 
     const enableDarkTheme = (enabled: boolean) => {
       browser.storage.local.set({
         darkThemeEnabled: enabled,
       })
-      theme.value = enabled ? 'dark' : 'light'
+      theme.global.name.value = enabled ? 'dark' : 'light'
     }
 
     const redrawScrollbar = () => {
-      document.documentElement.className = `v-theme--${theme.value}`
+      document.documentElement.className = `v-theme--${theme.global.name.value}`
       // force to redraw scrollbar
       document.documentElement.style.overflowY = 'hidden'
       document.documentElement.clientHeight.toString()
       document.documentElement.style.overflowY = 'scroll'
     }
 
-    watch(theme, redrawScrollbar, { immediate: true })
+    watch(theme.global.name, redrawScrollbar, { immediate: true })
 
     onMounted(async () => {
       const systemDarkModeEnabled = window.matchMedia(
@@ -447,21 +339,6 @@ export default defineComponent({
 
       enableDarkTheme(preferences.darkThemeEnabled)
     })
-
-    /* Headers */
-    const addHeader = () => {
-      request.value.headers.unshift({
-        enabled: true,
-        name: '',
-        value: '',
-        removeIfEmptyValue: true,
-        _createdAt: Date.now(),
-      })
-    }
-
-    const deleteHeader = (index: number) => {
-      request.value.headers.splice(index, 1)
-    }
 
     /* Functionality */
     const getNamespaceByPath = (
@@ -575,23 +452,7 @@ export default defineComponent({
 
     provide(ControlTestKey, controlTest)
 
-    /* Misc */
-    const postControlWrapped = ref(false)
-    const enctypeResizeObserver = new ResizeObserver(() => {
-      const selectRect: DOMRect =
-        enctypeSelect.value!.$el.getBoundingClientRect()
-      const switchRect: DOMRect =
-        postEnabledSwitch.value!.$el.getBoundingClientRect()
-
-      const selectCenter = selectRect.top + selectRect.height / 2
-      const switchCenter = switchRect.top + switchRect.height / 2
-
-      postControlWrapped.value = selectCenter != switchCenter
-    })
-    onMounted(() => {
-      enctypeResizeObserver.observe(enctypeSelect.value!.$el)
-    })
-
+    /* Events */
     const onFocus = (event: FocusEvent) => {
       domFocusedInput = event.target as HTMLInputElement | null
     }
@@ -601,17 +462,9 @@ export default defineComponent({
     }
 
     return {
-      mdiClose,
       mdiMenuDown,
-      mdiSync,
-
-      supportedEnctype,
-      commonRequestHeaders,
 
       appBar,
-      urlInput,
-      postEnabledSwitch,
-      enctypeSelect,
 
       theme,
 
@@ -621,15 +474,13 @@ export default defineComponent({
       reverseShellDialog,
       testProgressDialog,
       snackbar,
-      request,
 
-      postControlWrapped,
+      request,
+      isRawMode,
 
       load,
       split,
       execute,
-      addHeader,
-      deleteHeader,
       enableDarkTheme,
       onFocus,
       onScrollAppBar,
@@ -639,10 +490,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-.postSwitch :global .v-selection-control .v-label {
-  width: unset;
-}
-
 .loadMoreActionBtn {
   padding: 0;
   min-width: unset;

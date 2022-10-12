@@ -15,9 +15,9 @@ type Header = {
 }
 
 type BrowseRequest = {
+  method: string
   url: string
   body: {
-    enabled: boolean
     enctype: string
     content: string
   }
