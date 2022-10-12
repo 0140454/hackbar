@@ -113,8 +113,6 @@ export default defineComponent({
 
     const loadFrom = inject(LoadFromKey)!
     const apply = async () => {
-      // check method
-      const isPostMethod = parsed?.method.toLowerCase() !== 'get'
       // find processor
       const contentTypeHeader = Object.entries<string>(
         parsed?.headers ?? {},
@@ -152,9 +150,9 @@ export default defineComponent({
       }
       // convert to BrowseRequest
       const request: BrowseRequest = {
+        method: parsed?.method.toUpperCase() ?? 'GET',
         url: parsed?.url,
         body: {
-          enabled: isPostMethod,
           enctype: processor.getName(),
           content,
         },

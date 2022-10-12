@@ -84,7 +84,9 @@ export const CommonRequestHeaders = [
   'X-Request-ID',
   'X-UIDH',
   'X-Wap-Profile',
-] as const
+]
+
+export const BodyAvailableMethods = ['POST', 'PUT', 'PATCH']
 
 export const LoadFromKey: InjectionKey<
   (source: BrowseRequest, overwriteHeaders?: boolean) => void
