@@ -115,7 +115,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
         target: {
           tabId: message.tabId,
         },
-        files: [message.data.script],
+        files: [message.data.script!],
       })
     }
 
