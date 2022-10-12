@@ -116,6 +116,13 @@ import {
   OpenSqlInjectionPromptKey,
 } from './utils/constants'
 
+type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
+  postMessage(message: BackgroundInitMessage): void
+  postMessage(message: BackgroundLoadMessage): void
+  postMessage(message: BackgroundExecuteMessage): void
+  postMessage(message: BackgroundTestMessage): void
+}
+
 export default defineComponent({
   name: 'App',
   components: {
@@ -183,7 +190,7 @@ export default defineComponent({
     const isRawMode = ref(true)
 
     /* Communication */
-    let backgroundPageConnection: browser.Runtime.Port | null = null
+    let backgroundPageConnection: RuntimePort | null = null
 
     const load = () => {
       backgroundPageConnection!.postMessage({
@@ -434,7 +441,11 @@ export default defineComponent({
     provide(OpenReverseShellPromptKey, openReverseShellPrompt)
 
     /* Test */
-    const controlTest = (action: string, script?: string, argument?: any) => {
+    const controlTest = (
+      action: BackgroundTestMessage['data']['action'],
+      script?: string,
+      argument?: any,
+    ) => {
       if (action === 'start') {
         testProgressDialog.value.percentage = 0
         testProgressDialog.value.status = ''

@@ -51,20 +51,23 @@ type PostInfo = {
 
 type TestRequest = {
   action: 'start' | 'toggle' | 'stop'
-  script: string
+  script?: string
   argument: any
 }
 
-type BackgroundFunctionType = 'load' | 'execute' | 'test'
+type BackgroundFunctionType = 'init' | 'load' | 'execute' | 'test'
 
 interface BackgroundFunctionMessage {
   tabId: number
   type: BackgroundFunctionType
 }
 
+interface BackgroundInitMessage extends BackgroundFunctionMessage {
+  type: Extract<BackgroundFunctionType, 'init'>
+}
+
 interface BackgroundLoadMessage extends BackgroundFunctionMessage {
   type: Extract<BackgroundFunctionType, 'load'>
-  data: never
 }
 
 interface BackgroundExecuteMessage extends BackgroundFunctionMessage {
