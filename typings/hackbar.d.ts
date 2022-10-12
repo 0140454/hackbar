@@ -72,7 +72,10 @@ interface BackgroundLoadMessage extends BackgroundFunctionMessage {
 
 interface BackgroundExecuteMessage extends BackgroundFunctionMessage {
   type: Extract<BackgroundFunctionType, 'execute'>
-  data: BrowseRequest
+  data: {
+    rawMode: boolean
+    request: BrowseRequest
+  }
 }
 
 interface BackgroundTestMessage extends BackgroundFunctionMessage {
