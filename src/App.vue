@@ -226,7 +226,10 @@ export default defineComponent({
       backgroundPageConnection!.postMessage({
         tabId: browser.devtools.inspectedWindow.tabId,
         type: 'execute',
-        data: request,
+        data: {
+          rawMode: isRawMode.value,
+          request,
+        },
       })
     }
 

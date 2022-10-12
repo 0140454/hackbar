@@ -1,6 +1,9 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
-import { BodyAvailableMethods } from '../utils/constants'
+import {
+  BodyAvailableMethods,
+  DefaultSentRequestHeaders,
+} from '../utils/constants'
 import tabStore from './store'
 
 const decoder = new TextDecoder()
@@ -30,10 +33,30 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       data: tabStore.getBrowseRequest(message.tabId),
     } as DevtoolsLoadMessage)
   } else if (isExecuteMessage(message)) {
-    const modifiedHeaders = message.data.headers
+    const { rawMode: isRawMode, request } = message.data
+    const modifiedHeaders = request.headers.filter(
+      header => header.enabled && header.name.length > 0,
+    )
 
-    if (BodyAvailableMethods.includes(message.data.method)) {
-      const processor = bodyProcessors.find(message.data.body.enctype)
+    if (isRawMode) {
+      const enabledHeaderNames = modifiedHeaders.map(header =>
+        header.name.toLowerCase(),
+      )
+      DefaultSentRequestHeaders.forEach(name => {
+        if (enabledHeaderNames.includes(name.toLowerCase())) {
+          return
+        }
+
+        modifiedHeaders.push({
+          enabled: true,
+          name,
+          value: '',
+          removeIfEmptyValue: true,
+          _createdAt: 0, // Useless in background
+        })
+      })
+    } else if (BodyAvailableMethods.includes(request.method)) {
+      const processor = bodyProcessors.find(request.body.enctype)
       if (!processor) {
         throw new Error('Unsupported enctype')
       }
@@ -49,9 +72,8 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       }
     }
 
-    const sessionRules = modifiedHeaders
-      .filter(header => header.enabled && header.name.length > 0)
-      .map((header): browser.DeclarativeNetRequest.ModifyHeaderInfo => {
+    const sessionRules = modifiedHeaders.map(
+      (header): browser.DeclarativeNetRequest.ModifyHeaderInfo => {
         if (header.value.length !== 0 || !header.removeIfEmptyValue) {
           return {
             header: header.name,
@@ -64,12 +86,24 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
             operation: 'remove',
           }
         }
-      })
+      },
+    )
     const updateRuleOptions: browser.DeclarativeNetRequest.UpdateRuleOptions = {
       removeRuleIds: [message.tabId],
     }
 
     if (sessionRules.length > 0) {
+      const ruleCondition: browser.DeclarativeNetRequest.RuleCondition =
+        isRawMode
+          ? {
+              initiatorDomains: [browser.runtime.id],
+              resourceTypes: ['xmlhttprequest'],
+            }
+          : {
+              tabIds: [message.tabId],
+              resourceTypes: ['main_frame'],
+            }
+
       updateRuleOptions['addRules'] = [
         {
           id: message.tabId,
@@ -77,16 +111,22 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
             type: 'modifyHeaders',
             requestHeaders: sessionRules,
           },
-          condition: {
-            tabIds: [message.tabId],
-            resourceTypes: ['main_frame'],
-          },
+          condition: ruleCondition,
         },
       ]
     }
     await browser.declarativeNetRequest.updateSessionRules(updateRuleOptions)
 
-    if (BodyAvailableMethods.includes(message.data.method)) {
+    if (isRawMode) {
+      const requestInit = {
+        method: request.method,
+        ...(BodyAvailableMethods.includes(request.method)
+          ? { body: request.body.content }
+          : {}),
+      }
+      const response = await fetch(request.url, requestInit)
+      console.log(response)
+    } else if (BodyAvailableMethods.includes(request.method)) {
       await browser.scripting.executeScript({
         target: {
           tabId: message.tabId,
@@ -106,7 +146,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       }
     } else {
       await browser.tabs.update(message.tabId, {
-        url: message.data.url,
+        url: request.url,
       })
     }
   } else if (isTestMessage(message)) {
