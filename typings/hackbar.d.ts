@@ -85,6 +85,13 @@ interface BackgroundTestMessage extends BackgroundFunctionMessage {
 
 /* Response */
 
+type BrowseResponse = {
+  statusCode: number
+  statusMessage: string
+  headers: Array<{ name: string; value: string }>
+  body: string
+}
+
 type TestProgress = {
   status: string
   percentage: number
@@ -100,7 +107,7 @@ type TestResult = {
   data: Array<TestResultData>
 }
 
-type DevtoolsFunctionType = 'load' | 'test' | 'command' | 'error'
+type DevtoolsFunctionType = 'load' | 'execute' | 'test' | 'command' | 'error'
 
 interface DevtoolsFunctionMessage {
   type: DevtoolsFunctionType
@@ -111,9 +118,14 @@ interface DevtoolsLoadMessage extends DevtoolsFunctionMessage {
   data: BrowseRequest | undefined
 }
 
+interface DevtoolsExecuteMessage extends DevtoolsFunctionMessage {
+  type: Extract<DevtoolsFunctionType, 'execute'>
+  data: BrowseResponse
+}
+
 interface DevtoolsCommandMessage extends DevtoolsFunctionMessage {
   type: Extract<DevtoolsFunctionType, 'command'>
-  data: 'load_url' | 'split_url' | 'execute_url'
+  data: string
 }
 
 interface DevtoolsErrorMessage extends DevtoolsFunctionMessage {

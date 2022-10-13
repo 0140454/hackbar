@@ -35,14 +35,16 @@
           label="Request"
           :rows="1"
           variant="underlined"
-          :rules="[v => (!!v.length && !requestError.length) || requestError]"
+          :rules="[
+            v => (!!v.length && !rawRequestError.length) || rawRequestError,
+          ]"
           auto-grow
           @focus="onFocus"
         />
       </VCol>
       <VCol cols="12" md="6">
         <VTextarea
-          v-model="response"
+          v-model="rawResponse"
           label="Response (readonly)"
           :rows="1"
           variant="underlined"
@@ -57,7 +59,7 @@
 
 <script lang="ts">
 import httpZ from 'http-z'
-import { PropType, defineComponent, reactive, ref, watch } from 'vue'
+import { PropType, defineComponent, nextTick, reactive, ref, watch } from 'vue'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
 
@@ -66,6 +68,10 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Object as PropType<BrowseRequest>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<BrowseResponse | undefined>,
       required: true,
     },
   },
@@ -90,8 +96,8 @@ export default defineComponent({
       host: '',
       content: '',
     })
-    const requestError = ref('')
-    const response = ref('')
+    const rawRequestError = ref('')
+    const rawResponse = ref('')
 
     /* Converter */
     watch(
@@ -153,10 +159,10 @@ export default defineComponent({
             },
           } as any)
 
-          response.value = ''
-          requestError.value = ''
+          rawResponse.value = ''
+          rawRequestError.value = ''
         } catch (error) {
-          requestError.value = (error as Error).message
+          rawRequestError.value = (error as Error).message
         }
       },
       { deep: true, immediate: true },
@@ -213,8 +219,30 @@ export default defineComponent({
             }
           })
         } catch (error) {
-          requestError.value = (error as Error).message
+          rawRequestError.value = (error as Error).message
         }
+      },
+      { deep: true },
+    )
+
+    watch(
+      () => props.response,
+      response => {
+        if (!response) {
+          return
+        }
+
+        nextTick(async () => {
+          rawResponse.value = httpZ.build({
+            protocolVersion: 'HTTP/1.1',
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage + '123',
+            headers: response.headers,
+            body: {
+              text: response.body,
+            },
+          } as any)
+        })
       },
       { deep: true },
     )
@@ -228,8 +256,8 @@ export default defineComponent({
       supportedScheme,
 
       rawRequest,
-      requestError,
-      response,
+      rawRequestError,
+      rawResponse,
 
       onFocus,
     }
