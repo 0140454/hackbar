@@ -31,7 +31,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     tabStore.getConnection(message.tabId)!.postMessage({
       type: 'load',
       data: tabStore.getBrowseRequest(message.tabId),
-    } as DevtoolsLoadMessage)
+    })
   } else if (isExecuteMessage(message)) {
     const { rawMode: isRawMode, request } = message.data
     const modifiedHeaders = request.headers.filter(
@@ -118,14 +118,40 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
     await browser.declarativeNetRequest.updateSessionRules(updateRuleOptions)
 
     if (isRawMode) {
-      const requestInit = {
+      const requestInit: RequestInit = {
         method: request.method,
+        cache: 'no-store',
         ...(BodyAvailableMethods.includes(request.method)
           ? { body: request.body.content }
           : {}),
       }
-      const response = await fetch(request.url, requestInit)
-      console.log(response)
+
+      try {
+        const response = await fetch(request.url, requestInit)
+        const bodyText = await response.text()
+        const headers = Array.from(response.headers.entries()).map(
+          ([name, value]) => ({ name, value }),
+        )
+
+        tabStore.getConnection(message.tabId)!.postMessage({
+          type: 'execute',
+          data: {
+            statusCode: response.status,
+            statusMessage: response.statusText,
+            headers,
+            body: bodyText,
+          },
+        })
+      } catch (error) {
+        tabStore.getConnection(message.tabId)!.postMessage({
+          type: 'error',
+          data: (error as Error).message,
+        })
+      } finally {
+        await browser.declarativeNetRequest.updateSessionRules({
+          removeRuleIds: [message.tabId],
+        })
+      }
     } else if (BodyAvailableMethods.includes(request.method)) {
       await browser.scripting.executeScript({
         target: {
@@ -142,7 +168,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
         tabStore.getConnection(message.tabId)!.postMessage({
           type: 'error',
           data: error,
-        } as DevtoolsErrorMessage)
+        })
       }
     } else {
       await browser.tabs.update(message.tabId, {
@@ -184,7 +210,7 @@ browser.runtime.onMessage.addListener(
       tabStore.getConnection(sender.tab.id)!.postMessage({
         type: 'test',
         data: message,
-      } as DevtoolsTestMessage)
+      })
     }
   },
 )
@@ -319,5 +345,5 @@ browser.commands.onCommand.addListener(async command => {
   connection.postMessage({
     type: 'command',
     data: command,
-  } as DevtoolsCommandMessage)
+  })
 })
