@@ -59,7 +59,12 @@
     </VAppBar>
     <VMain>
       <RequestPanelBasic v-if="!isRawMode" v-model="request" @focus="onFocus" />
-      <RequestPanelRaw v-else v-model="request" @focus="onFocus" />
+      <RequestPanelRaw
+        v-else
+        v-model="request"
+        :response="response"
+        @focus="onFocus"
+      />
     </VMain>
     <DialogReloadPrompt v-model="reloadDialog" />
     <DialogRequestLoader
@@ -176,7 +181,7 @@ export default defineComponent({
       show: false,
       text: '',
     })
-    /* HTTP Request */
+    /* HTTP Request / Response */
     const request = reactive<BrowseRequest>({
       method: 'GET',
       url: '',
@@ -186,6 +191,7 @@ export default defineComponent({
       },
       headers: [],
     })
+    const response = ref<BrowseResponse>()
     /* Mode */
     const isRawMode = ref(true)
 
@@ -239,6 +245,12 @@ export default defineComponent({
       return m.type === 'load'
     }
 
+    function isExecuteMessage(
+      m: DevtoolsFunctionMessage,
+    ): m is DevtoolsExecuteMessage {
+      return m.type === 'execute'
+    }
+
     function isCommandMessage(
       m: DevtoolsFunctionMessage,
     ): m is DevtoolsCommandMessage {
@@ -277,6 +289,8 @@ export default defineComponent({
             execute()
             break
         }
+      } else if (isExecuteMessage(message)) {
+        response.value = message.data
       } else if (isErrorMessage(message)) {
         snackbar.value.text = message.data
         snackbar.value.show = true
@@ -490,6 +504,7 @@ export default defineComponent({
       snackbar,
 
       request,
+      response,
       isRawMode,
 
       load,

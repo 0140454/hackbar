@@ -1,10 +1,18 @@
 import browser from 'webextension-polyfill'
 
+type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
+  postMessage(message: DevtoolsLoadMessage): void
+  postMessage(message: DevtoolsExecuteMessage): void
+  postMessage(message: DevtoolsTestMessage): void
+  postMessage(message: DevtoolsCommandMessage): void
+  postMessage(message: DevtoolsErrorMessage): void
+}
+
 class Store {
   #records: Record<
     number,
     {
-      connection?: browser.Runtime.Port
+      connection?: RuntimePort
       request?: BrowseRequest
       _updatedAt: number
     }
@@ -17,7 +25,7 @@ class Store {
     this.#load()
   }
 
-  updateConnection(tabId: number, connection: browser.Runtime.Port) {
+  updateConnection(tabId: number, connection: RuntimePort) {
     const tabData = this.#records[tabId] || {}
 
     tabData.connection = connection
