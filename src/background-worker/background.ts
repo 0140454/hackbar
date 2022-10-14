@@ -273,19 +273,26 @@ const onBeforeSendHeadersOptions: Array<browser.WebRequest.OnBeforeSendHeadersOp
   ['requestHeaders', chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS]
 browser.webRequest.onBeforeSendHeaders.addListener(
   details => {
-    const contentTypeHeader = details.requestHeaders?.find(header => {
-      return header.name.toLowerCase() === 'content-type'
-    })
-    if (!contentTypeHeader) {
-      return
-    }
-
     const request = tabStore.getBrowseRequest(details.tabId)!
-    const processor =
-      bodyProcessors.findByContentType(contentTypeHeader.value ?? '') ??
-      bodyProcessors.getDefaultProcessor()
 
-    request.body.enctype = processor.getName()
+    details.requestHeaders?.forEach(({ name, value }, idx) => {
+      request.headers.push({
+        enabled: true,
+        name,
+        value: value ?? '',
+        removeIfEmptyValue: false,
+        _createdAt: Date.now() * 1000 + idx,
+      })
+
+      if (name.toLowerCase() === 'content-type') {
+        const processor =
+          bodyProcessors.findByContentType(value ?? '') ??
+          bodyProcessors.getDefaultProcessor()
+
+        request.body.enctype = processor.getName()
+      }
+    })
+
     tabStore.updateBrowseRequest(details.tabId, request)
   },
   {
