@@ -205,13 +205,11 @@ export default defineComponent({
       })
     }
 
-    const loadFrom = (source: BrowseRequest, overwriteHeaders = false) => {
+    const loadFrom = (source: BrowseRequest) => {
       request.method = source.method
       request.url = source.url
       request.body = source.body
-      if (overwriteHeaders) {
-        request.headers = source.headers
-      }
+      request.headers = source.headers
     }
 
     const split = () => {
