@@ -110,9 +110,8 @@ export const DefaultSentRequestHeaders = [
 
 export const BodyAvailableMethods = ['POST', 'PUT', 'PATCH']
 
-export const LoadFromKey: InjectionKey<
-  (source: BrowseRequest, overwriteHeaders?: boolean) => void
-> = Symbol('loadFrom')
+export const LoadFromKey: InjectionKey<(source: BrowseRequest) => void> =
+  Symbol('loadFrom')
 
 export const ApplyFunctionKey: InjectionKey<
   (

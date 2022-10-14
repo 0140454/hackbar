@@ -168,7 +168,7 @@ export default defineComponent({
       }
 
       shown.value = false
-      loadFrom(request, true)
+      loadFrom(request)
     }
 
     return {
