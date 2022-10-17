@@ -1,11 +1,14 @@
 import browser from 'webextension-polyfill'
 
 type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
-  postMessage(message: DevtoolsLoadMessage): void
-  postMessage(message: DevtoolsExecuteMessage): void
-  postMessage(message: DevtoolsTestMessage): void
-  postMessage(message: DevtoolsCommandMessage): void
-  postMessage(message: DevtoolsErrorMessage): void
+  postMessage(
+    message:
+      | DevtoolsLoadMessage
+      | DevtoolsExecuteMessage
+      | DevtoolsTestMessage
+      | DevtoolsCommandMessage
+      | DevtoolsErrorMessage,
+  ): void
 }
 
 class Store {
@@ -17,12 +20,21 @@ class Store {
       _updatedAt: number
     }
   >
+  #ruleId: number
   #encoder: TextEncoder
 
   constructor() {
     this.#records = {}
+    this.#ruleId = 1
     this.#encoder = new TextEncoder()
     this.#load()
+  }
+
+  allocateRuleId() {
+    const result = this.#ruleId++
+
+    this.#sync()
+    return result
   }
 
   updateConnection(tabId: number, connection: RuntimePort) {
@@ -58,46 +70,54 @@ class Store {
   }
 
   async #sync() {
-    const data = Object.entries(this.#records)
+    const sortedRecords = Object.entries(this.#records)
       .filter(([_, tabData]) => tabData.request)
       .sort(
         ([_tabIdA, tabDataA], [_tabIdB, tabDataB]) =>
           tabDataA._updatedAt - tabDataB._updatedAt,
       )
 
-    let pairs = {}
-    while (data.length) {
-      pairs = data.reduce((result, [tabId, tabData]) => {
-        result[tabId] = tabData.request!
+    let data = {}
+    while (sortedRecords.length) {
+      data = {
+        ruleId: this.#ruleId,
+        records: sortedRecords.reduce((result, [tabId, tabData]) => {
+          result[tabId] = tabData.request!
 
-        return result
-      }, {} as Record<string, BrowseRequest>)
+          return result
+        }, {} as Record<string, BrowseRequest>),
+      }
 
-      const length = this.#encoder.encode(JSON.stringify(pairs)).length
+      const length = this.#encoder.encode(JSON.stringify(data)).length
       if (length > browser.storage.session.QUOTA_BYTES) {
-        data.shift()
+        sortedRecords.shift()
       } else {
         break
       }
     }
 
     await browser.storage.session.clear()
-    await browser.storage.session.set(pairs)
+    await browser.storage.session.set(data)
   }
 
   async #load() {
-    const data: Record<string, BrowseRequest> =
-      await browser.storage.session.get()
+    const data = (await browser.storage.session.get()) as {
+      ruleId: number
+      records: Record<number, BrowseRequest>
+    }
 
-    for (const tabId in data) {
+    const records = data.records
+    for (const tabId in records) {
       this.#records[parseInt(tabId)] = {
-        request: data[tabId],
+        request: records[tabId],
         _updatedAt: Date.now(),
       }
     }
+
+    this.#ruleId = data.ruleId || this.#ruleId
   }
 }
 
-const tabStore = new Store()
+const store = new Store()
 
-export default tabStore
+export default store

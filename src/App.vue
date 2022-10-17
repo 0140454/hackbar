@@ -122,10 +122,13 @@ import {
 } from './utils/constants'
 
 type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
-  postMessage(message: BackgroundInitMessage): void
-  postMessage(message: BackgroundLoadMessage): void
-  postMessage(message: BackgroundExecuteMessage): void
-  postMessage(message: BackgroundTestMessage): void
+  postMessage(
+    message:
+      | BackgroundInitMessage
+      | BackgroundLoadMessage
+      | BackgroundExecuteMessage
+      | BackgroundTestMessage,
+  ): void
 }
 
 export default defineComponent({

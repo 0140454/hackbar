@@ -237,7 +237,7 @@ export default defineComponent({
 
           rawResponse.value = httpZ
             .build({
-              protocolVersion: 'HTTP/1.1',
+              protocolVersion: response.protocolVersion,
               statusCode: response.statusCode,
               statusMessage: response.statusMessage || emptyReasonPhrase,
               headers: response.headers,
@@ -245,7 +245,7 @@ export default defineComponent({
                 text: response.body,
               },
             } as any)
-            .replace(` ${emptyReasonPhrase}`, '')
+            .replace(`${emptyReasonPhrase}`, '')
         })
       },
       { deep: true },
