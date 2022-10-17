@@ -91,6 +91,7 @@ type HttpHeader = {
 }
 
 type BrowseResponse = {
+  protocolVersion: string
   statusCode: number
   statusMessage: string
   headers: Array<HttpHeader>
