@@ -233,15 +233,19 @@ export default defineComponent({
         }
 
         nextTick(async () => {
-          rawResponse.value = httpZ.build({
-            protocolVersion: 'HTTP/1.1',
-            statusCode: response.statusCode,
-            statusMessage: response.statusMessage + '123',
-            headers: response.headers,
-            body: {
-              text: response.body,
-            },
-          } as any)
+          const emptyReasonPhrase = '3mp7y r3450n-phr453'
+
+          rawResponse.value = httpZ
+            .build({
+              protocolVersion: 'HTTP/1.1',
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage || emptyReasonPhrase,
+              headers: response.headers,
+              body: {
+                text: response.body,
+              },
+            } as any)
+            .replace(` ${emptyReasonPhrase}`, '')
         })
       },
       { deep: true },

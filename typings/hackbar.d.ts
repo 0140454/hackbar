@@ -85,10 +85,15 @@ interface BackgroundTestMessage extends BackgroundFunctionMessage {
 
 /* Response */
 
+type HttpHeader = {
+  name: string
+  value: string
+}
+
 type BrowseResponse = {
   statusCode: number
   statusMessage: string
-  headers: Array<{ name: string; value: string }>
+  headers: Array<HttpHeader>
   body: string
 }
 

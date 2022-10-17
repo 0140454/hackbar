@@ -7,6 +7,10 @@ import {
 import tabStore from './store'
 
 const decoder = new TextDecoder()
+const redirectStore: Record<
+  number,
+  { status: number; statusText: string; headers: Array<HttpHeader> }
+> = {}
 
 function isLoadMessage(
   m: BackgroundFunctionMessage,
@@ -25,6 +29,24 @@ function isTestMessage(
 ): m is BackgroundTestMessage {
   return m.type === 'test'
 }
+
+function isSelfOrigin(val: string | URL | undefined) {
+  if (!val) {
+    return false
+  }
+
+  const origin = val instanceof URL ? val.origin : new URL(val).origin
+  return origin === `chrome-extension://${browser.runtime.id}`
+}
+
+function stringHashCode(str: string): number {
+  return Array.from(str).reduce(
+    (result, c) => (Math.imul(31, result) + c.charCodeAt(0)) | 0,
+    0,
+  )
+}
+
+/* Communication */
 
 const handleMessage = async (message: BackgroundFunctionMessage) => {
   if (isLoadMessage(message)) {
@@ -128,18 +150,53 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
       try {
         const response = await fetch(request.url, requestInit)
-        const bodyText = await response.text()
-        const headers = Array.from(response.headers.entries()).map(
-          ([name, value]) => ({ name, value }),
-        )
+        const finalUrl = new URL(response.url)
+
+        const isRedirected = isSelfOrigin(finalUrl)
+        const ruleId = isRedirected
+          ? parseInt(finalUrl.searchParams.get('id')!)
+          : -1
+
+        const statusCode = isRedirected
+          ? redirectStore[ruleId].status
+          : response.status
+        const statusMessage = isRedirected
+          ? redirectStore[ruleId].statusText
+          : response.statusText
+        const headers = isRedirected
+          ? redirectStore[ruleId].headers
+          : Array.from(response.headers.entries()).map(([name, value]) => ({
+              name,
+              value,
+            }))
+
+        let body = await response.text()
+        let contentLength = 0
+        try {
+          contentLength = parseInt(response.headers.get('content-length')!)
+        } catch (_) {
+          // ignored error
+        } finally {
+          if (isRedirected && contentLength > 0) {
+            body = '[Missed content of redirect response]'
+          }
+        }
+
+        if (isRedirected) {
+          delete redirectStore[ruleId]
+
+          await browser.declarativeNetRequest.updateSessionRules({
+            removeRuleIds: [ruleId],
+          })
+        }
 
         tabStore.getConnection(message.tabId)!.postMessage({
           type: 'execute',
           data: {
-            statusCode: response.status,
-            statusMessage: response.statusText,
+            statusCode,
+            statusMessage,
             headers,
-            body: bodyText,
+            body,
           },
         })
       } catch (error) {
@@ -214,6 +271,8 @@ browser.runtime.onMessage.addListener(
     }
   },
 )
+
+/* Main frame listener */
 
 const onBeforeRequestOptions: Array<browser.WebRequest.OnBeforeRequestOptions> =
   ['requestBody', chrome.webRequest.OnBeforeRequestOptions.EXTRA_HEADERS]
@@ -335,6 +394,91 @@ browser.webRequest.onErrorOccurred.addListener(handleResponseCompleted, {
 browser.tabs.onRemoved.addListener(tabId => {
   tabStore.remove(tabId)
 })
+
+/* Fetch listener */
+
+browser.webRequest.onBeforeSendHeaders.addListener(
+  details => {
+    if (!isSelfOrigin(details.initiator)) {
+      return
+    }
+
+    const ruleId = stringHashCode(details.requestId)
+
+    browser.declarativeNetRequest.updateSessionRules({
+      removeRuleIds: [ruleId],
+      addRules: [
+        {
+          id: ruleId,
+          action: {
+            type: 'redirect',
+            redirect: {
+              url: browser.runtime.getURL('/blank') + `?id=${ruleId}`,
+            },
+          },
+          condition: {
+            initiatorDomains: [browser.runtime.id],
+            regexFilter: '.+',
+            resourceTypes: ['xmlhttprequest'],
+          },
+        },
+      ],
+    })
+  },
+  {
+    urls: ['*://*/*'],
+    types: ['xmlhttprequest'],
+  },
+)
+
+browser.webRequest.onBeforeRedirect.addListener(
+  details => {
+    const ruleId = stringHashCode(details.requestId)
+    const headers = details.responseHeaders ?? []
+
+    redirectStore[ruleId] = {
+      status: details.statusCode,
+      statusText: details.statusLine.split(/\s+/g).splice(-1, 1)[0],
+      headers: headers.map(({ name, value }) => ({ name, value: value ?? '' })),
+    }
+  },
+  {
+    urls: ['*://*/*'],
+    types: ['xmlhttprequest'],
+  },
+  ['responseHeaders', 'extraHeaders'],
+)
+
+const handleFetchResponseCompleted = async (
+  details:
+    | Parameters<
+        Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
+      >[0]
+    | Parameters<
+        Parameters<typeof browser.webRequest.onErrorOccurred['addListener']>[0]
+      >[0],
+) => {
+  const ruleId = stringHashCode(details.requestId)
+
+  if (ruleId in redirectStore) {
+    delete redirectStore[ruleId]
+  }
+
+  await browser.declarativeNetRequest.updateSessionRules({
+    removeRuleIds: [ruleId],
+  })
+}
+
+browser.webRequest.onCompleted.addListener(handleFetchResponseCompleted, {
+  urls: ['*://*/*'],
+  types: ['xmlhttprequest'],
+})
+browser.webRequest.onErrorOccurred.addListener(handleFetchResponseCompleted, {
+  urls: ['*://*/*'],
+  types: ['xmlhttprequest'],
+})
+
+/* Shortcut */
 
 browser.commands.onCommand.addListener(async command => {
   const tabs = await browser.tabs.query({ currentWindow: true, active: true })
