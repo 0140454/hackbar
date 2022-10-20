@@ -22,11 +22,6 @@
           />
         </div>
       </VCol>
-      <VCol cols="12" md="6">
-        <div style="padding: 11px 0 1px">
-          <VBtn :elevation="2"> Render response </VBtn>
-        </div>
-      </VCol>
     </VRow>
     <VRow>
       <VCol cols="12" md="6">
@@ -71,7 +66,7 @@ export default defineComponent({
       required: true,
     },
     response: {
-      type: Object as PropType<BrowseResponse | undefined>,
+      type: undefined as unknown as PropType<BrowseResponse | undefined>,
       required: true,
     },
   },
@@ -115,35 +110,6 @@ export default defineComponent({
           const isBodyEnabled = BodyAvailableMethods.includes(request.method)
           const scheme = parsedUrl.protocol.slice(0, -1).toUpperCase()
 
-          if (!headers.find(({ name }) => name.toLowerCase() == 'host')) {
-            headers.push({
-              name: 'Host',
-              value: parsedUrl.host,
-            })
-          }
-          if (
-            isBodyEnabled &&
-            !headers.find(({ name }) => name.toLowerCase() == 'content-type')
-          ) {
-            let contentType = request.body.enctype
-            const postInfo = bodyProcessors
-              .findByContentType(contentType)!
-              .parse(request.body.content)
-
-            if (Object.keys(postInfo.contentTypeArguments).length) {
-              contentType +=
-                '; ' +
-                Object.entries(postInfo.contentTypeArguments)
-                  .map(([name, value]) => `${name}=${value}`)
-                  .join('; ')
-            }
-
-            headers.push({
-              name: 'Content-Type',
-              value: contentType,
-            })
-          }
-
           rawRequest.scheme = supportedScheme.includes(scheme)
             ? scheme
             : defaultScheme
@@ -153,7 +119,7 @@ export default defineComponent({
             protocolVersion: 'HTTP/1.1',
             target: `${parsedUrl.pathname}${parsedUrl.search}`,
             host: parsedUrl.host,
-            headers: headers,
+            headers,
             body: {
               text: isBodyEnabled ? request.body.content : '',
             },
