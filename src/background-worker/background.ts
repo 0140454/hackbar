@@ -82,7 +82,7 @@ browser.runtime.onMessage.addListener(
   },
 )
 
-/* Request listener */
+/* Request recorder */
 
 const onBeforeRequestOptions: Array<browser.WebRequest.OnBeforeRequestOptions> =
   ['requestBody', chrome.webRequest.OnBeforeRequestOptions.EXTRA_HEADERS]
@@ -175,7 +175,7 @@ browser.tabs.onRemoved.addListener(tabId => {
   store.remove(tabId)
 })
 
-/* Shortcut */
+/* Shortcut handler */
 
 browser.commands.onCommand.addListener(async command => {
   const tabs = await browser.tabs.query({ currentWindow: true, active: true })

@@ -49,7 +49,21 @@ export class FetchRequestExecutor extends RequestExecutor {
   }
 
   setupModifyHeaderRuleCleaner(ruleId: number) {
-    const handler = async () => {
+    const handler = async (
+      details:
+        | Parameters<
+            Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
+          >[0]
+        | Parameters<
+            Parameters<
+              typeof browser.webRequest.onErrorOccurred['addListener']
+            >[0]
+          >[0],
+    ) => {
+      if (!isSelfOrigin(details.initiator)) {
+        return
+      }
+
       await browser.declarativeNetRequest.updateSessionRules({
         removeRuleIds: [ruleId],
       })
@@ -162,7 +176,18 @@ export class FetchRequestExecutor extends RequestExecutor {
       ['responseHeaders', 'extraHeaders'],
     )
 
-    const onErrorHandler = () => {
+    const onErrorHandler = (
+      details:
+        | Parameters<
+            Parameters<
+              typeof browser.webRequest.onErrorOccurred['addListener']
+            >[0]
+          >[0],
+    ) => {
+      if (!isSelfOrigin(details.initiator)) {
+        return
+      }
+
       browser.declarativeNetRequest.updateSessionRules({
         removeRuleIds: [ruleId],
       })
@@ -178,6 +203,9 @@ export class FetchRequestExecutor extends RequestExecutor {
     const requestInit: RequestInit = {
       method: this.request.method,
       cache: 'no-store',
+      credentials: 'omit',
+      keepalive: false,
+      referrerPolicy: 'no-referrer',
       ...(BodyAvailableMethods.includes(this.request.method)
         ? { body: this.request.body.content }
         : {}),
@@ -201,7 +229,8 @@ export class FetchRequestExecutor extends RequestExecutor {
         // ignored error
       } finally {
         if (isRedirected && contentLength > 0) {
-          body = '[Missed content of redirect response]'
+          body =
+            '[Content cannot be catched because it is a redirection response]'
         }
       }
 

@@ -97,6 +97,7 @@ export const DefaultSentRequestHeaders = [
   'Host',
   'Origin',
   'Pragma',
+  'Referer',
   'Sec-Ch-Ua-Mobile',
   'Sec-Ch-Ua-Platform',
   'Sec-Ch-Ua',
