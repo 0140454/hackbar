@@ -77,7 +77,7 @@ export default function (names: Array<string>): Plugin {
       options: NormalizedOutputOptions,
       bundle: OutputBundle,
     ) {
-      const removedImports = new Set<string>()
+      let removedImports = new Set<string>()
       const chunks = Object.values(bundle).filter(
         c => c.type === 'chunk' && names.includes(c.name),
       ) as Array<OutputChunk>
@@ -92,14 +92,27 @@ export default function (names: Array<string>): Plugin {
         chunk.importedBindings = {}
       }
 
-      for (const fileName of removedImports) {
-        const importers = Object.values(bundle).filter(
-          c => c.type === 'chunk' && c.imports.includes(fileName),
-        )
+      while (removedImports.size !== 0) {
+        const newRemovedImports = new Set<string>()
 
-        if (importers.length === 0) {
+        for (const fileName of removedImports) {
+          const importers = Object.values(bundle).filter(
+            c => c.type === 'chunk' && c.imports.includes(fileName),
+          )
+          if (importers.length !== 0) {
+            continue
+          }
+
+          const chunk = bundle[fileName] as OutputChunk
+          if (!chunk) {
+            continue
+          }
+
+          chunk.imports.forEach(newRemovedImports.add, newRemovedImports)
           delete bundle[fileName]
         }
+
+        removedImports = newRemovedImports
       }
     },
   }
