@@ -216,6 +216,10 @@ export default defineComponent({
     }
 
     const split = () => {
+      if (isRawMode.value) {
+        return
+      }
+
       request.url = request.url.replace(/[^\n][?&#]/g, str => {
         return str[0] + '\n' + str[1]
       })
