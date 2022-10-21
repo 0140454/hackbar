@@ -305,17 +305,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webextension-polyfill@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "@types/webextension-polyfill@npm:0.9.0"
-  checksum: 7e266d0bb08ccdb6d7f49e1312600ae7471cfce053dc5843a0309e1f58f98f4234ffead76473261fa34e03069f4da74c6ffa312ddbcf915c0229a869188dcc1c
+"@types/webextension-polyfill@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "@types/webextension-polyfill@npm:0.9.1"
+  checksum: 1d2d041f0f8d936649637ea5630fda0b65576d12a3a9de35e52e13d7f042dcf1098e5770252086b0f4f52213880c56f129446b2b4500a3687504269ba4e0231f
   languageName: node
   linkType: hard
 
-"@types/webextension-polyfill@patch:@types/webextension-polyfill@npm:^0.9.0#build/package-patches/@types-webextension-polyfill.patch::locator=HackBar%40workspace%3A.":
-  version: 0.9.0
-  resolution: "@types/webextension-polyfill@patch:@types/webextension-polyfill@npm%3A0.9.0#build/package-patches/@types-webextension-polyfill.patch::version=0.9.0&hash=be7ad6&locator=HackBar%40workspace%3A."
-  checksum: d02907c2e7db93dc6a83d65e823d7427967449717d83cb8569fdb8a2f24e13ed0083fd6eaa7b169e3bf841da325710d5a454f4668348d38092c52f40acdd802b
+"@types/webextension-polyfill@patch:@types/webextension-polyfill@npm:^0.9.1#build/package-patches/@types-webextension-polyfill.patch::locator=HackBar%40workspace%3A.":
+  version: 0.9.1
+  resolution: "@types/webextension-polyfill@patch:@types/webextension-polyfill@npm%3A0.9.1#build/package-patches/@types-webextension-polyfill.patch::version=0.9.1&hash=be7ad6&locator=HackBar%40workspace%3A."
+  checksum: a5e8172e822fe8a1b121b7e0ce7c42c206324e771db180963e6e986d539ca0613fb468212ab79d15e7e1b2e0e2bfc8ce109a93ad06e9c98c3ffd27aa4e1f56d7
   languageName: node
   linkType: hard
 
@@ -2331,6 +2331,15 @@ __metadata:
   dependencies:
     lodash: ^4.17.20
   checksum: d9cee1319b8a0311d64d2d33db26af93479f1ccafc627febb1e4887ed6ebaa7435bd1aad85a1753d466055cb4298f95a1d812a450d62ce35b4bf3e8899a3810d
+  languageName: node
+  linkType: hard
+
+"http-z@patch:http-z@npm:^6.1.2#build/package-patches/http-z.patch::locator=HackBar%40workspace%3A.":
+  version: 6.1.2
+  resolution: "http-z@patch:http-z@npm%3A6.1.2#build/package-patches/http-z.patch::version=6.1.2&hash=0d6cb3&locator=HackBar%40workspace%3A."
+  dependencies:
+    lodash: ^4.17.20
+  checksum: 88ae49b708988014fa2dbbb5d21fdcd0da3a067d982e6a406b9e9a632c59c8f0126aec29d564df8ea94623b2ecc0c830289dbe2299677f68c59c12acad313ac2
   languageName: node
   linkType: hard
 
