@@ -55,8 +55,9 @@
     "yarn-upgrade-all": "^0.7.1"
   },
   "resolutions": {
-    "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.0#build/package-patches/@types-webextension-polyfill.patch",
-    "curlconverter": "exec:build/package-generators/curlconverter.js"
+    "@types/webextension-polyfill": "patch:@types/webextension-polyfill@npm:^0.9.1#build/package-patches/@types-webextension-polyfill.patch",
+    "curlconverter": "exec:build/package-generators/curlconverter.js",
+    "http-z": "patch:http-z@npm:^6.1.2#build/package-patches/http-z.patch"
   },
   "packageManager": "yarn@3.2.1"
 }
