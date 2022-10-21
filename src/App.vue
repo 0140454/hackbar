@@ -28,7 +28,7 @@
       <MenuTest />
       <MenuSqli />
       <MenuXss />
-      <MenuLfi />
+      <MenuSsrf />
       <MenuSsti />
       <MenuShell />
       <MenuEncoding />
@@ -104,9 +104,9 @@ import DialogSqlInjectionSetting from './components/DialogSqlInjectionSetting.vu
 import DialogTestProgress from './components/DialogTestProgress.vue'
 import MenuEncoding from './components/MenuEncoding.vue'
 import MenuHashing from './components/MenuHashing.vue'
-import MenuLfi from './components/MenuLfi.vue'
 import MenuShell from './components/MenuShell.vue'
 import MenuSqli from './components/MenuSqli.vue'
+import MenuSsrf from './components/MenuSsrf.vue'
 import MenuSsti from './components/MenuSsti.vue'
 import MenuTest from './components/MenuTest.vue'
 import MenuXss from './components/MenuXss.vue'
@@ -137,7 +137,7 @@ export default defineComponent({
     MenuTest,
     MenuSqli,
     MenuXss,
-    MenuLfi,
+    MenuSsrf,
     MenuSsti,
     MenuShell,
     MenuEncoding,

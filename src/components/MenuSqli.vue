@@ -91,6 +91,10 @@
             title="Error-based injection statement"
             @click="applyFunction('Payload.SQLi.PostgreSQL.errorBased', true)"
           />
+          <VListItem
+            title="Command execution statement"
+            @click="applyFunction('Payload.SQLi.PostgreSQL.cmdExec', true)"
+          />
         </VList>
       </VMenu>
       <VMenu location="end" open-on-hover>
