@@ -2,13 +2,13 @@
   <VMenu>
     <template #activator="{ props }">
       <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
-        LFI
+        SSRF
       </VBtn>
     </template>
     <VList>
       <VListItem
-        title="PHP wrapper - Base64"
-        @click="applyFunction('Payload.LFI.phpWrapperBas64', true)"
+        title="AWS - IAM role name"
+        @click="applyFunction('Payload.SSRF.awsRoleName', true)"
       />
     </VList>
   </VMenu>
@@ -20,7 +20,7 @@ import { defineComponent, inject } from 'vue'
 import { ApplyFunctionKey } from '../utils/constants'
 
 export default defineComponent({
-  name: 'MenuLfi',
+  name: 'MenuSsrf',
   setup() {
     const applyFunction = inject(ApplyFunctionKey)!
 

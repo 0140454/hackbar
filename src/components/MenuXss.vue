@@ -65,30 +65,6 @@
         <template #activator="{ props }">
           <VListItem
             :append-icon="mdiChevronRight"
-            title="CTF Snippets"
-            v-bind="props"
-            @click.stop=""
-          />
-        </template>
-        <VList>
-          <VListItem
-            title="Get flag from '/flag'"
-            @click="applyFunction('Payload.XSS.snippets.getSamesiteFlag', true)"
-          />
-          <VListItem
-            title="Get flag from document.cookie"
-            @click="applyFunction('Payload.XSS.snippets.getCookieFlag', true)"
-          />
-          <VListItem
-            title="Get flag from localStorage.flag"
-            @click="applyFunction('Payload.XSS.snippets.getStorageFlag', true)"
-          />
-        </VList>
-      </VMenu>
-      <VMenu location="end" open-on-hover>
-        <template #activator="{ props }">
-          <VListItem
-            :append-icon="mdiChevronRight"
             title="HTML"
             v-bind="props"
             @click.stop=""
@@ -138,6 +114,30 @@
           <VListItem
             title="Decode"
             @click="applyFunction('Encode.CharCode.decode')"
+          />
+        </VList>
+      </VMenu>
+      <VMenu location="end" open-on-hover>
+        <template #activator="{ props }">
+          <VListItem
+            :append-icon="mdiChevronRight"
+            title="CTF Snippets"
+            v-bind="props"
+            @click.stop=""
+          />
+        </template>
+        <VList>
+          <VListItem
+            title="Get flag from '/flag'"
+            @click="applyFunction('Payload.XSS.snippets.getSamesiteFlag', true)"
+          />
+          <VListItem
+            title="Get flag from document.cookie"
+            @click="applyFunction('Payload.XSS.snippets.getCookieFlag', true)"
+          />
+          <VListItem
+            title="Get flag from localStorage.flag"
+            @click="applyFunction('Payload.XSS.snippets.getStorageFlag', true)"
           />
         </VList>
       </VMenu>
