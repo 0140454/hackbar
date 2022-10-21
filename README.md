@@ -30,13 +30,17 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - From tab (default)
   - From cURL command
 
-- Supported methods
+- Supported
 
-  - GET
-  - POST
-    - application/x-www-form-urlencoded
-    - [multipart/form-data](#multipartform-data)
-    - [application/json](#applicationjson)
+  - HTTP methods
+    - GET
+    - POST
+      - application/x-www-form-urlencoded
+      - [multipart/form-data](#multipartform-data)
+      - [application/json](#applicationjson)
+  - Request editing mode
+    - Basic
+    - Raw
 
 - Auto Test
 
@@ -61,9 +65,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Html encode/decode with hex/dec/entity name
   - String.fromCharCode encode/decode
 
-- LFI
+- SSRF
 
-  - PHP wrapper - Base64
+  - AWS - IAM role name
 
 - SSTI
 
@@ -109,7 +113,9 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 | Split       | `Alt + S` | `Control + S` |
 | Execute     | `Alt + X` | `Control + X` |
 
-### Supported enctype
+## Request editing mode
+
+### Basic mode
 
 #### multipart/form-data
 
@@ -130,7 +136,7 @@ Content-Type: application/x-httpd-php
 
 We will consider the first line as boundary, and reconstruct a form element to send your request.
 
-Therefore, sent boundary will not be the same as your typed.
+Therefore, sent boundary will not be the same as you typed.
 
 #### application/json
 
@@ -152,6 +158,18 @@ In order to post JSON data, we will insert a dummy field or object to your JSON 
 ```
 
 For more details, please visit "[Posting JSON with an HTML Form](https://systemoverlord.com/2016/08/24/posting-json-with-an-html-form.html)".
+
+### Raw mode
+
+This mode is implemented via `fetch` API. It will try the best to send a request as same as you typed.
+
+However, there are some limitations:
+
+- It is unable to use a specified HTTP protocol version.
+  > The protocol version is fixed to `HTTP/1.1` in the editor, but what version used in a request is up to `fetch` behavior.
+- Some HTTP headers may appear in a sent request even if you don't add them in the editor.<br/>
+  e.g. `Connection`, `Cache-Control`, `Pragma`, etc.
+  > These headers will be assigned a default value. For example, `Connection: keep-alive`, `Cache-Control: no-cache`.
 
 ## Third-party Libraries
 
