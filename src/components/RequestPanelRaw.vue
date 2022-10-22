@@ -213,7 +213,7 @@ export default defineComponent({
                 text: response.body,
               },
             } as any)
-            .replace(`${emptyReasonPhrase}`, '')
+            .replace(` ${emptyReasonPhrase}`, '')
         })
       },
       { deep: true },

@@ -77,7 +77,5 @@ export abstract class RequestExecutor {
 
   abstract setupEventHandlers(): Promise<void>
 
-  abstract sendRequest(): Promise<
-    DevtoolsExecuteMessage | DevtoolsErrorMessage | undefined
-  >
+  abstract sendRequest(): Promise<DevtoolsExecuteMessage | DevtoolsErrorMessage>
 }

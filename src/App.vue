@@ -66,6 +66,9 @@
         @focus="onFocus"
       />
     </VMain>
+    <VOverlay :model-value="isExecuting" class="align-center justify-center">
+      <VProgressCircular indeterminate size="64" />
+    </VOverlay>
     <DialogReloadPrompt v-model="reloadDialog" />
     <DialogRequestLoader
       v-if="requestLoaderDialog.show"
@@ -195,8 +198,9 @@ export default defineComponent({
       headers: [],
     })
     const response = ref<BrowseResponse>()
-    /* Mode */
+    /* Mode / Status */
     const isRawMode = ref(true)
+    const isExecuting = ref(false)
 
     /* Communication */
     let backgroundPageConnection: RuntimePort | null = null
@@ -230,7 +234,7 @@ export default defineComponent({
     }
 
     const execute = () => {
-      if (request.url.length === 0) {
+      if (request.url.length === 0 || isExecuting.value) {
         return
       }
 
@@ -242,6 +246,7 @@ export default defineComponent({
           request,
         },
       })
+      isExecuting.value = true
     }
 
     function isLoadMessage(
@@ -274,7 +279,7 @@ export default defineComponent({
       return m.type === 'test'
     }
 
-    const handleMessage = (message: DevtoolsFunctionMessage) => {
+    const handleMessage = async (message: DevtoolsFunctionMessage) => {
       if (isLoadMessage(message)) {
         if (!message.data) {
           reloadDialog.value.show = true
@@ -296,7 +301,10 @@ export default defineComponent({
         }
       } else if (isExecuteMessage(message)) {
         response.value = message.data
+        await nextTick()
+        isExecuting.value = false
       } else if (isErrorMessage(message)) {
+        isExecuting.value = false
         snackbar.value.text = message.data
         snackbar.value.show = true
       } else if (isTestMessage(message)) {
@@ -511,6 +519,7 @@ export default defineComponent({
       request,
       response,
       isRawMode,
+      isExecuting,
 
       load,
       split,
