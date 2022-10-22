@@ -24,9 +24,7 @@
               v-model="userInput"
               label="Command"
               :rows="3"
-              :rules="[
-                v => (!!v.length && !parsingError.length) || parsingError,
-              ]"
+              :rules="[v => !v.length || !parsingError.length || parsingError]"
               variant="underlined"
               auto-grow
               autofocus
@@ -101,10 +99,7 @@ export default defineComponent({
 
           parsingError.value = ''
         } catch (err) {
-          let errMessage = (err as Error).message
-          errMessage = errMessage.charAt(0).toUpperCase() + errMessage.slice(1)
-
-          parsingError.value = errMessage
+          parsingError.value = (err as Error).message
         }
 
         form.value?.validate()
