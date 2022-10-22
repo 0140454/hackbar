@@ -60,6 +60,7 @@ export abstract class RequestExecutor {
       ruleOptions['addRules'] = [
         {
           id: ruleId,
+          priority: 9999,
           action: {
             type: 'modifyHeaders',
             requestHeaders: modifyHeaderInfo,
