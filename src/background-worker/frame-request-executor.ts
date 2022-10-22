@@ -86,6 +86,13 @@ export class FrameRequestExecutor extends RequestExecutor {
       }
 
       return result
+    } else {
+      const result: DevtoolsExecuteMessage = {
+        type: 'execute',
+        data: undefined,
+      }
+
+      return result
     }
   }
 }
