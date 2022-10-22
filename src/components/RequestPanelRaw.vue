@@ -31,7 +31,7 @@
           :rows="1"
           variant="underlined"
           :rules="[
-            v => (!!v.length && !rawRequestError.length) || rawRequestError,
+            v => !v.length || !rawRequestError.length || rawRequestError,
           ]"
           auto-grow
           @focus="onFocus"
