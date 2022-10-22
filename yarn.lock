@@ -85,6 +85,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/roboto-mono@npm:^4.5.8":
+  version: 4.5.8
+  resolution: "@fontsource/roboto-mono@npm:4.5.8"
+  checksum: 0912b468ae5285d992f81f27c1b59dabf7a7a0a6ab050b5af38947985ba7fe776de8050b89361aa7c3c4730def2567cb305e83bd631d1a4c12791dda7faab21e
+  languageName: node
+  linkType: hard
+
 "@fontsource/roboto@npm:^4.5.8":
   version: 4.5.8
   resolution: "@fontsource/roboto@npm:4.5.8"
@@ -713,6 +720,7 @@ __metadata:
   dependencies:
     "@esbuild-plugins/node-modules-polyfill": ^0.1.4
     "@fontsource/roboto": ^4.5.8
+    "@fontsource/roboto-mono": ^4.5.8
     "@mdi/js": ^7.0.96
     "@rollup/plugin-commonjs": ^23.0.1
     "@rollup/plugin-virtual": ^3.0.0

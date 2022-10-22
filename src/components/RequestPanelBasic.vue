@@ -4,7 +4,7 @@
       ref="urlInput"
       v-model="request.url"
       auto-grow
-      class="pb-3"
+      class="pb-3 monospaced"
       hide-details
       label="URL"
       :rows="1"
@@ -37,6 +37,7 @@
         <VTextarea
           v-show="isBodyEnabled"
           v-model="request.body.content"
+          class="monospaced"
           :class="postControlWrapped ? 'pt-3' : 'pt-1'"
           label="Body"
           :rows="1"
@@ -68,6 +69,7 @@
               <VCombobox
                 v-model="header.name"
                 :items="commonRequestHeaders"
+                class="monospaced"
                 label="Name"
                 :menu-props="{ maxHeight: 200 }"
                 style="flex: 1 0"
@@ -77,7 +79,7 @@
               />
               <VTextField
                 v-model="header.value"
-                class="pl-2"
+                class="pl-2 monospaced"
                 style="flex: 1 0"
                 label="Value"
                 variant="underlined"

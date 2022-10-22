@@ -1,4 +1,5 @@
 @use './variables' as *;
+@use '@fontsource/roboto-mono/400.css' as *;
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -54,4 +55,8 @@ header {
 
 .ellipsis {
   @include ellipsis;
+}
+
+.monospaced .v-field__input {
+  font-family: 'Roboto Mono';
 }
