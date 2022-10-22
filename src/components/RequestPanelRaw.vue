@@ -13,7 +13,7 @@
           />
           <VTextField
             v-model="rawRequest.host"
-            class="pl-2"
+            class="pl-2 monospaced"
             label="Host"
             placeholder="example.com, example.com:8443, etc."
             variant="underlined"
@@ -27,6 +27,7 @@
       <VCol cols="12" md="6">
         <VTextarea
           v-model="rawRequest.content"
+          class="monospaced"
           label="Request"
           :rows="1"
           variant="underlined"
@@ -40,6 +41,7 @@
       <VCol cols="12" md="6">
         <VTextarea
           v-model="rawResponse"
+          class="monospaced"
           label="Response (readonly)"
           :rows="1"
           variant="underlined"
