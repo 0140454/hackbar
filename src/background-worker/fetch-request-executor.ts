@@ -214,6 +214,7 @@ export class FetchRequestExecutor extends RequestExecutor {
     try {
       const response = await fetch(this.request.url, requestInit)
       let body = await response.text()
+      await this.#waitResponseInfo()
 
       const finalUrl = new URL(response.url)
       const isRedirected = isSelfOrigin(finalUrl)
@@ -253,5 +254,18 @@ export class FetchRequestExecutor extends RequestExecutor {
 
       return result
     }
+  }
+
+  async #waitResponseInfo() {
+    return new Promise<void>(resolve => {
+      const timerId = setInterval(() => {
+        if (this.responseInfo.statusCode === 0) {
+          return
+        }
+
+        clearInterval(timerId)
+        resolve()
+      }, 1)
+    })
   }
 }
