@@ -126,7 +126,7 @@ interface DevtoolsLoadMessage extends DevtoolsFunctionMessage {
 
 interface DevtoolsExecuteMessage extends DevtoolsFunctionMessage {
   type: Extract<DevtoolsFunctionType, 'execute'>
-  data: BrowseResponse
+  data: BrowseResponse | undefined
 }
 
 interface DevtoolsCommandMessage extends DevtoolsFunctionMessage {

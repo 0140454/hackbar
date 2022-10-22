@@ -39,9 +39,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       : new FrameRequestExecutor(message.tabId, request)
     const result = await executor.execute()
 
-    if (result) {
-      store.getConnection(message.tabId)!.postMessage(result)
-    }
+    store.getConnection(message.tabId)!.postMessage(result)
   } else if (isTestMessage(message)) {
     if (message.data.action === 'start') {
       await browser.scripting.executeScript({
