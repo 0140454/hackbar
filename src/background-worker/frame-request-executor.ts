@@ -34,20 +34,15 @@ export class FrameRequestExecutor extends RequestExecutor {
 
   setupModifyHeaderRuleCleaner(ruleId: number) {
     const handler = async () => {
-      browser.webRequest.onBeforeRedirect.removeListener(handler)
-      browser.webRequest.onCompleted.removeListener(handler)
-      browser.webRequest.onErrorOccurred.removeListener(handler)
-
       await browser.declarativeNetRequest.updateSessionRules({
         removeRuleIds: [ruleId],
       })
+
+      browser.webRequest.onSendHeaders.removeListener(handler)
+      browser.webRequest.onErrorOccurred.removeListener(handler)
     }
 
-    browser.webRequest.onBeforeRedirect.addListener(handler, {
-      urls: ['*://*/*'],
-      types: ['main_frame'],
-    })
-    browser.webRequest.onCompleted.addListener(handler, {
+    browser.webRequest.onSendHeaders.addListener(handler, {
       urls: ['*://*/*'],
       types: ['main_frame'],
     })
@@ -58,7 +53,7 @@ export class FrameRequestExecutor extends RequestExecutor {
   }
 
   async setupEventHandlers() {
-    return undefined
+    return
   }
 
   async sendRequest() {

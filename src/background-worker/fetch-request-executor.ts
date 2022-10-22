@@ -5,9 +5,10 @@ import {
 } from '../utils/constants'
 import { isSelfOrigin } from '../utils/functions'
 import { RequestExecutor } from './request-executor'
-import store from './store'
 
 export class FetchRequestExecutor extends RequestExecutor {
+  static STATUS_CODE_UNKNOWN = -1
+
   responseInfo: Omit<BrowseResponse, 'body'>
 
   constructor(tabId: number, request: BrowseRequest) {
@@ -15,7 +16,7 @@ export class FetchRequestExecutor extends RequestExecutor {
 
     this.responseInfo = {
       protocolVersion: '',
-      statusCode: 0,
+      statusCode: FetchRequestExecutor.STATUS_CODE_UNKNOWN,
       statusMessage: '',
       headers: [],
     }
@@ -52,11 +53,8 @@ export class FetchRequestExecutor extends RequestExecutor {
     const handler = async (
       details:
         | Parameters<
-            Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
-          >[0]
-        | Parameters<
             Parameters<
-              typeof browser.webRequest.onErrorOccurred['addListener']
+              typeof browser.webRequest.onSendHeaders['addListener']
             >[0]
           >[0],
     ) => {
@@ -68,11 +66,11 @@ export class FetchRequestExecutor extends RequestExecutor {
         removeRuleIds: [ruleId],
       })
 
-      browser.webRequest.onCompleted.removeListener(handler)
+      browser.webRequest.onSendHeaders.removeListener(handler)
       browser.webRequest.onErrorOccurred.removeListener(handler)
     }
 
-    browser.webRequest.onCompleted.addListener(handler, {
+    browser.webRequest.onSendHeaders.addListener(handler, {
       urls: ['*://*/*'],
       types: ['xmlhttprequest'],
     })
@@ -83,45 +81,7 @@ export class FetchRequestExecutor extends RequestExecutor {
   }
 
   async setupEventHandlers() {
-    const ruleId = store.allocateRuleId()
-
-    const onBeforeRequestHandler = (
-      details: Parameters<
-        Parameters<typeof browser.webRequest.onBeforeRequest['addListener']>[0]
-      >[0],
-    ) => {
-      if (!isSelfOrigin(details.initiator)) {
-        return
-      }
-
-      browser.webRequest.onBeforeRequest.removeListener(onBeforeRequestHandler)
-
-      browser.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: [ruleId],
-        addRules: [
-          {
-            id: ruleId,
-            action: {
-              type: 'redirect',
-              redirect: {
-                url: browser.runtime.getURL('/blank'),
-              },
-            },
-            condition: {
-              initiatorDomains: [browser.runtime.id],
-              regexFilter: '.+',
-              resourceTypes: ['xmlhttprequest'],
-            },
-          },
-        ],
-      })
-    }
-    browser.webRequest.onBeforeRequest.addListener(onBeforeRequestHandler, {
-      urls: ['*://*/*'],
-      types: ['xmlhttprequest'],
-    })
-
-    const onFinishedHandler = (
+    const onFinishedHandler = async (
       details:
         | Parameters<
             Parameters<
@@ -136,9 +96,6 @@ export class FetchRequestExecutor extends RequestExecutor {
         return
       }
 
-      browser.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: [ruleId],
-      })
       browser.webRequest.onBeforeRedirect.removeListener(onFinishedHandler)
       browser.webRequest.onCompleted.removeListener(onFinishedHandler)
 
@@ -176,7 +133,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       ['responseHeaders', 'extraHeaders'],
     )
 
-    const onErrorHandler = (
+    const onErrorHandler = async (
       details:
         | Parameters<
             Parameters<
@@ -188,10 +145,14 @@ export class FetchRequestExecutor extends RequestExecutor {
         return
       }
 
-      browser.declarativeNetRequest.updateSessionRules({
-        removeRuleIds: [ruleId],
-      })
       browser.webRequest.onErrorOccurred.removeListener(onErrorHandler)
+
+      if (
+        this.responseInfo.statusCode ===
+        FetchRequestExecutor.STATUS_CODE_UNKNOWN
+      ) {
+        this.responseInfo.statusCode = 0
+      }
     }
     browser.webRequest.onErrorOccurred.addListener(onErrorHandler, {
       urls: ['*://*/*'],
@@ -205,6 +166,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       cache: 'no-store',
       credentials: 'omit',
       keepalive: false,
+      redirect: 'manual',
       referrerPolicy: 'no-referrer',
       ...(BodyAvailableMethods.includes(this.request.method)
         ? { body: this.request.body.content }
@@ -214,10 +176,9 @@ export class FetchRequestExecutor extends RequestExecutor {
     try {
       const response = await fetch(this.request.url, requestInit)
       let body = await response.text()
-      await this.#waitResponseInfo()
 
-      const finalUrl = new URL(response.url)
-      const isRedirected = isSelfOrigin(finalUrl)
+      await this.#waitResponseInfo()
+      const isRedirected = Math.trunc(this.responseInfo.statusCode / 100) == 3
 
       let contentLength = 0
       try {
@@ -231,7 +192,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       } finally {
         if (isRedirected && contentLength > 0) {
           body =
-            '[Content cannot be catched because it is a redirection response]'
+            '[Content cannot be recorded because it is a redirection response]'
         }
       }
 
@@ -259,7 +220,10 @@ export class FetchRequestExecutor extends RequestExecutor {
   async #waitResponseInfo() {
     return new Promise<void>(resolve => {
       const timerId = setInterval(() => {
-        if (this.responseInfo.statusCode === 0) {
+        if (
+          this.responseInfo.statusCode ===
+          FetchRequestExecutor.STATUS_CODE_UNKNOWN
+        ) {
           return
         }
 
