@@ -165,11 +165,18 @@ This mode is implemented via `fetch` API. It will try the best to send a request
 
 However, there are some limitations:
 
+**Request**
+
 - It is unable to use a specified HTTP protocol version.
   > The protocol version is fixed to `HTTP/1.1` in the editor, but what version used in a request is up to `fetch` behavior.
 - Some HTTP headers may appear in a sent request even if you don't add them in the editor.<br/>
   e.g. `Connection`, `Cache-Control`, `Pragma`, etc.
   > These headers will be assigned a default value. For example, `Connection: keep-alive`, `Cache-Control: no-cache`.
+
+**Response**
+
+- It always shows `HTTP/1.1` if used protocol version is higher than or equal to HTTP/2.
+  > See also [Chromium Code Search](https://source.chromium.org/chromium/chromium/src/+/main:net/spdy/spdy_http_utils.cc;l=53;bpv=1;bpt=0)
 
 ## Third-party Libraries
 
