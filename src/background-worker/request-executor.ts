@@ -49,7 +49,7 @@ export abstract class RequestExecutor {
   }
 
   async setupModifyHeaderRules() {
-    const ruleId = store.allocateRuleId()
+    const ruleId = await store.allocateRuleId()
     const modifyHeaderInfo = this.getModifyHeaderInfo()
     const modifyHeaderCondition = this.getModifyHeaderCondition()
     const ruleOptions: browser.DeclarativeNetRequest.UpdateRuleOptions = {
