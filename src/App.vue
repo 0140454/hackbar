@@ -196,6 +196,7 @@ export default defineComponent({
         enctype: bodyProcessors.getDefaultProcessorName(),
       },
       headers: [],
+      followRedirect: false,
     })
     const response = ref<BrowseResponse>()
     /* Mode / Status */
@@ -213,6 +214,7 @@ export default defineComponent({
     }
 
     const loadFrom = (source: BrowseRequest) => {
+      // Don' overwrite `followRedirect` since we want to keep user's choice.
       request.method = source.method
       request.url = source.url
       request.body = source.body

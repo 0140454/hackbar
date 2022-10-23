@@ -22,6 +22,16 @@
           />
         </div>
       </VCol>
+      <VCol cols="12" md="6">
+        <div class="d-flex">
+          <VSwitch
+            v-model="request.followRedirect"
+            :color="themeName === 'dark' ? 'white' : 'black'"
+            label="Follow redirection"
+            hide-details
+          />
+        </div>
+      </VCol>
     </VRow>
     <VRow>
       <VCol cols="12" md="6">
@@ -64,6 +74,7 @@
 <script lang="ts">
 import httpZ from 'http-z'
 import { PropType, defineComponent, nextTick, reactive, ref, watch } from 'vue'
+import { useTheme } from 'vuetify/framework'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
 
@@ -89,6 +100,8 @@ export default defineComponent({
       },
       { deep: true },
     )
+
+    const theme = useTheme()
 
     /* Constants */
     const supportedScheme = ['HTTPS', 'HTTP']
@@ -234,9 +247,12 @@ export default defineComponent({
     return {
       supportedScheme,
 
+      request,
       rawRequest,
       rawRequestError,
       rawResponse,
+
+      themeName: theme.global.name,
 
       onFocus,
     }
