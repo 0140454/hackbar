@@ -113,7 +113,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 | Split       | `Alt + S` | `Control + S` |
 | Execute     | `Alt + X` | `Control + X` |
 
-## Request editing mode
+## Request Editing
 
 ### Basic mode
 
