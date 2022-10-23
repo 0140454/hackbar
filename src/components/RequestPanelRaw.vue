@@ -28,7 +28,14 @@
         <VTextarea
           v-model="rawRequest.content"
           class="monospaced"
+          :hint="
+            [
+              'Protocol version in the editor will be fixed to HTTP/1.1, but it is actually decided by fetch API.',
+              'Furthermore, due to Chrome implementation, it always shows HTTP/1.1 in Response if used version is higher than or equal to HTTP/2.',
+            ].join(' ')
+          "
           label="Request"
+          persistent-hint
           :rows="1"
           variant="underlined"
           :rules="[
