@@ -12,3 +12,11 @@
 .v-tooltip .v-overlay__content {
   background: rgba(var(--v-theme-surface-variant), 0.95);
 }
+
+.v-text-field--flush-details .v-input__details {
+  padding: 8px 0 0;
+}
+
+.v-messages__message {
+  line-height: 14px;
+}
