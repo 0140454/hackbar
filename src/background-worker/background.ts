@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
+import { waitForTabComplete } from '../utils/functions'
 import { FetchRequestExecutor } from './fetch-request-executor'
 import { FrameRequestExecutor } from './frame-request-executor'
 import store from './store'
@@ -22,6 +23,12 @@ function isTestMessage(
   m: BackgroundFunctionMessage,
 ): m is BackgroundTestMessage {
   return m.type === 'test'
+}
+
+function isRenderMessage(
+  m: BackgroundFunctionMessage,
+): m is BackgroundRenderMessage {
+  return m.type === 'render'
 }
 
 /* Communication */
@@ -52,6 +59,12 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       })
     }
 
+    await browser.tabs.sendMessage(message.tabId, message.data)
+  } else if (isRenderMessage(message)) {
+    await browser.tabs.update(message.tabId, {
+      url: browser.runtime.getURL('render.html'),
+    })
+    await waitForTabComplete(message.tabId)
     await browser.tabs.sendMessage(message.tabId, message.data)
   }
 }

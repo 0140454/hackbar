@@ -23,9 +23,11 @@
         </div>
       </VCol>
       <VCol cols="12" md="6">
-        <div class="d-flex">
+        <div class="d-flex fill-height align-end">
           <VSwitch
             v-model="request.followRedirect"
+            class="flex-grow-0"
+            density="compact"
             :color="themeName === 'dark' ? 'white' : 'black'"
             label="Follow redirection"
             hide-details
@@ -56,17 +58,25 @@
           @focus="onFocus"
         />
       </VCol>
-      <VCol cols="12" md="6">
+      <VCol cols="12" md="6" style="position: relative">
         <VTextarea
           v-model="rawResponse"
           class="monospaced"
-          label="Response (readonly)"
+          label="Response"
           :rows="1"
           variant="underlined"
           auto-grow
           hide-details
           readonly
         />
+        <VBtn
+          v-if="response && rawResponse"
+          :class="$style.renderBtn"
+          variant="plain"
+          @click="renderResponse"
+        >
+          Render
+        </VBtn>
       </VCol>
     </VRow>
   </VContainer>
@@ -92,7 +102,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:modelValue', 'focus'],
+  emits: ['update:modelValue', 'focus', 'render'],
   setup(props, { emit }) {
     const request = reactive(props.modelValue)
     watch(
@@ -244,6 +254,11 @@ export default defineComponent({
       { deep: true },
     )
 
+    /* Functionality */
+    const renderResponse = () => {
+      emit('render')
+    }
+
     /* Events */
     const onFocus = (event: FocusEvent) => {
       emit('focus', event)
@@ -271,6 +286,8 @@ export default defineComponent({
 
       themeName: theme.global.name,
 
+      renderResponse,
+
       onFocus,
 
       focus,
@@ -279,4 +296,10 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.renderBtn {
+  position: absolute;
+  right: 12px;
+  top: 22px;
+}
+</style>

@@ -56,7 +56,7 @@ type TestRequest = {
   argument: any
 }
 
-type BackgroundFunctionType = 'init' | 'load' | 'execute' | 'test'
+type BackgroundFunctionType = 'init' | 'load' | 'execute' | 'test' | 'render'
 
 interface BackgroundFunctionMessage {
   tabId: number
@@ -84,6 +84,11 @@ interface BackgroundTestMessage extends BackgroundFunctionMessage {
   data: TestRequest
 }
 
+interface BackgroundRenderMessage extends BackgroundFunctionMessage {
+  type: Extract<BackgroundFunctionType, 'render'>
+  data: BrowseResponse
+}
+
 /* Response */
 
 type HttpHeader = {
@@ -95,6 +100,7 @@ type BrowseResponse = {
   protocolVersion: string
   statusCode: number
   statusMessage: string
+  baseUrl: string
   headers: Array<HttpHeader>
   body: string
 }

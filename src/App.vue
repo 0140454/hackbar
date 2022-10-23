@@ -70,6 +70,7 @@
         v-model="request"
         :response="response"
         @focus="onFocus"
+        @render="onRenderRequested"
       />
     </VMain>
     <VOverlay :model-value="isExecuting" class="align-center justify-center">
@@ -136,7 +137,8 @@ type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
       | BackgroundInitMessage
       | BackgroundLoadMessage
       | BackgroundExecuteMessage
-      | BackgroundTestMessage,
+      | BackgroundTestMessage
+      | BackgroundRenderMessage,
   ): void
 }
 
@@ -518,6 +520,18 @@ export default defineComponent({
       appBar.value!.$el.scrollLeft += event.deltaY
     }
 
+    const onRenderRequested = () => {
+      if (!response.value) {
+        return
+      }
+
+      backgroundPageConnection!.postMessage({
+        tabId: browser.devtools.inspectedWindow.tabId,
+        type: 'render',
+        data: response.value,
+      })
+    }
+
     return {
       mdiMenuDown,
 
@@ -544,6 +558,7 @@ export default defineComponent({
       enableDarkTheme,
       onFocus,
       onScrollAppBar,
+      onRenderRequested,
     }
   },
 })
