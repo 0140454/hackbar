@@ -18,6 +18,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       protocolVersion: '',
       statusCode: FetchRequestExecutor.STATUS_CODE_UNKNOWN,
       statusMessage: '',
+      baseUrl: '',
       headers: [],
     }
   }
@@ -89,6 +90,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       const statusLineComponents = details.statusLine.split(' ')
       const protocolVersion = statusLineComponents[0]
       const statusMessage = statusLineComponents.splice(2).join(' ')
+      const baseUrl = new URL(details.url).origin
       const headers = (details.responseHeaders ?? []).map(
         ({ name, value }) => ({
           name,
@@ -100,6 +102,7 @@ export class FetchRequestExecutor extends RequestExecutor {
         protocolVersion,
         statusCode: details.statusCode,
         statusMessage,
+        baseUrl,
         headers,
       }
     }
@@ -230,6 +233,7 @@ export class FetchRequestExecutor extends RequestExecutor {
           protocolVersion: this.responseInfo.protocolVersion,
           statusCode: this.responseInfo.statusCode,
           statusMessage: this.responseInfo.statusMessage,
+          baseUrl: this.responseInfo.baseUrl,
           headers: this.responseInfo.headers,
           body,
         },
