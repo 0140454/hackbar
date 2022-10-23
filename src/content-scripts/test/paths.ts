@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import { sleep } from '../../utils/functions'
 
 /*
  * The following are about the messages sent from devtools.
@@ -97,10 +98,6 @@ let state = RUNNING
 let controller: AbortController | null = null
 
 /* Helpers */
-
-const sleep = (ms: number) => {
-  return new Promise(resolve => window.setTimeout(resolve, ms))
-}
 
 const wait = async () => {
   do {

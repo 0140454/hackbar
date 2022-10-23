@@ -27,10 +27,12 @@ function isTestMessage(
 /* Communication */
 
 const handleMessage = async (message: BackgroundFunctionMessage) => {
+  const connection = (await store.getConnection(message.tabId))!
+
   if (isLoadMessage(message)) {
-    store.getConnection(message.tabId)!.postMessage({
+    connection.postMessage({
       type: 'load',
-      data: store.getBrowseRequest(message.tabId),
+      data: await store.getBrowseRequest(message.tabId),
     })
   } else if (isExecuteMessage(message)) {
     const { rawMode: isRawMode, request } = message.data
@@ -39,7 +41,7 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
       : new FrameRequestExecutor(message.tabId, request)
     const result = await executor.execute()
 
-    store.getConnection(message.tabId)!.postMessage(result)
+    connection.postMessage(result)
   } else if (isTestMessage(message)) {
     if (message.data.action === 'start') {
       await browser.scripting.executeScript({
@@ -55,8 +57,8 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 }
 
 browser.runtime.onConnect.addListener(devToolsConnection => {
-  const devToolsListener = (message: BackgroundFunctionMessage) => {
-    store.updateConnection(message.tabId, devToolsConnection)
+  const devToolsListener = async (message: BackgroundFunctionMessage) => {
+    await store.updateConnection(message.tabId, devToolsConnection)
     handleMessage(message)
   }
 
@@ -67,12 +69,14 @@ browser.runtime.onConnect.addListener(devToolsConnection => {
 })
 
 browser.runtime.onMessage.addListener(
-  (
+  async (
     message: DevtoolsTestMessage['data'],
     sender: browser.Runtime.MessageSender,
   ) => {
     if (sender.tab?.id) {
-      store.getConnection(sender.tab.id)!.postMessage({
+      const connection = (await store.getConnection(sender.tab.id))!
+
+      connection.postMessage({
         type: 'test',
         data: message,
       })
@@ -140,27 +144,27 @@ const onBeforeSendHeadersOptions: Array<browser.WebRequest.OnBeforeSendHeadersOp
   ['requestHeaders', chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS]
 browser.webRequest.onBeforeSendHeaders.addListener(
   details => {
-    const request = store.getBrowseRequest(details.tabId)!
+    store.getBrowseRequest(details.tabId).then(request => {
+      details.requestHeaders?.forEach(({ name, value }, idx) => {
+        request!.headers.push({
+          enabled: true,
+          name,
+          value: value ?? '',
+          removeIfEmptyValue: false,
+          _createdAt: Date.now() * 1000 + idx,
+        })
 
-    details.requestHeaders?.forEach(({ name, value }, idx) => {
-      request.headers.push({
-        enabled: true,
-        name,
-        value: value ?? '',
-        removeIfEmptyValue: false,
-        _createdAt: Date.now() * 1000 + idx,
+        if (name.toLowerCase() === 'content-type') {
+          const processor =
+            bodyProcessors.findByContentType(value ?? '') ??
+            bodyProcessors.getDefaultProcessor()
+
+          request!.body.enctype = processor.getName()
+        }
       })
 
-      if (name.toLowerCase() === 'content-type') {
-        const processor =
-          bodyProcessors.findByContentType(value ?? '') ??
-          bodyProcessors.getDefaultProcessor()
-
-        request.body.enctype = processor.getName()
-      }
+      store.updateBrowseRequest(details.tabId, request)
     })
-
-    store.updateBrowseRequest(details.tabId, request)
   },
   {
     urls: ['*://*/*'],
@@ -169,8 +173,8 @@ browser.webRequest.onBeforeSendHeaders.addListener(
   onBeforeSendHeadersOptions.filter(Boolean),
 )
 
-browser.tabs.onRemoved.addListener(tabId => {
-  store.remove(tabId)
+browser.tabs.onRemoved.addListener(async tabId => {
+  await store.remove(tabId)
 })
 
 /* Shortcut handler */
@@ -183,7 +187,7 @@ browser.commands.onCommand.addListener(async command => {
     return
   }
 
-  const connection = store.getConnection(tabId)
+  const connection = await store.getConnection(tabId)
   if (!connection) {
     return
   }
