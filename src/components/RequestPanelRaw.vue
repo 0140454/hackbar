@@ -36,6 +36,7 @@
     <VRow>
       <VCol cols="12" md="6">
         <VTextarea
+          ref="rawRequestInput"
           v-model="rawRequest.content"
           class="monospaced"
           :hint="
@@ -74,6 +75,7 @@
 <script lang="ts">
 import httpZ from 'http-z'
 import { PropType, defineComponent, nextTick, reactive, ref, watch } from 'vue'
+import { VTextarea } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
@@ -106,6 +108,9 @@ export default defineComponent({
     /* Constants */
     const supportedScheme = ['HTTPS', 'HTTP']
     const defaultScheme = supportedScheme[0]
+
+    /* DOM element and refs */
+    const rawRequestInput = ref<InstanceType<typeof VTextarea>>()
 
     /* Request / Response */
     const rawRequest = reactive({
@@ -244,8 +249,20 @@ export default defineComponent({
       emit('focus', event)
     }
 
+    /* Misc */
+    const focus = () => {
+      nextTick(() => {
+        const dom =
+          rawRequestInput.value!.$el.getElementsByTagName('textarea')[0]
+        dom.setSelectionRange(0, 0)
+        dom.focus()
+      })
+    }
+
     return {
       supportedScheme,
+
+      rawRequestInput,
 
       request,
       rawRequest,
@@ -255,6 +272,8 @@ export default defineComponent({
       themeName: theme.global.name,
 
       onFocus,
+
+      focus,
     }
   },
 })
