@@ -213,6 +213,11 @@ export default defineComponent({
       emit('focus', event)
     }
 
+    /* Misc */
+    const focus = () => {
+      urlInput.value!.$el.getElementsByTagName('textarea')[0].focus()
+    }
+
     return {
       mdiClose,
       mdiSync,
@@ -234,6 +239,8 @@ export default defineComponent({
       deleteHeader,
 
       onFocus,
+
+      focus,
     }
   },
 })
