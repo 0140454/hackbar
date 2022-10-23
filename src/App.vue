@@ -58,9 +58,15 @@
       </VMenu>
     </VAppBar>
     <VMain>
-      <RequestPanelBasic v-if="!isRawMode" v-model="request" @focus="onFocus" />
+      <RequestPanelBasic
+        v-if="!isRawMode"
+        ref="requestPanel"
+        v-model="request"
+        @focus="onFocus"
+      />
       <RequestPanelRaw
         v-else
+        ref="requestPanel"
         v-model="request"
         :response="response"
         @focus="onFocus"
@@ -157,6 +163,8 @@ export default defineComponent({
     /* DOM element and refs */
     let domFocusedInput: HTMLInputElement | null = null
     const appBar = ref<InstanceType<typeof VAppBar>>()
+    const requestPanel =
+      ref<InstanceType<typeof RequestPanelBasic | typeof RequestPanelRaw>>()
 
     /* Dialog */
     const reloadDialog = ref({
@@ -203,6 +211,10 @@ export default defineComponent({
     const isRawMode = ref(true)
     const isExecuting = ref(false)
 
+    watch(isRawMode, () => {
+      domFocusedInput = null
+    })
+
     /* Communication */
     let backgroundPageConnection: RuntimePort | null = null
 
@@ -219,6 +231,8 @@ export default defineComponent({
       request.url = source.url
       request.body = source.body
       request.headers = source.headers
+
+      requestPanel.value!.focus()
     }
 
     const split = () => {
@@ -508,6 +522,7 @@ export default defineComponent({
       mdiMenuDown,
 
       appBar,
+      requestPanel,
 
       theme,
 
