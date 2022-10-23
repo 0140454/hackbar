@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import { sleep } from '../utils/functions'
 
 type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
   postMessage(
@@ -12,6 +13,7 @@ type RuntimePort = Omit<browser.Runtime.Port, 'postMessage'> & {
 }
 
 class Store {
+  #isInitialized: boolean
   #records: Record<
     number,
     {
@@ -24,20 +26,25 @@ class Store {
   #encoder: TextEncoder
 
   constructor() {
+    this.#isInitialized = false
     this.#records = {}
     this.#ruleId = 1
     this.#encoder = new TextEncoder()
     this.#load()
   }
 
-  allocateRuleId() {
+  async allocateRuleId() {
+    await this.#waitForInitialized()
+
     const result = this.#ruleId++
 
-    this.#sync()
+    await this.#sync()
     return result
   }
 
-  updateConnection(tabId: number, connection: RuntimePort) {
+  async updateConnection(tabId: number, connection: RuntimePort) {
+    await this.#waitForInitialized()
+
     const tabData = this.#records[tabId] || {}
 
     tabData.connection = connection
@@ -45,28 +52,36 @@ class Store {
     this.#records[tabId] = tabData
   }
 
-  getConnection(tabId: number) {
+  async getConnection(tabId: number) {
+    await this.#waitForInitialized()
+
     return this.#records[tabId]?.connection
   }
 
-  updateBrowseRequest(tabId: number, request: BrowseRequest | undefined) {
+  async updateBrowseRequest(tabId: number, request: BrowseRequest | undefined) {
+    await this.#waitForInitialized()
+
     const tabData = this.#records[tabId] || {}
 
     tabData.request = request
     tabData._updatedAt = Date.now()
     this.#records[tabId] = tabData
 
-    this.#sync()
+    await this.#sync()
   }
 
-  getBrowseRequest(tabId: number) {
+  async getBrowseRequest(tabId: number) {
+    await this.#waitForInitialized()
+
     return this.#records[tabId]?.request
   }
 
-  remove(tabId: number) {
+  async remove(tabId: number) {
+    await this.#waitForInitialized()
+
     delete this.#records[tabId]
 
-    this.#sync()
+    await this.#sync()
   }
 
   async #sync() {
@@ -115,6 +130,13 @@ class Store {
     }
 
     this.#ruleId = data.ruleId || this.#ruleId
+    this.#isInitialized = true
+  }
+
+  async #waitForInitialized() {
+    while (!this.#isInitialized) {
+      sleep(1)
+    }
   }
 }
 
