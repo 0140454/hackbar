@@ -17,11 +17,12 @@
           <VSwitch
             ref="postEnabledSwitch"
             v-model="isBodyEnabled"
-            :class="$style.postSwitch"
+            class="flex-grow-0"
             :color="themeName === 'dark' ? 'white' : 'black'"
             label="Use POST method"
             hide-details
           />
+          <VSpacer />
           <VSelect
             v-show="isBodyEnabled"
             ref="enctypeSelect"
@@ -246,8 +247,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" module>
-.postSwitch :global .v-selection-control .v-label {
-  width: unset;
-}
-</style>
+<style lang="scss" module></style>
