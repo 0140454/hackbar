@@ -131,6 +131,7 @@ browser.webRequest.onBeforeRequest.addListener(
       body,
       method: details.method.toUpperCase(),
       headers: [], // Ignored in UI
+      followRedirect: false, // Ignored in UI
     })
   },
   {

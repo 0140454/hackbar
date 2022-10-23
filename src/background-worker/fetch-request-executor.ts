@@ -81,24 +81,11 @@ export class FetchRequestExecutor extends RequestExecutor {
   }
 
   async setupEventHandlers() {
-    const onFinishedHandler = async (
+    const updateResponseInfo = (
       details:
-        | Parameters<
-            Parameters<
-              typeof browser.webRequest.onBeforeRedirect['addListener']
-            >[0]
-          >[0]
-        | Parameters<
-            Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
-          >[0],
+        | browser.WebRequest.OnBeforeRedirectDetailsType
+        | browser.WebRequest.OnCompletedDetailsType,
     ) => {
-      if (!isSelfOrigin(details.initiator)) {
-        return
-      }
-
-      browser.webRequest.onBeforeRedirect.removeListener(onFinishedHandler)
-      browser.webRequest.onCompleted.removeListener(onFinishedHandler)
-
       const statusLineComponents = details.statusLine.split(' ')
       const protocolVersion = statusLineComponents[0]
       const statusMessage = statusLineComponents.splice(2).join(' ')
@@ -116,16 +103,27 @@ export class FetchRequestExecutor extends RequestExecutor {
         headers,
       }
     }
+
+    const onBeforeRedirectHandler = async (
+      details:
+        | Parameters<
+            Parameters<
+              typeof browser.webRequest.onBeforeRedirect['addListener']
+            >[0]
+          >[0],
+    ) => {
+      if (!isSelfOrigin(details.initiator)) {
+        return
+      }
+
+      browser.webRequest.onBeforeRedirect.removeListener(
+        onBeforeRedirectHandler,
+      )
+
+      updateResponseInfo(details)
+    }
     browser.webRequest.onBeforeRedirect.addListener(
-      onFinishedHandler,
-      {
-        urls: ['*://*/*'],
-        types: ['xmlhttprequest'],
-      },
-      ['responseHeaders', 'extraHeaders'],
-    )
-    browser.webRequest.onCompleted.addListener(
-      onFinishedHandler,
+      onBeforeRedirectHandler,
       {
         urls: ['*://*/*'],
         types: ['xmlhttprequest'],
@@ -133,7 +131,33 @@ export class FetchRequestExecutor extends RequestExecutor {
       ['responseHeaders', 'extraHeaders'],
     )
 
-    const onErrorHandler = async (
+    const onCompletedHandler = async (
+      details:
+        | Parameters<
+            Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
+          >[0],
+    ) => {
+      if (!isSelfOrigin(details.initiator)) {
+        return
+      }
+
+      browser.webRequest.onBeforeRedirect.removeListener(
+        onBeforeRedirectHandler,
+      )
+      browser.webRequest.onCompleted.removeListener(onCompletedHandler)
+
+      updateResponseInfo(details)
+    }
+    browser.webRequest.onCompleted.addListener(
+      onCompletedHandler,
+      {
+        urls: ['*://*/*'],
+        types: ['xmlhttprequest'],
+      },
+      ['responseHeaders', 'extraHeaders'],
+    )
+
+    const onErrorOccurredHandler = async (
       details:
         | Parameters<
             Parameters<
@@ -145,7 +169,11 @@ export class FetchRequestExecutor extends RequestExecutor {
         return
       }
 
-      browser.webRequest.onErrorOccurred.removeListener(onErrorHandler)
+      browser.webRequest.onBeforeRedirect.removeListener(
+        onBeforeRedirectHandler,
+      )
+      browser.webRequest.onCompleted.removeListener(onCompletedHandler)
+      browser.webRequest.onErrorOccurred.removeListener(onErrorOccurredHandler)
 
       if (
         this.responseInfo.statusCode ===
@@ -154,7 +182,7 @@ export class FetchRequestExecutor extends RequestExecutor {
         this.responseInfo.statusCode = 0
       }
     }
-    browser.webRequest.onErrorOccurred.addListener(onErrorHandler, {
+    browser.webRequest.onErrorOccurred.addListener(onErrorOccurredHandler, {
       urls: ['*://*/*'],
       types: ['xmlhttprequest'],
     })
@@ -166,7 +194,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       cache: 'no-store',
       credentials: 'omit',
       keepalive: false,
-      redirect: 'manual',
+      redirect: this.request.followRedirect ? 'follow' : 'manual',
       referrerPolicy: 'no-referrer',
       ...(BodyAvailableMethods.includes(this.request.method)
         ? { body: this.request.body.content }

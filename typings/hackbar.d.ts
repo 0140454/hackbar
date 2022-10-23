@@ -22,6 +22,7 @@ type BrowseRequest = {
     content: string
   }
   headers: Array<Header>
+  followRedirect: boolean // Only used in Raw mode
 }
 
 type PostFile = {

@@ -161,6 +161,7 @@ export default defineComponent({
             _createdAt: Date.now() * 1000 + idx,
           }),
         ),
+        followRedirect: false,
       }
 
       shown.value = false
