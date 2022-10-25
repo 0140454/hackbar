@@ -73,7 +73,11 @@
         @render="onRenderRequested"
       />
     </VMain>
-    <VOverlay :model-value="isExecuting" class="align-center justify-center">
+    <VOverlay
+      :model-value="isExecuting"
+      class="align-center justify-center"
+      persistent
+    >
       <VProgressCircular indeterminate size="64" />
     </VOverlay>
     <DialogReloadPrompt v-model="reloadDialog" />
