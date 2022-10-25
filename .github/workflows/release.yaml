@@ -16,7 +16,7 @@ jobs:
           script: |
             const ref = '${{ github.ref }}'
 
-            const isPrerelease = /beta/.test(ref)
+            const isPrerelease = /beta|rc/.test(ref)
 
             core.exportVariable('IS_PRERELEASE', isPrerelease)
       - name: Checkout code
