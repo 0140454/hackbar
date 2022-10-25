@@ -18,6 +18,7 @@
             placeholder="example.com, example.com:8443, etc."
             variant="underlined"
             hide-details
+            @blur="onBlur"
             @focus="onFocus"
           />
         </div>
@@ -27,7 +28,6 @@
           <VSwitch
             v-model="request.followRedirect"
             class="flex-grow-0"
-            density="compact"
             :color="themeName === 'dark' ? 'white' : 'black'"
             label="Follow redirection"
             hide-details
@@ -55,6 +55,7 @@
             v => !v.length || !rawRequestError.length || rawRequestError,
           ]"
           auto-grow
+          @blur="onBlur"
           @focus="onFocus"
         />
       </VCol>
@@ -132,44 +133,47 @@ export default defineComponent({
     const rawResponse = ref('')
 
     /* Converter */
-    watch(
-      props.modelValue,
-      request => {
-        if (!request.url.trim()) {
-          return
-        }
+    let isEditing = false
 
-        try {
-          const parsedUrl = new URL(request.url)
-          const headers = request.headers
-            .filter(({ enabled }) => enabled)
-            .map(({ name, value }) => ({ name, value }))
-          const isBodyEnabled = BodyAvailableMethods.includes(request.method)
-          const scheme = parsedUrl.protocol.slice(0, -1).toUpperCase()
+    const requestWatcher = (request: BrowseRequest) => {
+      if (!request.url.trim()) {
+        return
+      }
 
+      try {
+        const parsedUrl = new URL(request.url)
+        const headers = request.headers
+          .filter(({ enabled }) => enabled)
+          .map(({ name, value }) => ({ name, value }))
+        const isBodyEnabled = BodyAvailableMethods.includes(request.method)
+        const scheme = parsedUrl.protocol.slice(0, -1).toUpperCase()
+
+        const builtRawRequest = httpZ.build({
+          method: request.method,
+          protocolVersion: 'HTTP/1.1',
+          target: `${parsedUrl.pathname}${parsedUrl.search}`,
+          host: parsedUrl.host,
+          headers,
+          body: {
+            text: isBodyEnabled ? request.body.content : '',
+          },
+        } as any)
+
+        if (!isEditing) {
           rawRequest.scheme = supportedScheme.includes(scheme)
             ? scheme
             : defaultScheme
           rawRequest.host = parsedUrl.host
-          rawRequest.content = httpZ.build({
-            method: request.method,
-            protocolVersion: 'HTTP/1.1',
-            target: `${parsedUrl.pathname}${parsedUrl.search}`,
-            host: parsedUrl.host,
-            headers,
-            body: {
-              text: isBodyEnabled ? request.body.content : '',
-            },
-          } as any)
-
-          rawResponse.value = ''
-          rawRequestError.value = ''
-        } catch (error) {
-          rawRequestError.value = (error as Error).message
+          rawRequest.content = builtRawRequest
         }
-      },
-      { deep: true, immediate: true },
-    )
+
+        rawResponse.value = ''
+        rawRequestError.value = ''
+      } catch (error) {
+        rawRequestError.value = (error as Error).message
+      }
+    }
+    watch(props.modelValue, requestWatcher, { deep: true, immediate: true })
 
     watch(
       rawRequest,
@@ -260,7 +264,13 @@ export default defineComponent({
     }
 
     /* Events */
+    const onBlur = () => {
+      isEditing = false
+      requestWatcher(props.modelValue)
+    }
+
     const onFocus = (event: FocusEvent) => {
+      isEditing = true
       emit('focus', event)
     }
 
@@ -289,6 +299,7 @@ export default defineComponent({
       renderResponse,
 
       onFocus,
+      onBlur,
 
       focus,
     }
