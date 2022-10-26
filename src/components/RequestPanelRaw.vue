@@ -59,7 +59,7 @@
           @focus="onFocus"
         />
       </VCol>
-      <VCol cols="12" md="6" style="position: relative">
+      <VCol :class="$style.responseArea" cols="12" md="6">
         <VTextarea
           v-model="rawResponse"
           class="monospaced"
@@ -308,6 +308,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.responseArea {
+  position: relative;
+}
+
 .renderBtn {
   position: absolute;
   right: 12px;

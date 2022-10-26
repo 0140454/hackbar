@@ -135,7 +135,7 @@ class Store {
 
   async #waitForInitialized() {
     while (!this.#isInitialized) {
-      sleep(1)
+      await sleep(1)
     }
   }
 }
