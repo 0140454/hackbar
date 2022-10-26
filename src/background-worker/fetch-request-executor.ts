@@ -3,7 +3,7 @@ import {
   BodyAvailableMethods,
   DefaultSentRequestHeaders,
 } from '../utils/constants'
-import { isSelfOrigin } from '../utils/functions'
+import { isSelfOrigin, sleep } from '../utils/functions'
 import { RequestExecutor } from './request-executor'
 
 export class FetchRequestExecutor extends RequestExecutor {
@@ -250,18 +250,10 @@ export class FetchRequestExecutor extends RequestExecutor {
   }
 
   async #waitResponseInfo() {
-    return new Promise<void>(resolve => {
-      const timerId = setInterval(() => {
-        if (
-          this.responseInfo.statusCode ===
-          FetchRequestExecutor.STATUS_CODE_UNKNOWN
-        ) {
-          return
-        }
-
-        clearInterval(timerId)
-        resolve()
-      }, 1)
-    })
+    while (
+      this.responseInfo.statusCode === FetchRequestExecutor.STATUS_CODE_UNKNOWN
+    ) {
+      await sleep(1)
+    }
   }
 }
