@@ -100,6 +100,7 @@ type BrowseResponse = {
   protocolVersion: string
   statusCode: number
   statusMessage: string
+  url: string
   baseUrl: string
   headers: Array<HttpHeader>
   body: string

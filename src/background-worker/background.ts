@@ -61,9 +61,31 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
     await browser.tabs.sendMessage(message.tabId, message.data)
   } else if (isRenderMessage(message)) {
-    await browser.tabs.update(message.tabId, {
-      url: browser.runtime.getURL('render.html'),
-    })
+    if (message.data.url.endsWith('solution1.php')) {
+      await browser.scripting.executeScript({
+        target: {
+          tabId: message.tabId,
+          allFrames: true,
+        },
+        files: ['core/render.js'],
+      })
+    } else if (message.data.url.endsWith('solution2.php')) {
+      await browser.tabs.update(message.tabId, {
+        url: 'about:blank',
+      })
+      await waitForTabComplete(message.tabId)
+      await browser.scripting.executeScript({
+        target: {
+          tabId: message.tabId,
+          allFrames: true,
+        },
+        files: ['core/render.js'],
+      })
+    } else {
+      await browser.tabs.update(message.tabId, {
+        url: browser.runtime.getURL('render.html'),
+      })
+    }
     await waitForTabComplete(message.tabId)
     await browser.tabs.sendMessage(message.tabId, message.data)
   }

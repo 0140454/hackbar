@@ -18,6 +18,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       protocolVersion: '',
       statusCode: FetchRequestExecutor.STATUS_CODE_UNKNOWN,
       statusMessage: '',
+      url: '',
       baseUrl: '',
       headers: [],
     }
@@ -102,6 +103,7 @@ export class FetchRequestExecutor extends RequestExecutor {
         protocolVersion,
         statusCode: details.statusCode,
         statusMessage,
+        url: details.url,
         baseUrl,
         headers,
       }
@@ -233,6 +235,7 @@ export class FetchRequestExecutor extends RequestExecutor {
           protocolVersion: this.responseInfo.protocolVersion,
           statusCode: this.responseInfo.statusCode,
           statusMessage: this.responseInfo.statusMessage,
+          url: this.responseInfo.url,
           baseUrl: this.responseInfo.baseUrl,
           headers: this.responseInfo.headers,
           body,
