@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js'
 import browser from 'webextension-polyfill'
 
 export function isSelfOrigin(val: string | URL | undefined) {
@@ -37,4 +38,10 @@ export async function waitForTabComplete(tabId: number) {
       }
     })
   })
+}
+
+export function generateRandomHexString(numBytes: number) {
+  return CryptoJS.lib.WordArray.random(numBytes).toString(
+    CryptoJS.enc.Base64url,
+  )
 }

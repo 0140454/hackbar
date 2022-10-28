@@ -60,18 +60,13 @@
         />
       </VCol>
       <VCol :class="$style.responseArea" cols="12" md="6">
-        <VTextarea
-          v-model="rawResponse"
-          class="monospaced"
+        <PrettyRawResponse
           label="Response"
-          :rows="1"
           variant="underlined"
-          auto-grow
-          hide-details
-          readonly
+          :response="response"
         />
         <VBtn
-          v-if="response && rawResponse"
+          v-if="response"
           :class="$style.renderBtn"
           variant="plain"
           @click="renderResponse"
@@ -90,9 +85,13 @@ import { VTextarea } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
+import PrettyRawResponse from './PrettyRawResponse.vue'
 
 export default defineComponent({
   name: 'RequestPanelRaw',
+  components: {
+    PrettyRawResponse,
+  },
   props: {
     modelValue: {
       type: Object as PropType<BrowseRequest>,
@@ -123,14 +122,13 @@ export default defineComponent({
     /* DOM element and refs */
     const rawRequestInput = ref<InstanceType<typeof VTextarea>>()
 
-    /* Request / Response */
+    /* Request */
     const rawRequest = reactive({
       scheme: defaultScheme,
       host: '',
       content: '',
     })
     const rawRequestError = ref('')
-    const rawResponse = ref('')
 
     /* Converter */
     let isEditing = false
@@ -167,7 +165,6 @@ export default defineComponent({
           rawRequest.content = builtRawRequest
         }
 
-        rawResponse.value = ''
         rawRequestError.value = ''
       } catch (error) {
         rawRequestError.value = (error as Error).message
@@ -232,32 +229,6 @@ export default defineComponent({
       { deep: true },
     )
 
-    watch(
-      () => props.response,
-      response => {
-        if (!response) {
-          return
-        }
-
-        nextTick(async () => {
-          const emptyReasonPhrase = '3mp7y r3450n-phr453'
-
-          rawResponse.value = httpZ
-            .build({
-              protocolVersion: response.protocolVersion,
-              statusCode: response.statusCode,
-              statusMessage: response.statusMessage || emptyReasonPhrase,
-              headers: response.headers,
-              body: {
-                text: response.body,
-              },
-            } as any)
-            .replace(` ${emptyReasonPhrase}`, '')
-        })
-      },
-      { deep: true },
-    )
-
     /* Functionality */
     const renderResponse = () => {
       emit('render')
@@ -292,7 +263,6 @@ export default defineComponent({
       request,
       rawRequest,
       rawRequestError,
-      rawResponse,
 
       themeName: theme.global.name,
 
