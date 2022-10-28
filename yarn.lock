@@ -742,6 +742,7 @@ __metadata:
     eslint-plugin-require-sort: ^1.3.0
     eslint-plugin-vue: ^9.6.0
     glob: ^8.0.3
+    highlight.js: ^11.6.0
     http-z: ^6.1.2
     lodash: ^4.17.21
     prettier: ^2.7.1
@@ -2313,6 +2314,13 @@ __metadata:
   bin:
     he: bin/he
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
+  languageName: node
+  linkType: hard
+
+"highlight.js@npm:^11.6.0":
+  version: 11.6.0
+  resolution: "highlight.js@npm:11.6.0"
+  checksum: 3908eb34a4b442ca1e20c1ae6415ea935fbbcdb2b532a89948d82b0fa4ad41fc5de3802a0de4e88a0bcb7d97d4445579048cd2aab1d105ac47f59dd58a9a98ae
   languageName: node
   linkType: hard
 
