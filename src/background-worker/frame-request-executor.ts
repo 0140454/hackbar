@@ -20,7 +20,7 @@ export class FrameRequestExecutor extends RequestExecutor {
         name: 'content-type',
         value: processor.getHttpContentType(),
         removeIfEmptyValue: false,
-        _createdAt: 0, // Useless in background
+        _createdAt: 0,
       })
     }
   }

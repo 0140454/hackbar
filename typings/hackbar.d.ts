@@ -11,7 +11,7 @@ type Header = {
   name: string
   value: string
   removeIfEmptyValue: boolean
-  _createdAt: number
+  _createdAt: number // Only used in UI
 }
 
 type BrowseRequest = {

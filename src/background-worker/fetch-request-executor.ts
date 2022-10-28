@@ -38,7 +38,7 @@ export class FetchRequestExecutor extends RequestExecutor {
         name,
         value: '',
         removeIfEmptyValue: true,
-        _createdAt: 0, // Useless in background
+        _createdAt: 0,
       })
     })
   }
