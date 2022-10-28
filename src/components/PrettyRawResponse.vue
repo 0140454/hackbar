@@ -130,6 +130,7 @@ export default defineComponent({
   display: block;
   height: fit-content;
   outline: 0px solid transparent;
+  white-space: break-spaces;
 }
 .sizer {
   display: block;
