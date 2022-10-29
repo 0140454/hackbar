@@ -2,18 +2,25 @@
   <VInput
     class="monospaced"
     :class="themeName === 'dark' ? $style.dark : $style.light"
+    :hide-details="hideDetails"
+    :messages="messages"
   >
-    <VField v-bind="$attrs" :active="isActive" :focused="isFocused">
+    <VField
+      :label="label"
+      :variant="variant"
+      :active="isActive"
+      :focused="isFocused"
+    >
       <pre
         class="v-field__input"
         :class="$style.contenteditable"
         spellcheck="false"
         contenteditable
-        @paste="onEdit"
-        @keydown="onEdit"
-        @focus="onFocus"
         @blur="onBlur"
         @cut="onEdit"
+        @focus="onFocus"
+        @keydown="onEdit"
+        @paste="onEdit"
         v-html="html"
       />
     </VField>
@@ -42,9 +49,27 @@ export default defineComponent({
   name: 'PrettyRawResponse',
   inheritAttrs: false,
   props: {
+    label: {
+      type: String,
+      default: '',
+    },
+    variant: {
+      type: String as PropType<
+        'filled' | 'outlined' | 'plain' | 'underlined' | 'solo'
+      >,
+      default: 'filled',
+    },
     response: {
-      type: undefined as unknown as PropType<BrowseResponse | undefined>,
+      type: [Object, undefined] as PropType<BrowseResponse | undefined>,
       required: true,
+    },
+    messages: {
+      type: [Array, String] as PropType<string | string[]>,
+      default: () => [],
+    },
+    hideDetails: {
+      type: [Boolean, String] as PropType<boolean | 'auto'>,
+      default: false,
     },
   },
   setup(props) {
@@ -131,12 +156,5 @@ export default defineComponent({
   height: fit-content;
   outline: 0px solid transparent;
   white-space: break-spaces;
-}
-.sizer {
-  display: block;
-  left: 0;
-  position: absolute;
-  top: 0;
-  visibility: hidden;
 }
 </style>

@@ -64,6 +64,7 @@
           label="Response"
           variant="underlined"
           :response="response"
+          hide-details
         />
         <VBtn
           v-if="response"
@@ -98,7 +99,7 @@ export default defineComponent({
       required: true,
     },
     response: {
-      type: undefined as unknown as PropType<BrowseResponse | undefined>,
+      type: [Object, undefined] as PropType<BrowseResponse | undefined>,
       required: true,
     },
   },
