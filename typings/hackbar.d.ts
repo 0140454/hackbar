@@ -2,6 +2,7 @@
 
 type Preferences = {
   darkThemeEnabled: boolean
+  rawModeEnabled: boolean
 }
 
 /* Request */
