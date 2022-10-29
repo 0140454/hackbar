@@ -24,12 +24,19 @@
         </div>
       </VCol>
       <VCol cols="12" md="6">
-        <div class="d-flex fill-height align-end">
+        <div class="d-flex fill-height align-end" :class="$style.switchArea">
           <VSwitch
             v-model="request.followRedirect"
             class="flex-grow-0"
             :color="themeName === 'dark' ? 'white' : 'black'"
             label="Follow redirection"
+            hide-details
+          />
+          <VSwitch
+            v-model="isAutoRenderEnabled"
+            class="flex-grow-0"
+            :color="themeName === 'dark' ? 'white' : 'black'"
+            label="Render automatically"
             hide-details
           />
         </div>
@@ -67,7 +74,7 @@
           hide-details
         />
         <VBtn
-          v-if="response"
+          v-if="response && !isAutoRenderEnabled"
           :class="$style.renderBtn"
           variant="plain"
           @click="renderResponse"
@@ -231,9 +238,22 @@ export default defineComponent({
     )
 
     /* Functionality */
+    const isAutoRenderEnabled = ref(true)
+
     const renderResponse = () => {
       emit('render')
     }
+
+    watch(
+      () => props.response,
+      () => {
+        if (!isAutoRenderEnabled.value) {
+          return
+        }
+
+        renderResponse()
+      },
+    )
 
     /* Events */
     const onBlur = () => {
@@ -265,6 +285,7 @@ export default defineComponent({
       rawRequest,
       rawRequestError,
 
+      isAutoRenderEnabled,
       themeName: theme.global.name,
 
       renderResponse,
@@ -279,10 +300,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+.switchArea {
+  flex-wrap: wrap;
+  gap: 16px;
+}
 .responseArea {
   position: relative;
 }
-
 .renderBtn {
   position: absolute;
   right: 12px;
