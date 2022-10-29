@@ -41,8 +41,8 @@
           </VBtn>
         </template>
         <VList>
-          <VListItem title="Basic" @click="isRawMode = false" />
-          <VListItem title="Raw" @click="isRawMode = true" />
+          <VListItem title="Basic" @click="enableRawMode(false)" />
+          <VListItem title="Raw" @click="enableRawMode(true)" />
         </VList>
       </VMenu>
       <VMenu>
@@ -214,12 +214,19 @@ export default defineComponent({
     })
     const response = ref<BrowseResponse>()
     /* Mode / Status */
-    const isRawMode = ref(true)
+    const isRawMode = ref(false)
     const isExecuting = ref(false)
 
-    watch(isRawMode, () => {
-      domFocusedInput = null
-    })
+    const enableRawMode = (enabled: boolean) => {
+      if (isRawMode.value !== enabled) {
+        domFocusedInput = null
+      }
+
+      browser.storage.local.set({
+        rawModeEnabled: enabled,
+      })
+      isRawMode.value = enabled
+    }
 
     /* Communication */
     let backgroundPageConnection: RuntimePort | null = null
@@ -388,15 +395,18 @@ export default defineComponent({
 
     watch(theme.global.name, redrawScrollbar, { immediate: true })
 
+    /* Preferences */
     onMounted(async () => {
       const systemDarkModeEnabled = window.matchMedia(
         '(prefers-color-scheme: dark)',
       ).matches
       const preferences = (await browser.storage.local.get({
         darkThemeEnabled: systemDarkModeEnabled,
+        rawModeEnabled: false,
       })) as Preferences
 
       enableDarkTheme(preferences.darkThemeEnabled)
+      isRawMode.value = preferences.rawModeEnabled
     })
 
     /* Functionality */
@@ -559,6 +569,7 @@ export default defineComponent({
       load,
       split,
       execute,
+      enableRawMode,
       enableDarkTheme,
       onFocus,
       onScrollAppBar,
