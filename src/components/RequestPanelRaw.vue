@@ -99,7 +99,7 @@ export default defineComponent({
       required: true,
     },
     response: {
-      type: [Object, undefined] as PropType<BrowseResponse | undefined>,
+      type: undefined as unknown as PropType<BrowseResponse | undefined>,
       required: true,
     },
   },
