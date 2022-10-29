@@ -16,11 +16,11 @@
         :class="$style.contenteditable"
         spellcheck="false"
         contenteditable
-        @blur="onBlur"
-        @cut="onEdit"
         @focus="onFocus"
-        @keydown="onEdit"
-        @paste="onEdit"
+        @blur="onBlur"
+        @keydown="onKeydown"
+        @cut.prevent
+        @paste.prevent
         v-html="html"
       />
     </VField>
@@ -60,7 +60,7 @@ export default defineComponent({
       default: 'filled',
     },
     response: {
-      type: [Object, undefined] as PropType<BrowseResponse | undefined>,
+      type: undefined as unknown as PropType<BrowseResponse | undefined>,
       required: true,
     },
     messages: {
@@ -117,14 +117,17 @@ export default defineComponent({
     })
 
     /* Events */
-    const onEdit = (event: ClipboardEvent | KeyboardEvent) => {
-      event.preventDefault()
-    }
     const onFocus = () => {
       isFocused.value = true
     }
     const onBlur = () => {
       isFocused.value = false
+    }
+
+    const onKeydown = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey)) {
+        event.preventDefault()
+      }
     }
 
     return {
@@ -135,9 +138,9 @@ export default defineComponent({
 
       themeName: theme.global.name,
 
-      onEdit,
       onFocus,
       onBlur,
+      onKeydown,
     }
   },
 })
