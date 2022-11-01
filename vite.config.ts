@@ -71,7 +71,9 @@ export default defineConfig((env: ConfigEnv) => {
     },
     build: {
       minify: false,
-      polyfillModulePreload: false,
+      modulePreload: {
+        pollyfill: false,
+      },
       rollupOptions: {
         input,
         output: {
