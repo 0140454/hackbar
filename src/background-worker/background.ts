@@ -1,6 +1,5 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
-import { waitForTabComplete } from '../utils/functions'
 import { FetchRequestExecutor } from './fetch-request-executor'
 import { FrameRequestExecutor } from './frame-request-executor'
 import store from './store'
@@ -61,10 +60,12 @@ const handleMessage = async (message: BackgroundFunctionMessage) => {
 
     await browser.tabs.sendMessage(message.tabId, message.data)
   } else if (isRenderMessage(message)) {
-    await browser.tabs.update(message.tabId, {
-      url: browser.runtime.getURL('render.html'),
+    await browser.scripting.executeScript({
+      target: {
+        tabId: message.tabId,
+      },
+      files: ['core/render.js'],
     })
-    await waitForTabComplete(message.tabId)
     await browser.tabs.sendMessage(message.tabId, message.data)
   }
 }

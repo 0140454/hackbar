@@ -13,6 +13,7 @@ const messageListener = async (message: BrowseResponse) => {
 
     document.open()
     document.write(base.outerHTML + message.body)
+    document.close()
   } catch (error) {
     response = (error as Error).message
   }
