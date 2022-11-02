@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
+import { waitForTabComplete } from '../utils/functions'
 import { RequestExecutor } from './request-executor'
 
 export class FrameRequestExecutor extends RequestExecutor {
@@ -73,6 +74,8 @@ export class FrameRequestExecutor extends RequestExecutor {
         url: this.request.url,
       })
     }
+
+    await waitForTabComplete(this.tabId)
 
     if (error !== null) {
       const result: DevtoolsErrorMessage = {
