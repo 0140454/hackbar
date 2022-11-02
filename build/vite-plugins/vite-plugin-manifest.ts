@@ -43,6 +43,13 @@ const baseManifest = {
       },
       description: "Trigger 'Execute'",
     },
+    switch_mode: {
+      suggested_key: {
+        default: 'Alt+M',
+        mac: 'MacCtrl+M',
+      },
+      description: "Switch between 'Basic' and 'Raw' mode",
+    },
   },
   manifest_version: 3,
 }

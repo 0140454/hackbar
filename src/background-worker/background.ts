@@ -210,5 +210,5 @@ browser.commands.onCommand.addListener(async command => {
   connection.postMessage({
     type: 'command',
     data: command,
-  })
+  } as DevtoolsCommandMessage)
 })
