@@ -327,6 +327,9 @@ export default defineComponent({
           case 'execute_url':
             execute()
             break
+          case 'switch_mode':
+            enableRawMode(!isRawMode.value)
+            break
         }
       } else if (isExecuteMessage(message)) {
         response.value = message.data

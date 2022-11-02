@@ -139,7 +139,7 @@ interface DevtoolsExecuteMessage extends DevtoolsFunctionMessage {
 
 interface DevtoolsCommandMessage extends DevtoolsFunctionMessage {
   type: Extract<DevtoolsFunctionType, 'command'>
-  data: string
+  data: 'load_url' | 'split_url' | 'execute_url' | 'switch_mode'
 }
 
 interface DevtoolsErrorMessage extends DevtoolsFunctionMessage {
