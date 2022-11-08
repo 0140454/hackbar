@@ -66,21 +66,14 @@
           @focus="onFocus"
         />
       </VCol>
-      <VCol :class="$style.responseArea" cols="12" md="6">
+      <VCol cols="12" md="6">
         <PrettyRawResponse
           label="Response"
           variant="underlined"
           :response="response"
           hide-details
+          @render="renderResponse"
         />
-        <VBtn
-          v-if="response && !isAutoRenderEnabled"
-          :class="$style.renderBtn"
-          variant="plain"
-          @click="renderResponse"
-        >
-          Render
-        </VBtn>
       </VCol>
     </VRow>
   </VContainer>
@@ -303,13 +296,5 @@ export default defineComponent({
 .switchArea {
   flex-wrap: wrap;
   gap: 16px;
-}
-.responseArea {
-  position: relative;
-}
-.renderBtn {
-  position: absolute;
-  right: 12px;
-  top: 22px;
 }
 </style>

@@ -1,33 +1,124 @@
 <template>
-  <VInput
-    class="monospaced"
-    :class="themeName === 'dark' ? $style.dark : $style.light"
-    :hide-details="hideDetails"
-    :messages="messages"
-  >
-    <VField
-      :label="label"
-      :variant="variant"
-      :active="isActive"
-      :focused="isFocused"
+  <div :class="$style.root">
+    <VInput
+      class="monospaced"
+      :class="themeName === 'dark' ? $style.dark : $style.light"
+      :hide-details="hideDetails"
+      :messages="messages"
     >
-      <pre
-        class="v-field__input"
-        :class="$style.contenteditable"
-        spellcheck="false"
-        contenteditable
-        @focus="onFocus"
-        @blur="onBlur"
-        @keydown="onKeydown"
-        @cut.prevent
-        @paste.prevent
-        v-html="html"
-      />
-    </VField>
-  </VInput>
+      <VField
+        :label="label"
+        :variant="variant"
+        :active="isActive"
+        :focused="isFocused"
+      >
+        <pre
+          ref="_contenteditable"
+          class="v-field__input"
+          :class="$style.contenteditable"
+          spellcheck="false"
+          contenteditable
+          @focus="onFocus"
+          @blur="onBlur"
+          @keydown="onKeydown"
+          @cut.prevent
+          @paste.prevent
+          v-html="html"
+        />
+      </VField>
+    </VInput>
+    <div
+      v-if="response"
+      :class="$style.tools"
+      class="d-flex flex-column align-end"
+    >
+      <div>
+        <VBtn
+          variant="plain"
+          icon
+          @click="searchOptions.enabled = !searchOptions.enabled"
+        >
+          <VIcon :icon="mdiFileSearchOutline" />
+          <VTooltip location="top" activator="parent"> Search </VTooltip>
+        </VBtn>
+        <VBtn variant="plain" icon @click="$emit('render')">
+          <VIcon :icon="mdiMonitorDashboard" />
+          <VTooltip location="top" activator="parent"> Render </VTooltip>
+        </VBtn>
+      </div>
+      <VToolbar
+        v-show="searchOptions.enabled"
+        class="w-100"
+        density="compact"
+        :elevation="1"
+        floating
+        rounded
+      >
+        <VTextField
+          v-model="searchOptions.keyword"
+          class="ml-2 monospaced"
+          :class="$style.searchInput"
+          density="compact"
+          :suffix="searchInputSuffix"
+          variant="plain"
+          single-line
+          hide-details
+        />
+        <VDivider inset vertical />
+        <VBtn
+          class="ml-1"
+          density="comfortable"
+          :disabled="!searchResult.ranges.length || searchResult.current == 0"
+          size="small"
+          :icon="mdiChevronUp"
+          @click="searchResult.current = searchResult.current - 1"
+        />
+        <VBtn
+          density="comfortable"
+          :disabled="
+            !searchResult.ranges.length ||
+            searchResult.current == searchResult.ranges.length - 1
+          "
+          size="small"
+          :icon="mdiChevronDown"
+          @click="searchResult.current = searchResult.current + 1"
+        />
+        <VBtn
+          :class="{ 'v-btn--active': searchOptions.caseSensitive }"
+          density="comfortable"
+          size="small"
+          :icon="mdiFormatLetterCase"
+          @click="searchOptions.caseSensitive = !searchOptions.caseSensitive"
+        />
+        <VBtn
+          :class="{ 'v-btn--active': searchOptions.regexp }"
+          density="comfortable"
+          size="small"
+          :icon="mdiRegex"
+          @click="searchOptions.regexp = !searchOptions.regexp"
+        />
+        <VBtn
+          class="mr-1"
+          density="comfortable"
+          size="small"
+          :icon="mdiClose"
+          @click="searchOptions.enabled = !searchOptions.enabled"
+        />
+      </VToolbar>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
+import {
+  mdiChevronDown,
+  mdiChevronUp,
+  mdiClose,
+  mdiFileSearchOutline,
+  mdiFormatLetterCase,
+  mdiMonitorDashboard,
+  mdiRegex,
+} from '@mdi/js'
 import hljs from 'highlight.js/lib/core'
 import css from 'highlight.js/lib/languages/css'
 import http from 'highlight.js/lib/languages/http'
@@ -35,7 +126,16 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
 import xml from 'highlight.js/lib/languages/xml'
 import httpZ from 'http-z'
-import { PropType, computed, defineComponent, ref } from 'vue'
+import escapeRegExp from 'lodash/escapeRegExp'
+import {
+  PropType,
+  computed,
+  defineComponent,
+  nextTick,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
 import { useTheme } from 'vuetify/framework'
 import { generateRandomHexString } from '../utils/functions'
 
@@ -72,8 +172,12 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['render'],
   setup(props) {
     const theme = useTheme()
+
+    /* DOM element and refs */
+    const _contenteditable = ref<HTMLPreElement>()
 
     /* State */
     const isFocused = ref(false)
@@ -116,6 +220,125 @@ export default defineComponent({
         .value.replace(bodyPlaceholder, prettyBody)
     })
 
+    /* Search */
+    const searchOptions = reactive({
+      enabled: false,
+      keyword: '',
+      caseSensitive: false,
+      regexp: false,
+    })
+    const searchResult = reactive({
+      current: 0,
+      ranges: [] as Array<Range>,
+    })
+    const searchInputSuffix = computed(() => {
+      if (!searchOptions.keyword.length) {
+        return ''
+      } else if (!searchResult.ranges.length) {
+        return '0/0'
+      }
+
+      return `${searchResult.current + 1}/${searchResult.ranges.length}`
+    })
+
+    const selectCurrentResult = () => {
+      const selection = document.getSelection()!
+
+      selection.removeAllRanges()
+      if (searchResult.ranges.length) {
+        // XXX: cast to Range for type checking
+        selection.addRange(searchResult.ranges[searchResult.current] as Range)
+      }
+    }
+    const performSearch = () => {
+      if (!searchOptions.keyword.length) {
+        searchResult.current = 0
+        searchResult.ranges = []
+        return
+      }
+
+      const pattern = searchOptions.regexp
+        ? searchOptions.keyword
+        : escapeRegExp(searchOptions.keyword)
+      const flags = ['g', searchOptions.caseSensitive ? '' : 'i'].join('')
+      const regexp = new RegExp(pattern, flags)
+
+      const offsets = [
+        ..._contenteditable.value!.innerText.matchAll(regexp),
+      ].map(m => {
+        return {
+          start: m.index!,
+          end: m.index! + m[0].length,
+        }
+      })
+      const walker = document.createTreeWalker(
+        _contenteditable.value!,
+        NodeFilter.SHOW_TEXT,
+      )
+
+      const results = offsets.map(() => {
+        const range = document.createRange()
+        range.setStart(_contenteditable.value!, 0)
+        range.collapse(true)
+
+        return {
+          startFound: false,
+          range,
+        }
+      })
+
+      let currentOffset = 0
+      let node: Node | null
+      while ((node = walker.nextNode())) {
+        const textStart = currentOffset
+        const textEnd = textStart + (node as Text).length
+
+        results.forEach((record, idx) => {
+          const resultStart = offsets[idx].start
+          const resultEnd = offsets[idx].end
+
+          if (
+            !record.startFound &&
+            resultStart >= textStart &&
+            resultStart <= textEnd
+          ) {
+            record.range.setStart(node!, resultStart - textStart)
+            record.startFound = true
+          } else if (
+            record.startFound &&
+            resultEnd >= textStart &&
+            resultEnd <= textEnd
+          ) {
+            record.range.setEnd(node!, resultEnd - textStart)
+          }
+        })
+
+        currentOffset = textEnd
+      }
+
+      searchResult.current = 0
+      searchResult.ranges = results.map(result => result.range)
+    }
+
+    watch(
+      () => searchOptions,
+      newOptions => {
+        if (!newOptions.enabled) {
+          return
+        }
+
+        performSearch()
+        selectCurrentResult()
+      },
+      { deep: true },
+    )
+    watch(
+      () => searchResult.current,
+      () => {
+        nextTick(selectCurrentResult)
+      },
+    )
+
     /* Events */
     const onFocus = () => {
       isFocused.value = true
@@ -131,12 +354,26 @@ export default defineComponent({
     }
 
     return {
+      mdiChevronDown,
+      mdiChevronUp,
+      mdiClose,
+      mdiFileSearchOutline,
+      mdiFormatLetterCase,
+      mdiMonitorDashboard,
+      mdiRegex,
+
+      _contenteditable,
+
       isActive,
       isFocused,
 
+      themeName: theme.global.name,
+
       html,
 
-      themeName: theme.global.name,
+      searchOptions,
+      searchResult,
+      searchInputSuffix,
 
       onFocus,
       onBlur,
@@ -152,6 +389,34 @@ export default defineComponent({
 }
 .dark :global {
   @import 'highlight.js/scss/github-dark.scss';
+}
+.root {
+  position: relative;
+}
+.tools {
+  max-width: 380px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+.searchInput {
+  min-width: 70px;
+  width: 100%;
+
+  :global {
+    .v-field__field {
+      align-items: center;
+    }
+    .v-field__input {
+      line-height: 16px;
+      padding: 0;
+    }
+    .v-text-field__suffix {
+      line-height: 17px;
+      padding: 0 8px 0 12px;
+    }
+  }
 }
 .contenteditable {
   caret-color: transparent;
