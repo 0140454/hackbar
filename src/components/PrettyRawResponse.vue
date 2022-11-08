@@ -288,14 +288,20 @@ export default defineComponent({
       })
 
       let currentOffset = 0
+      let finishedResultsIndex = -1
       let node: Node | null
       while ((node = walker.nextNode())) {
         const textStart = currentOffset
         const textEnd = textStart + (node as Text).length
 
-        results.forEach((record, idx) => {
+        for (let idx = finishedResultsIndex + 1; idx < results.length; idx++) {
+          const record = results[idx]
           const resultStart = offsets[idx].start
           const resultEnd = offsets[idx].end
+
+          if (resultStart > textEnd) {
+            break
+          }
 
           if (
             !record.startFound &&
@@ -304,14 +310,19 @@ export default defineComponent({
           ) {
             record.range.setStart(node!, resultStart - textStart)
             record.startFound = true
-          } else if (
+          }
+          if (
             record.startFound &&
             resultEnd >= textStart &&
             resultEnd <= textEnd
           ) {
             record.range.setEnd(node!, resultEnd - textStart)
+
+            if (finishedResultsIndex + 1 === idx) {
+              finishedResultsIndex = idx
+            }
           }
-        })
+        }
 
         currentOffset = textEnd
       }
