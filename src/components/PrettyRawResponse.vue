@@ -68,20 +68,25 @@
         <VBtn
           class="ml-1"
           density="comfortable"
-          :disabled="!searchResult.ranges.length || searchResult.current == 0"
+          :disabled="!searchResult.ranges.length"
           size="small"
           :icon="mdiChevronUp"
-          @click="searchResult.current = searchResult.current - 1"
+          @click="
+            searchResult.current =
+              (searchResult.current - 1 + searchResult.ranges.length) %
+              searchResult.ranges.length
+          "
         />
         <VBtn
           density="comfortable"
-          :disabled="
-            !searchResult.ranges.length ||
-            searchResult.current == searchResult.ranges.length - 1
-          "
+          :disabled="!searchResult.ranges.length"
           size="small"
           :icon="mdiChevronDown"
-          @click="searchResult.current = searchResult.current + 1"
+          @click="
+            searchResult.current =
+              (searchResult.current + 1 + searchResult.ranges.length) %
+              searchResult.ranges.length
+          "
         />
         <VBtn
           :class="{ 'v-btn--active': searchOptions.caseSensitive }"
