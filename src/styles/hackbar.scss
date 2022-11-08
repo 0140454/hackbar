@@ -57,6 +57,10 @@ header {
   @include ellipsis;
 }
 
-.monospaced .v-field__input {
-  font-family: 'Roboto Mono';
+.monospaced {
+  .v-field__input,
+  .v-text-field__prefix,
+  .v-text-field__suffix {
+    font-family: 'Roboto Mono';
+  }
 }
