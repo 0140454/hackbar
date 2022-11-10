@@ -63,6 +63,7 @@
           variant="plain"
           single-line
           hide-details
+          @keydown="onSearchInputKeydown"
         />
         <VDivider inset vertical />
         <VBtn
@@ -71,22 +72,14 @@
           :disabled="!searchResult.ranges.length"
           size="small"
           :icon="mdiChevronUp"
-          @click="
-            searchResult.current =
-              (searchResult.current - 1 + searchResult.ranges.length) %
-              searchResult.ranges.length
-          "
+          @click="previousSearchResult"
         />
         <VBtn
           density="comfortable"
           :disabled="!searchResult.ranges.length"
           size="small"
           :icon="mdiChevronDown"
-          @click="
-            searchResult.current =
-              (searchResult.current + 1 + searchResult.ranges.length) %
-              searchResult.ranges.length
-          "
+          @click="nextSearchResult"
         />
         <VBtn
           :class="{ 'v-btn--active': searchOptions.caseSensitive }"
@@ -131,6 +124,7 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
 import xml from 'highlight.js/lib/languages/xml'
 import httpZ from 'http-z'
+import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
 import {
   PropType,
@@ -246,7 +240,17 @@ export default defineComponent({
       return `${searchResult.current + 1}/${searchResult.ranges.length}`
     })
 
-    const selectCurrentResult = () => {
+    const nextSearchResult = () => {
+      searchResult.current =
+        (searchResult.current + 1 + searchResult.ranges.length) %
+        searchResult.ranges.length
+    }
+    const previousSearchResult = () => {
+      searchResult.current =
+        (searchResult.current - 1 + searchResult.ranges.length) %
+        searchResult.ranges.length
+    }
+    const selectCurrentSearchResult = () => {
       const selection = document.getSelection()!
 
       selection.removeAllRanges()
@@ -337,21 +341,19 @@ export default defineComponent({
     }
 
     watch(
-      () => searchOptions,
-      newOptions => {
-        if (!newOptions.enabled) {
-          return
-        }
-
+      () => searchOptions.keyword,
+      debounce(() => {
         performSearch()
-        selectCurrentResult()
-      },
-      { deep: true },
+        selectCurrentSearchResult()
+      }, 256),
     )
+    watch(() => {
+      return `${searchOptions.caseSensitive}-${searchOptions.regexp}`
+    }, performSearch)
     watch(
       () => searchResult.current,
       () => {
-        nextTick(selectCurrentResult)
+        nextTick(selectCurrentSearchResult)
       },
     )
 
@@ -366,6 +368,17 @@ export default defineComponent({
     const onKeydown = (event: KeyboardEvent) => {
       if (!(event.metaKey || event.ctrlKey)) {
         event.preventDefault()
+      }
+    }
+    const onSearchInputKeydown = (event: KeyboardEvent) => {
+      if (event.code != 'Enter') {
+        return
+      }
+
+      if (event.shiftKey) {
+        previousSearchResult()
+      } else {
+        nextSearchResult()
       }
     }
 
@@ -390,10 +403,13 @@ export default defineComponent({
       searchOptions,
       searchResult,
       searchInputSuffix,
+      nextSearchResult,
+      previousSearchResult,
 
       onFocus,
       onBlur,
       onKeydown,
+      onSearchInputKeydown,
     }
   },
 })
