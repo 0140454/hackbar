@@ -119,16 +119,8 @@
 
 <script lang="ts">
 import { mdiClose, mdiSync } from '@mdi/js'
-import {
-  PropType,
-  computed,
-  defineComponent,
-  onBeforeUnmount,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from 'vue'
+import { MaybeComputedElementRef, useElementBounding } from '@vueuse/core'
+import { PropType, computed, defineComponent, reactive, ref, watch } from 'vue'
 import { VSelect, VSwitch, VTextarea } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import bodyProcessors from '../processors'
@@ -189,24 +181,17 @@ export default defineComponent({
     }
 
     /* RWD */
-    const postControlWrapped = ref(false)
-    const enctypeResizeObserver = new ResizeObserver(() => {
-      const selectRect: DOMRect =
-        enctypeSelect.value!.$el.getBoundingClientRect()
-      const switchRect: DOMRect =
-        postEnabledSwitch.value!.$el.getBoundingClientRect()
+    const { y: enctypeSelectTop, height: enctypeSelectHeight } =
+      useElementBounding(enctypeSelect as MaybeComputedElementRef)
+    const { y: postEnabledSwitchTop, height: postEnabledSwitchHeight } =
+      useElementBounding(postEnabledSwitch as MaybeComputedElementRef)
+    const postControlWrapped = computed(() => {
+      const selectCenter =
+        enctypeSelectTop.value + enctypeSelectHeight.value / 2
+      const switchCenter =
+        postEnabledSwitchTop.value + postEnabledSwitchHeight.value / 2
 
-      const selectCenter = selectRect.top + selectRect.height / 2
-      const switchCenter = switchRect.top + switchRect.height / 2
-
-      postControlWrapped.value = selectCenter != switchCenter
-    })
-
-    onMounted(() => {
-      enctypeResizeObserver.observe(enctypeSelect.value!.$el)
-    })
-    onBeforeUnmount(() => {
-      enctypeResizeObserver.unobserve(enctypeSelect.value!.$el)
+      return selectCenter != switchCenter
     })
 
     /* Events */
