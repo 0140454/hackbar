@@ -1,4 +1,6 @@
 declare class Highlight {
+  priority: number
+
   constructor(..._: Array<Range>) {}
 }
 
