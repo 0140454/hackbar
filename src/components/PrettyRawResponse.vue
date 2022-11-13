@@ -126,15 +126,7 @@ import xml from 'highlight.js/lib/languages/xml'
 import httpZ from 'http-z'
 import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
-import {
-  PropType,
-  computed,
-  defineComponent,
-  nextTick,
-  reactive,
-  ref,
-  watch,
-} from 'vue'
+import { PropType, computed, defineComponent, reactive, ref, watch } from 'vue'
 import { useTheme } from 'vuetify/framework'
 import { generateRandomHexString } from '../utils/functions'
 
@@ -250,17 +242,31 @@ export default defineComponent({
         (searchResult.current - 1 + searchResult.ranges.length) %
         searchResult.ranges.length
     }
-    const selectCurrentSearchResult = () => {
-      const selection = document.getSelection()!
+    const highlightCurrentSearchResult = () => {
+      if (!searchResult.ranges.length) {
+        return
+      }
 
-      selection.removeAllRanges()
-      if (searchResult.ranges.length) {
-        // XXX: cast to Range for type checking
-        selection.addRange(searchResult.ranges[searchResult.current] as Range)
+      const range = searchResult.ranges[searchResult.current] as Range
+      const rect = range.getBoundingClientRect()
+
+      CSS.highlights.set('searchResultCurrent', new Highlight(range))
+
+      const absoluteTop = rect.top + window.scrollY
+      const absoluteBottom = rect.bottom + window.scrollY
+      const viewportTop = window.scrollY
+      const viewportBottom = window.scrollY + window.innerHeight
+
+      if (absoluteTop < viewportTop || absoluteBottom > viewportBottom) {
+        window.scrollTo({
+          top: absoluteTop - window.innerHeight / 2,
+        })
       }
     }
     const performSearch = () => {
-      if (!searchOptions.keyword.length) {
+      CSS.highlights.clear()
+
+      if (!searchOptions.keyword.length || !searchOptions.enabled) {
         searchResult.current = 0
         searchResult.ranges = []
         return
@@ -269,7 +275,7 @@ export default defineComponent({
       const pattern = searchOptions.regexp
         ? searchOptions.keyword
         : escapeRegExp(searchOptions.keyword)
-      const flags = ['g', searchOptions.caseSensitive ? '' : 'i'].join('')
+      const flags = searchOptions.caseSensitive ? 'g' : 'gi'
       const regexp = new RegExp(pattern, flags)
 
       const offsets = [
@@ -315,7 +321,7 @@ export default defineComponent({
           if (
             !record.startFound &&
             resultStart >= textStart &&
-            resultStart <= textEnd
+            resultStart < textEnd
           ) {
             record.range.setStart(node!, resultStart - textStart)
             record.startFound = true
@@ -327,9 +333,7 @@ export default defineComponent({
           ) {
             record.range.setEnd(node!, resultEnd - textStart)
 
-            if (finishedResultsIndex + 1 === idx) {
-              finishedResultsIndex = idx
-            }
+            finishedResultsIndex = idx
           }
         }
 
@@ -338,24 +342,28 @@ export default defineComponent({
 
       searchResult.current = 0
       searchResult.ranges = results.map(result => result.range)
+
+      const ranges = searchResult.ranges as Array<Range>
+      CSS.highlights.set('searchResult', new Highlight(...ranges))
     }
 
     watch(
       () => searchOptions.keyword,
       debounce(() => {
         performSearch()
-        selectCurrentSearchResult()
+        highlightCurrentSearchResult()
       }, 256),
     )
-    watch(() => {
-      return `${searchOptions.caseSensitive}-${searchOptions.regexp}`
-    }, performSearch)
     watch(
-      () => searchResult.current,
       () => {
-        nextTick(selectCurrentSearchResult)
+        return `${searchOptions.enabled}-${searchOptions.caseSensitive}-${searchOptions.regexp}`
+      },
+      () => {
+        performSearch()
+        highlightCurrentSearchResult()
       },
     )
+    watch(() => searchResult.current, highlightCurrentSearchResult)
 
     /* Events */
     const onFocus = () => {
@@ -456,5 +464,12 @@ export default defineComponent({
   height: fit-content;
   outline: 0px solid transparent;
   white-space: pre-wrap;
+}
+// FIXME: Firefox doesn't support Custom Highlight API
+::highlight(searchResult) {
+  background-color: yellow;
+}
+::highlight(searchResultCurrent) {
+  background-color: orange;
 }
 </style>
