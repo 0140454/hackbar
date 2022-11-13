@@ -18,6 +18,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@fontsource/roboto-mono": "^4.5.8",
     "@mdi/js": "^7.0.96",
+    "@vueuse/core": "^9.5.0",
     "crypto-js": "^4.1.1",
     "curlconverter": "^4.3.0",
     "highlight.js": "^11.6.0",

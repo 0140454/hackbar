@@ -32,7 +32,7 @@
       :class="$style.tools"
       class="d-flex flex-column align-end"
     >
-      <div>
+      <div ref="iconPanel">
         <VBtn
           variant="plain"
           icon
@@ -51,7 +51,7 @@
         class="w-100"
         density="compact"
         :elevation="1"
-        floating
+        :style="searchPanelStyle"
         rounded
       >
         <VTextField
@@ -117,6 +117,7 @@ import {
   mdiMonitorDashboard,
   mdiRegex,
 } from '@mdi/js'
+import { useElementBounding } from '@vueuse/core'
 import hljs from 'highlight.js/lib/core'
 import css from 'highlight.js/lib/languages/css'
 import http from 'highlight.js/lib/languages/http'
@@ -178,6 +179,7 @@ export default defineComponent({
 
     /* DOM element and refs */
     const contenteditable = ref<HTMLPreElement>()
+    const iconPanel = ref<HTMLDivElement>()
 
     /* State */
     const isFocused = ref(false)
@@ -220,6 +222,9 @@ export default defineComponent({
         .value.replace(bodyPlaceholder, prettyBody)
     })
 
+    /* Tools */
+    const { bottom: iconPanelBottom } = useElementBounding(iconPanel)
+
     /* Search */
     const searchOptions = reactive({
       enabled: false,
@@ -239,6 +244,16 @@ export default defineComponent({
       }
 
       return `${searchResult.current + 1}/${searchResult.ranges.length}`
+    })
+    const searchPanelStyle = computed(() => {
+      if (iconPanelBottom.value > 48) {
+        return {}
+      }
+
+      return {
+        position: 'fixed',
+        top: '48px',
+      }
     })
 
     const nextSearchResult = () => {
@@ -432,6 +447,7 @@ export default defineComponent({
       mdiRegex,
 
       contenteditable,
+      iconPanel,
 
       isActive,
       isFocused,
@@ -443,6 +459,7 @@ export default defineComponent({
       searchOptions,
       searchResult,
       searchInputSuffix,
+      searchPanelStyle,
       nextSearchResult,
       previousSearchResult,
 
@@ -466,11 +483,15 @@ export default defineComponent({
   position: relative;
 }
 .tools {
-  max-width: 380px;
   position: absolute;
   right: 0;
   top: 0;
   width: 100%;
+
+  &,
+  > * {
+    max-width: 380px !important;
+  }
 }
 .searchInput {
   min-width: 70px;
