@@ -312,6 +312,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/web-bluetooth@npm:^0.0.16":
+  version: 0.0.16
+  resolution: "@types/web-bluetooth@npm:0.0.16"
+  checksum: f68a630d062202a25c46d48686ebae1cf429dc70b4578fcf13b8357b2db63e4aedfb6f6d752bd388366be46ebd19c1c9de45f8a15c2631bb79e904fdfc454f94
+  languageName: node
+  linkType: hard
+
 "@types/webextension-polyfill@npm:^0.9.1":
   version: 0.9.1
   resolution: "@types/webextension-polyfill@npm:0.9.1"
@@ -715,6 +722,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:^9.5.0":
+  version: 9.5.0
+  resolution: "@vueuse/core@npm:9.5.0"
+  dependencies:
+    "@types/web-bluetooth": ^0.0.16
+    "@vueuse/metadata": 9.5.0
+    "@vueuse/shared": 9.5.0
+    vue-demi: "*"
+  checksum: 55bac9f1c8c5aa4f8f795f4bb9ea61754db6ec2f683081d804a9f474da63d0d3a01e863712583f70db7ab5f1a5bd1d52c40edb4c9addcf497c1b31c4f8fed714
+  languageName: node
+  linkType: hard
+
+"@vueuse/metadata@npm:9.5.0":
+  version: 9.5.0
+  resolution: "@vueuse/metadata@npm:9.5.0"
+  checksum: b832754a03682086214ad3f99daf31e78339f7c4d2661a1ffb1565eeceef41435b77780d4c83b4f42299ba037d0a77f6eecd8b6d7a4546aa6b75cb82644bb5bb
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:9.5.0":
+  version: 9.5.0
+  resolution: "@vueuse/shared@npm:9.5.0"
+  dependencies:
+    vue-demi: "*"
+  checksum: d7f697a489bdb6d5c590b19b31d59a5754c1b3b11278a2e186aed081a90fe79b434319e9122a470cc3e96637062bf63202adc08919d61e56d7f57c51c3282a48
+  languageName: node
+  linkType: hard
+
 "HackBar@workspace:.":
   version: 0.0.0-use.local
   resolution: "HackBar@workspace:."
@@ -733,6 +768,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.42.1
     "@typescript-eslint/parser": ^5.42.1
     "@vitejs/plugin-vue": ^3.2.0
+    "@vueuse/core": ^9.5.0
     chrome-types: ^0.1.148
     crypto-js: ^4.1.1
     curlconverter: ^4.3.0
@@ -4220,6 +4256,22 @@ __metadata:
     vuetify-loader:
       optional: true
   checksum: d71654fb4ab0518a6bebb39c1de266f2d4e5a113bad60652369d8187d8f9fc7570dc2e616366d82b9965bb10bd856ea131d712ef16e13a13007141a0bada2a56
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:*":
+  version: 0.13.11
+  resolution: "vue-demi@npm:0.13.11"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 0fbe9bf8ab7fe498ffa2bbd0cfc8f6f43a6bbaa5eda3e20ef1b70dca7c8b0ddb216a7ff2f632b694fe0735805638975abb441c621ec0bd2e6d4656353f316c15
   languageName: node
   linkType: hard
 
