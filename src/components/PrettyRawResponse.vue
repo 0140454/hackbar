@@ -13,7 +13,7 @@
         :focused="isFocused"
       >
         <pre
-          ref="_contenteditable"
+          ref="contenteditable"
           class="v-field__input"
           :class="$style.contenteditable"
           spellcheck="false"
@@ -177,7 +177,7 @@ export default defineComponent({
     const theme = useTheme()
 
     /* DOM element and refs */
-    const _contenteditable = ref<HTMLPreElement>()
+    const contenteditable = ref<HTMLPreElement>()
 
     /* State */
     const isFocused = ref(false)
@@ -290,7 +290,7 @@ export default defineComponent({
       const regexp = new RegExp(pattern, flags)
 
       const offsets = [
-        ..._contenteditable.value!.innerText.matchAll(regexp),
+        ...contenteditable.value!.innerText.matchAll(regexp),
       ].map(m => {
         return {
           start: m.index!,
@@ -298,13 +298,13 @@ export default defineComponent({
         }
       })
       const walker = document.createTreeWalker(
-        _contenteditable.value!,
+        contenteditable.value!,
         NodeFilter.SHOW_TEXT,
       )
 
       const results = offsets.map(() => {
         const range = document.createRange()
-        range.setStart(_contenteditable.value!, 0)
+        range.setStart(contenteditable.value!, 0)
         range.collapse(true)
 
         return {
@@ -431,7 +431,7 @@ export default defineComponent({
       mdiMonitorDashboard,
       mdiRegex,
 
-      _contenteditable,
+      contenteditable,
 
       isActive,
       isFocused,
