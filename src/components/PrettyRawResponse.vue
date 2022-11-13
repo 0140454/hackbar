@@ -126,7 +126,16 @@ import xml from 'highlight.js/lib/languages/xml'
 import httpZ from 'http-z'
 import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
-import { PropType, computed, defineComponent, reactive, ref, watch } from 'vue'
+import {
+  PropType,
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
 import { useTheme } from 'vuetify/framework'
 import { generateRandomHexString } from '../utils/functions'
 
@@ -249,8 +258,10 @@ export default defineComponent({
 
       const range = searchResult.ranges[searchResult.current] as Range
       const rect = range.getBoundingClientRect()
+      const highlight = new Highlight(range)
 
-      CSS.highlights.set('searchResultCurrent', new Highlight(range))
+      highlight.priority = 999
+      CSS.highlights.set('searchResultCurrent', highlight)
 
       const absoluteTop = rect.top + window.scrollY
       const absoluteBottom = rect.bottom + window.scrollY
@@ -342,9 +353,7 @@ export default defineComponent({
 
       searchResult.current = 0
       searchResult.ranges = results.map(result => result.range)
-
-      const ranges = searchResult.ranges as Array<Range>
-      CSS.highlights.set('searchResult', new Highlight(...ranges))
+      onScroll()
     }
 
     watch(
@@ -389,6 +398,29 @@ export default defineComponent({
         nextSearchResult()
       }
     }
+
+    const onScroll = () => {
+      const viewportTop = window.scrollY
+      const viewportBottom = window.scrollY + window.innerHeight
+
+      const visibleRanges = searchResult.ranges.filter(range => {
+        const rect = range.getBoundingClientRect()
+        const absoluteTop = rect.top + window.scrollY
+        const absoluteBottom = rect.bottom + window.scrollY
+
+        return absoluteTop < viewportBottom && absoluteBottom > viewportTop
+      }) as Array<Range>
+
+      CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
+    }
+    const debouncedOnScroll = debounce(onScroll, 128)
+
+    onMounted(() => {
+      window.addEventListener('scroll', debouncedOnScroll)
+    })
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', debouncedOnScroll)
+    })
 
     return {
       mdiChevronDown,
