@@ -48,7 +48,7 @@ export function generateRandomHexString(numBytes: number) {
 
 export function binarySearch<T>(objects: Array<T>, cmp: (object: T) => number) {
   let left = 0
-  let right = objects.length
+  let right = objects.length - 1
 
   while (left <= right) {
     const middle = left + Math.floor((right - left) / 2)
