@@ -144,7 +144,7 @@ import {
 } from 'vue'
 import { useTheme } from 'vuetify/framework'
 import { AppBarKey } from '../utils/constants'
-import { generateRandomHexString } from '../utils/functions'
+import { binarySearch, generateRandomHexString } from '../utils/functions'
 
 hljs.registerLanguage('css', css)
 hljs.registerLanguage('http', http)
@@ -427,17 +427,26 @@ export default defineComponent({
       const viewportTop = window.scrollY
       const viewportBottom = window.scrollY + window.innerHeight
 
-      const visibleRanges = searchResult.ranges.filter(range => {
+      const lowerBound = binarySearch(searchResult.ranges, range => {
         const rect = range.getBoundingClientRect()
-        const absoluteTop = rect.top + window.scrollY
         const absoluteBottom = rect.bottom + window.scrollY
 
-        return absoluteTop < viewportBottom && absoluteBottom > viewportTop
-      }) as Array<Range>
+        return absoluteBottom - viewportTop
+      })
+      const upperBound = binarySearch(searchResult.ranges, range => {
+        const rect = range.getBoundingClientRect()
+        const absoluteTop = rect.top + window.scrollY
 
+        return absoluteTop - viewportBottom
+      })
+
+      const visibleRanges = searchResult.ranges.slice(
+        lowerBound,
+        upperBound + 1,
+      ) as Array<Range>
       CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
     }
-    const debouncedOnScroll = debounce(onScroll, 128)
+    const debouncedOnScroll = debounce(onScroll, 50)
 
     onMounted(() => {
       window.addEventListener('scroll', debouncedOnScroll)
