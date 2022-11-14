@@ -1,4 +1,5 @@
-import { InjectionKey } from 'vue'
+import { InjectionKey, Ref } from 'vue'
+import { VAppBar } from 'vuetify/components'
 
 export const CommonRequestHeaders = [
   'Accept',
@@ -132,3 +133,6 @@ export const OpenReverseShellPromptKey: InjectionKey<(func: string) => void> =
 export const ControlTestKey: InjectionKey<
   (action: string, script?: string, argument?: any) => void
 > = Symbol('controlTest')
+
+export const AppBarKey: InjectionKey<Ref<InstanceType<typeof VAppBar>>> =
+  Symbol('appBar')

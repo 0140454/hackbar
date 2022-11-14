@@ -128,6 +128,7 @@ import RequestPanelBasic from './components/RequestPanelBasic.vue'
 import RequestPanelRaw from './components/RequestPanelRaw.vue'
 import bodyProcessors from './processors'
 import {
+  AppBarKey,
   ApplyFunctionKey,
   ControlTestKey,
   LoadFromKey,
@@ -171,6 +172,8 @@ export default defineComponent({
     const appBar = ref<InstanceType<typeof VAppBar>>()
     const requestPanel =
       ref<InstanceType<typeof RequestPanelBasic | typeof RequestPanelRaw>>()
+
+    provide(AppBarKey, appBar)
 
     /* Dialog */
     const reloadDialog = ref({

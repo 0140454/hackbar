@@ -117,7 +117,11 @@ import {
   mdiMonitorDashboard,
   mdiRegex,
 } from '@mdi/js'
-import { useElementBounding } from '@vueuse/core'
+import {
+  MaybeComputedElementRef,
+  useElementBounding,
+  useElementSize,
+} from '@vueuse/core'
 import hljs from 'highlight.js/lib/core'
 import css from 'highlight.js/lib/languages/css'
 import http from 'highlight.js/lib/languages/http'
@@ -131,6 +135,7 @@ import {
   PropType,
   computed,
   defineComponent,
+  inject,
   onBeforeUnmount,
   onMounted,
   reactive,
@@ -138,6 +143,7 @@ import {
   watch,
 } from 'vue'
 import { useTheme } from 'vuetify/framework'
+import { AppBarKey } from '../utils/constants'
 import { generateRandomHexString } from '../utils/functions'
 
 hljs.registerLanguage('css', css)
@@ -180,6 +186,7 @@ export default defineComponent({
     /* DOM element and refs */
     const contenteditable = ref<HTMLPreElement>()
     const iconPanel = ref<HTMLDivElement>()
+    const appBar = inject(AppBarKey)
 
     /* State */
     const isFocused = ref(false)
@@ -222,9 +229,6 @@ export default defineComponent({
         .value.replace(bodyPlaceholder, prettyBody)
     })
 
-    /* Tools */
-    const { bottom: iconPanelBottom } = useElementBounding(iconPanel)
-
     /* Search */
     const searchOptions = reactive({
       enabled: false,
@@ -245,14 +249,19 @@ export default defineComponent({
 
       return `${searchResult.current + 1}/${searchResult.ranges.length}`
     })
+
+    const { height: appBarHeight } = useElementSize(
+      appBar as MaybeComputedElementRef,
+    )
+    const { bottom: iconPanelBottom } = useElementBounding(iconPanel)
     const searchPanelStyle = computed(() => {
-      if (iconPanelBottom.value > 48) {
+      if (iconPanelBottom.value > appBarHeight.value) {
         return {}
       }
 
       return {
         position: 'fixed',
-        top: '48px',
+        top: `${appBarHeight.value}px`,
       }
     })
 
