@@ -121,6 +121,7 @@ import {
   MaybeComputedElementRef,
   useElementBounding,
   useElementSize,
+  useEventListener,
 } from '@vueuse/core'
 import hljs from 'highlight.js/lib/core'
 import css from 'highlight.js/lib/languages/css'
@@ -136,8 +137,6 @@ import {
   computed,
   defineComponent,
   inject,
-  onBeforeUnmount,
-  onMounted,
   reactive,
   ref,
   watch,
@@ -442,18 +441,13 @@ export default defineComponent({
 
       const visibleRanges = searchResult.ranges.slice(
         lowerBound,
-        upperBound + 1,
+        upperBound,
       ) as Array<Range>
       CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
     }
-    const debouncedOnScroll = debounce(onScroll, 50)
+    const debouncedOnScroll = debounce(onScroll, 32)
 
-    onMounted(() => {
-      window.addEventListener('scroll', debouncedOnScroll)
-    })
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', debouncedOnScroll)
-    })
+    useEventListener(window, 'scroll', debouncedOnScroll)
 
     return {
       mdiChevronDown,
