@@ -13,16 +13,12 @@
         :focused="isFocused"
       >
         <pre
-          ref="contenteditable"
+          ref="htmlArea"
           class="v-field__input"
-          :class="$style.contenteditable"
-          spellcheck="false"
-          contenteditable
+          :class="$style.htmlArea"
+          tabindex="0"
           @focus="onFocus"
           @blur="onBlur"
-          @keydown="onKeydown"
-          @cut.prevent
-          @paste.prevent
           v-html="html"
         />
       </VField>
@@ -33,6 +29,10 @@
       class="d-flex flex-column align-end"
     >
       <div ref="iconPanel">
+        <VBtn variant="plain" icon @click="onSelectAll">
+          <VIcon :icon="mdiSelectAll" />
+          <VTooltip location="top" activator="parent"> Select all </VTooltip>
+        </VBtn>
         <VBtn
           variant="plain"
           icon
@@ -116,6 +116,7 @@ import {
   mdiFormatLetterCase,
   mdiMonitorDashboard,
   mdiRegex,
+  mdiSelectAll,
 } from '@mdi/js'
 import {
   MaybeComputedElementRef,
@@ -183,7 +184,7 @@ export default defineComponent({
     const theme = useTheme()
 
     /* DOM element and refs */
-    const contenteditable = ref<HTMLPreElement>()
+    const htmlArea = ref<HTMLPreElement>()
     const iconPanel = ref<HTMLDivElement>()
     const appBar = inject(AppBarKey)
 
@@ -312,22 +313,20 @@ export default defineComponent({
       const flags = searchOptions.caseSensitive ? 'g' : 'gi'
       const regexp = new RegExp(pattern, flags)
 
-      const offsets = [
-        ...contenteditable.value!.innerText.matchAll(regexp),
-      ].map(m => {
+      const offsets = [...htmlArea.value!.innerText.matchAll(regexp)].map(m => {
         return {
           start: m.index!,
           end: m.index! + m[0].length,
         }
       })
       const walker = document.createTreeWalker(
-        contenteditable.value!,
+        htmlArea.value!,
         NodeFilter.SHOW_TEXT,
       )
 
       const results = offsets.map(() => {
         const range = document.createRange()
-        range.setStart(contenteditable.value!, 0)
+        range.setStart(htmlArea.value!, 0)
         range.collapse(true)
 
         return {
@@ -405,10 +404,17 @@ export default defineComponent({
       isFocused.value = false
     }
 
-    const onKeydown = (event: KeyboardEvent) => {
-      if (!(event.metaKey || event.ctrlKey)) {
-        event.preventDefault()
+    const onSelectAll = () => {
+      const selection = document.getSelection()
+      if (!selection) {
+        return
       }
+
+      const range = new Range()
+      range.selectNodeContents(htmlArea.value!)
+
+      selection.removeAllRanges()
+      selection.addRange(range as Range)
     }
     const onSearchInputKeydown = (event: KeyboardEvent) => {
       if (event.code != 'Enter') {
@@ -457,8 +463,9 @@ export default defineComponent({
       mdiFormatLetterCase,
       mdiMonitorDashboard,
       mdiRegex,
+      mdiSelectAll,
 
-      contenteditable,
+      htmlArea,
       iconPanel,
 
       isActive,
@@ -477,7 +484,8 @@ export default defineComponent({
 
       onFocus,
       onBlur,
-      onKeydown,
+
+      onSelectAll,
       onSearchInputKeydown,
     }
   },
@@ -523,11 +531,8 @@ export default defineComponent({
     }
   }
 }
-.contenteditable {
-  caret-color: transparent;
+.htmlArea {
   display: block;
-  height: fit-content;
-  outline: 0px solid transparent;
   white-space: pre-wrap;
 }
 // FIXME: Firefox doesn't support Custom Highlight API
