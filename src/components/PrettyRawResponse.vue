@@ -55,6 +55,7 @@
         rounded
       >
         <VTextField
+          ref="searchInput"
           v-model="searchOptions.keyword"
           class="ml-2 monospaced"
           :class="$style.searchInput"
@@ -63,7 +64,6 @@
           variant="plain"
           single-line
           hide-details
-          @keydown="onSearchInputKeydown"
         />
         <VDivider inset vertical />
         <VBtn
@@ -120,6 +120,8 @@ import {
 } from '@mdi/js'
 import {
   MaybeComputedElementRef,
+  MaybeComputedRef,
+  onKeyStroke,
   useElementBounding,
   useElementSize,
   useEventListener,
@@ -138,10 +140,12 @@ import {
   computed,
   defineComponent,
   inject,
+  nextTick,
   reactive,
   ref,
   watch,
 } from 'vue'
+import { VTextField } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import { AppBarKey } from '../utils/constants'
 import { binarySearch, generateRandomHexString } from '../utils/functions'
@@ -186,6 +190,9 @@ export default defineComponent({
     /* DOM element and refs */
     const htmlArea = ref<HTMLPreElement>()
     const iconPanel = ref<HTMLDivElement>()
+    const searchInput = ref<
+      InstanceType<typeof VTextField> & { focus: () => void }
+    >()
     const appBar = inject(AppBarKey)
 
     /* State */
@@ -386,6 +393,14 @@ export default defineComponent({
       }, 256),
     )
     watch(
+      () => searchOptions.enabled,
+      () => {
+        nextTick(() => {
+          searchInput.value!.focus()
+        })
+      },
+    )
+    watch(
       () => {
         return `${searchOptions.enabled}-${searchOptions.caseSensitive}-${searchOptions.regexp}`
       },
@@ -395,6 +410,22 @@ export default defineComponent({
       },
     )
     watch(() => searchResult.current, highlightCurrentSearchResult)
+
+    onKeyStroke(
+      ['Enter', 'Shift+Enter'],
+      (event: KeyboardEvent) => {
+        if (event.code != 'Enter') {
+          return
+        }
+
+        if (event.shiftKey) {
+          previousSearchResult()
+        } else {
+          nextSearchResult()
+        }
+      },
+      { target: searchInput as unknown as MaybeComputedRef<EventTarget> },
+    )
 
     /* Events */
     const onFocus = () => {
@@ -415,17 +446,6 @@ export default defineComponent({
 
       selection.removeAllRanges()
       selection.addRange(range as Range)
-    }
-    const onSearchInputKeydown = (event: KeyboardEvent) => {
-      if (event.code != 'Enter') {
-        return
-      }
-
-      if (event.shiftKey) {
-        previousSearchResult()
-      } else {
-        nextSearchResult()
-      }
     }
 
     const onScroll = () => {
@@ -454,6 +474,22 @@ export default defineComponent({
     const debouncedOnScroll = debounce(onScroll, 32)
 
     useEventListener(window, 'scroll', debouncedOnScroll)
+    onKeyStroke(
+      (event: KeyboardEvent) => {
+        return (
+          event.code === 'Escape' ||
+          event.code === 'F3' ||
+          ((event.ctrlKey || event.metaKey) && event.code === 'KeyF')
+        )
+      },
+      (event: KeyboardEvent) => {
+        event.preventDefault()
+        event.stopPropagation()
+
+        searchOptions.enabled = event.code != 'Escape'
+      },
+      { target: window },
+    )
 
     return {
       mdiChevronDown,
@@ -467,6 +503,7 @@ export default defineComponent({
 
       htmlArea,
       iconPanel,
+      searchInput,
 
       isActive,
       isFocused,
@@ -486,7 +523,6 @@ export default defineComponent({
       onBlur,
 
       onSelectAll,
-      onSearchInputKeydown,
     }
   },
 })
@@ -534,6 +570,7 @@ export default defineComponent({
 .htmlArea {
   display: block;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 // FIXME: Firefox doesn't support Custom Highlight API
 ::highlight(searchResult) {
