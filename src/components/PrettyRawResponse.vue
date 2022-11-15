@@ -575,8 +575,10 @@ export default defineComponent({
 // FIXME: Firefox doesn't support Custom Highlight API
 ::highlight(searchResult) {
   background-color: yellow;
+  color: black;
 }
 ::highlight(searchResultCurrent) {
   background-color: orange;
+  color: black;
 }
 </style>
