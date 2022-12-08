@@ -18,25 +18,13 @@ export async function sleep(ms: number) {
 
 export async function waitForTabComplete(tabId: number) {
   return new Promise<void>(resolve => {
-    const handler = (
-      id: number,
-      info: browser.Tabs.OnUpdatedChangeInfoType,
-    ) => {
-      if (info.status !== 'complete' || id != tabId) {
-        return
-      }
-
-      browser.tabs.onUpdated.removeListener(handler)
-      resolve()
-    }
-
-    browser.tabs.onUpdated.addListener(handler)
-    browser.tabs.query({ status: 'complete' }).then(tabs => {
-      if (tabs.find(tab => tab.id === tabId)) {
-        browser.tabs.onUpdated.removeListener(handler)
+    const timer = setInterval(async () => {
+      const tab = await browser.tabs.get(tabId)
+      if (tab.status === 'complete') {
+        clearInterval(timer)
         resolve()
       }
-    })
+    }, 256)
   })
 }
 

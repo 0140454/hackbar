@@ -66,11 +66,11 @@ const GETTING_NOT_FOUND_STATUS = 'Getting status code for non-existent path...'
 const result: Array<TestResultData> = []
 const reporter = new (class {
   data: TestProgress
-  timer: number
+  timer: ReturnType<typeof setInterval>
 
   constructor() {
     this.data = { status: '', percentage: 0 }
-    this.timer = window.setInterval(() => this.flush(), 256)
+    this.timer = setInterval(() => this.flush(), 256)
   }
 
   setStatus(status: string) {
