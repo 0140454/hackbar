@@ -40,10 +40,10 @@ index 2cc594f..b97e4df 100644
 +});
  export type { Parser };
 diff --git a/src/generators/ansible.ts b/src/generators/ansible.ts
-index d0f2e29..3a1eb3a 100644
+index da411c7..240e2c4 100644
 --- a/src/generators/ansible.ts
 +++ b/src/generators/ansible.ts
-@@ -111,14 +111,14 @@ export const _toAnsible = (
+@@ -115,14 +115,14 @@ export const _toAnsible = (
      2
    );
  };
@@ -64,10 +64,10 @@ index d0f2e29..3a1eb3a 100644
 +  return (await toAnsibleWarn(curlCommand))[0];
  };
 diff --git a/src/generators/cfml.ts b/src/generators/cfml.ts
-index 52243e2..919f4dc 100644
+index 26b5d4d..6315ccf 100644
 --- a/src/generators/cfml.ts
 +++ b/src/generators/cfml.ts
-@@ -136,15 +136,15 @@ export const _toCFML = (request: Request, warnings: Warnings = []): string => {
+@@ -150,15 +150,15 @@ export const _toCFML = (request: Request, warnings: Warnings = []): string => {
    return cfmlCode;
  };
  
@@ -89,10 +89,10 @@ index 52243e2..919f4dc 100644
 +  return (await toCFMLWarn(curlCommand))[0];
  };
 diff --git a/src/generators/csharp.ts b/src/generators/csharp.ts
-index 47474f2..b4052b8 100644
+index 83628a2..e359dde 100644
 --- a/src/generators/csharp.ts
 +++ b/src/generators/csharp.ts
-@@ -306,14 +306,14 @@ export const _toCSharp = (
+@@ -314,14 +314,14 @@ export const _toCSharp = (
    }
    return s;
  };
@@ -113,10 +113,10 @@ index 47474f2..b4052b8 100644
 +  return (await toCSharpWarn(curlCommand))[0];
  };
 diff --git a/src/generators/dart.ts b/src/generators/dart.ts
-index 0ef03b1..30cbab3 100644
+index 1a4ad05..f39a6c0 100644
 --- a/src/generators/dart.ts
 +++ b/src/generators/dart.ts
-@@ -214,14 +214,14 @@ export const _toDart = (request: Request, warnings: Warnings = []): string => {
+@@ -218,14 +218,14 @@ export const _toDart = (request: Request, warnings: Warnings = []): string => {
    importString += "import 'package:http/http.dart' as http;\n";
    return importString + "\n" + s + "\n";
  };
@@ -137,13 +137,13 @@ index 0ef03b1..30cbab3 100644
 +  return (await toDartWarn(curlCommand))[0];
  };
 diff --git a/src/generators/elixir.ts b/src/generators/elixir.ts
-index 7d300f5..da7ad10 100644
+index 0dc25dd..415a7a0 100644
 --- a/src/generators/elixir.ts
 +++ b/src/generators/elixir.ts
-@@ -249,15 +249,15 @@ response = HTTPoison.request(request)
- 
-   return template;
+@@ -297,15 +297,15 @@ response = HTTPoison.request(request)
+ `;
  };
+ 
 -export const toElixirWarn = (
 +export const toElixirWarn = async (
    curlCommand: string | string[],
@@ -162,10 +162,10 @@ index 7d300f5..da7ad10 100644
 +  return (await toElixirWarn(curlCommand))[0];
  };
 diff --git a/src/generators/go.ts b/src/generators/go.ts
-index 9626460..8a14058 100644
+index 81499c5..475f88a 100644
 --- a/src/generators/go.ts
 +++ b/src/generators/go.ts
-@@ -93,14 +93,14 @@ export const _toGo = (request: Request, warnings: Warnings = []): string => {
+@@ -134,14 +134,14 @@ export const _toGo = (request: Request, warnings: Warnings = []): string => {
  
    return goCode + "\n";
  };
@@ -186,10 +186,10 @@ index 9626460..8a14058 100644
 +  return (await toGoWarn(curlCommand))[0];
  };
 diff --git a/src/generators/java.ts b/src/generators/java.ts
-index 53f4d84..95c5f63 100644
+index a421751..a15113a 100644
 --- a/src/generators/java.ts
 +++ b/src/generators/java.ts
-@@ -114,15 +114,15 @@ export const _toJava = (request: Request, warnings: Warnings = []): string => {
+@@ -159,15 +159,15 @@ export const _toJava = (request: Request, warnings: Warnings = []): string => {
  
    return javaCode + "\n";
  };
@@ -211,10 +211,10 @@ index 53f4d84..95c5f63 100644
 +  return (await toJavaWarn(curlCommand))[0];
  };
 diff --git a/src/generators/javascript/axios.ts b/src/generators/javascript/axios.ts
-index c3e8a4e..8c0691b 100644
+index fce11dc..83c45a5 100644
 --- a/src/generators/javascript/axios.ts
 +++ b/src/generators/javascript/axios.ts
-@@ -377,14 +377,14 @@ export const _toNodeAxios = (
+@@ -368,14 +368,14 @@ export const _toNodeAxios = (
  
    return importCode + "\n" + code;
  };
@@ -235,10 +235,10 @@ index c3e8a4e..8c0691b 100644
 +  return (await toNodeAxiosWarn(curlCommand))[0];
  };
 diff --git a/src/generators/javascript/javascript.ts b/src/generators/javascript/javascript.ts
-index fac85da..6b6d74d 100644
+index c4597a8..751afc9 100644
 --- a/src/generators/javascript/javascript.ts
 +++ b/src/generators/javascript/javascript.ts
-@@ -320,32 +320,32 @@ export const _toNode = (request: Request, warnings: Warnings = []): string => {
+@@ -386,32 +386,32 @@ export const _toNode = (request: Request, warnings: Warnings = []): string => {
    return _toJavaScriptOrNode(request, warnings, true);
  };
  
@@ -282,10 +282,10 @@ index fac85da..6b6d74d 100644
 +  return (await toNodeWarn(curlCommand))[0];
  };
 diff --git a/src/generators/javascript/node-request.ts b/src/generators/javascript/node-request.ts
-index 912d326..57fb11b 100644
+index d3f1e96..abb7c1d 100644
 --- a/src/generators/javascript/node-request.ts
 +++ b/src/generators/javascript/node-request.ts
-@@ -99,16 +99,16 @@ export const _toNodeRequest = (
+@@ -100,16 +100,16 @@ export const _toNodeRequest = (
  
    return nodeRequestCode + "\n";
  };
@@ -308,10 +308,10 @@ index 912d326..57fb11b 100644
 +  return (await toNodeRequestWarn(curlCommand))[0];
  };
 diff --git a/src/generators/json.ts b/src/generators/json.ts
-index f25f862..b6c6a10 100644
+index f0dfa36..7a771ce 100644
 --- a/src/generators/json.ts
 +++ b/src/generators/json.ts
-@@ -183,14 +183,14 @@ export const _toJsonString = (
+@@ -178,14 +178,14 @@ export const _toJsonString = (
      ) + "\n"
    );
  };
@@ -332,10 +332,10 @@ index f25f862..b6c6a10 100644
 +  return (await toJsonStringWarn(curlCommand))[0];
  };
 diff --git a/src/generators/matlab/matlab.ts b/src/generators/matlab/matlab.ts
-index a66776f..a487e7d 100644
+index 7c55fb9..7d3d81b 100644
 --- a/src/generators/matlab/matlab.ts
 +++ b/src/generators/matlab/matlab.ts
-@@ -40,14 +40,14 @@ export const _toMATLAB = (
+@@ -45,14 +45,14 @@ export const _toMATLAB = (
      .filter((line) => line !== null)
      .join("\n");
  };
@@ -356,10 +356,10 @@ index a66776f..a487e7d 100644
 +  return (await toMATLABWarn(curlCommand))[0];
  };
 diff --git a/src/generators/php/php-requests.ts b/src/generators/php/php-requests.ts
-index 77f649d..a469fd5 100644
+index 393c506..7c4247e 100644
 --- a/src/generators/php/php-requests.ts
 +++ b/src/generators/php/php-requests.ts
-@@ -114,14 +114,14 @@ export const _toPhpRequests = (
+@@ -112,14 +112,14 @@ export const _toPhpRequests = (
  
    return phpCode + "\n";
  };
@@ -380,10 +380,10 @@ index 77f649d..a469fd5 100644
 +  return (await toPhpRequestsWarn(curlCommand))[0];
  };
 diff --git a/src/generators/php/php.ts b/src/generators/php/php.ts
-index 160b958..058a6b3 100644
+index 36dc1a9..8fe467f 100644
 --- a/src/generators/php/php.ts
 +++ b/src/generators/php/php.ts
-@@ -156,14 +156,14 @@ export const _toPhp = (request: Request, warnings: Warnings = []): string => {
+@@ -213,14 +213,14 @@ export const _toPhp = (request: Request, warnings: Warnings = []): string => {
    return phpCode;
  };
  
@@ -404,11 +404,11 @@ index 160b958..058a6b3 100644
 +  return (await toPhpWarn(curlCommand))[0];
  };
 diff --git a/src/generators/python.ts b/src/generators/python.ts
-index cd1b713..fc15714 100644
+index d3882b9..cae86ff 100644
 --- a/src/generators/python.ts
 +++ b/src/generators/python.ts
-@@ -1026,15 +1026,15 @@ export const _toPython = (
-   return pythonCode + "\n";
+@@ -1877,15 +1877,15 @@ export const _toPython = (
+   return pythonCode;
  };
  
 -export const toPythonWarn = (
@@ -429,7 +429,7 @@ index cd1b713..fc15714 100644
 +  return (await toPythonWarn(curlCommand))[0];
  };
 diff --git a/src/generators/r.ts b/src/generators/r.ts
-index 8ce5305..7601028 100644
+index baf54d0..b75ba09 100644
 --- a/src/generators/r.ts
 +++ b/src/generators/r.ts
 @@ -221,14 +221,14 @@ export const _toR = (request: Request, warnings: Warnings = []): string => {
@@ -453,10 +453,10 @@ index 8ce5305..7601028 100644
 +  return (await toRWarn(curlCommand))[0];
  };
 diff --git a/src/generators/ruby.ts b/src/generators/ruby.ts
-index ee929cf..03d31e5 100644
+index 5bb0858..186d33e 100644
 --- a/src/generators/ruby.ts
 +++ b/src/generators/ruby.ts
-@@ -424,15 +424,15 @@ export const _toRuby = (request: Request, warnings: Warnings = []): string => {
+@@ -429,15 +429,15 @@ export const _toRuby = (request: Request, warnings: Warnings = []): string => {
    return prelude + "\n" + code + "\n";
  };
  
@@ -478,10 +478,10 @@ index ee929cf..03d31e5 100644
 +  return (await toRubyWarn(curlCommand))[0];
  };
 diff --git a/src/generators/rust.ts b/src/generators/rust.ts
-index 8403be7..883e08c 100644
+index 78edd02..398e95f 100644
 --- a/src/generators/rust.ts
 +++ b/src/generators/rust.ts
-@@ -135,14 +135,14 @@ export const _toRust = (request: Request, warnings: Warnings = []): string => {
+@@ -173,14 +173,14 @@ export const _toRust = (request: Request, warnings: Warnings = []): string => {
  
    return lines.join("\n") + "\n";
  };
@@ -501,32 +501,8 @@ index 8403be7..883e08c 100644
 +export const toRust = async (curlCommand: string | string[]): Promise<string> => {
 +  return (await toRustWarn(curlCommand))[0];
  };
-diff --git a/src/generators/strest.ts b/src/generators/strest.ts
-index 3089f68..9340684 100644
---- a/src/generators/strest.ts
-+++ b/src/generators/strest.ts
-@@ -140,14 +140,14 @@ export const _toStrest = (
- 
-   return yaml.stringify(response, 100, 2);
- };
--export const toStrestWarn = (
-+export const toStrestWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const strest = _toStrest(request, warnings);
-   return [strest, warnings];
- };
--export const toStrest = (curlCommand: string | string[]): string => {
--  return toStrestWarn(curlCommand)[0];
-+export const toStrest = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toStrestWarn(curlCommand))[0];
- };
 diff --git a/src/util.ts b/src/util.ts
-index ce1f1c6..3a170e8 100644
+index c7d0d22..44f3eb1 100644
 --- a/src/util.ts
 +++ b/src/util.ts
 @@ -1,7 +1,7 @@
@@ -539,7 +515,7 @@ index ce1f1c6..3a170e8 100644
  
  // TODO: this type doesn't work.
  function has<T, K extends PropertyKey>(
-@@ -993,10 +993,11 @@ interface TokenizeResult {
+@@ -1130,10 +1130,11 @@ interface TokenizeResult {
    stdin?: string;
    stdinFile?: string;
  }
@@ -553,7 +529,7 @@ index ce1f1c6..3a170e8 100644
    const ast = parser.parse(curlCommand);
    // https://github.com/tree-sitter/tree-sitter-bash/blob/master/grammar.js
    // The AST must be in a nice format, i.e.
-@@ -1805,11 +1806,11 @@ function buildRequest(
+@@ -2100,11 +2101,11 @@ function buildRequest(
    return request;
  }
  
@@ -567,7 +543,7 @@ index ce1f1c6..3a170e8 100644
    let cmdName: string,
      args: string[],
      stdin: undefined | string,
-@@ -1820,7 +1821,7 @@ function parseCurlCommand(
+@@ -2115,7 +2116,7 @@ function parseCurlCommand(
        throw new CCError("no arguments provided");
      }
    } else {
@@ -576,16 +552,3 @@ index ce1f1c6..3a170e8 100644
      if (typeof cmdName === "undefined") {
        throw new CCError("failed to parse input");
      }
-diff --git a/tsconfig.json b/tsconfig.json
-index 7879258..e298c6b 100644
---- a/tsconfig.json
-+++ b/tsconfig.json
-@@ -6,7 +6,7 @@
-     "sourceMap": true,
-     "strict": true,
-     "target": "es2018",
--    "lib": ["es2018"],
-+    "lib": ["es2018", "dom"],
-     "moduleResolution": "node",
-     "module": "es2022",
-     "esModuleInterop": true,
