@@ -1,2 +1,2 @@
-.yarn/releases/* linguist-generated
-.yarn/plugins/* linguist-generated
+.yarn/releases/** linguist-generated
+.yarn/plugins/** linguist-generated
