@@ -1,7 +1,7 @@
 {
   "name": "HackBar",
   "description": "A browser extension for Penetration Testing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "build:chrome": "vite build",

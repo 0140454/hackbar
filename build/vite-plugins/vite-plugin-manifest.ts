@@ -25,28 +25,24 @@ const baseManifest = {
     load_url: {
       suggested_key: {
         default: 'Alt+A',
-        mac: 'MacCtrl+A',
       },
       description: "Trigger 'Load'",
     },
     split_url: {
       suggested_key: {
         default: 'Alt+S',
-        mac: 'MacCtrl+S',
       },
       description: "Trigger 'Split'",
     },
     execute_url: {
       suggested_key: {
         default: 'Alt+X',
-        mac: 'MacCtrl+X',
       },
       description: "Trigger 'Execute'",
     },
     switch_mode: {
       suggested_key: {
         default: 'Alt+M',
-        mac: 'MacCtrl+M',
       },
       description: "Switch between 'Basic' and 'Raw' mode",
     },

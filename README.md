@@ -107,11 +107,11 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 ### Shortcuts
 
-| Description | Default   | Mac           |
-| ----------- | --------- | ------------- |
-| Load        | `Alt + A` | `Control + A` |
-| Split       | `Alt + S` | `Control + S` |
-| Execute     | `Alt + X` | `Control + X` |
+| Description | Shortcut  |
+| ----------- | --------- |
+| Load        | `Alt + A` |
+| Split       | `Alt + S` |
+| Execute     | `Alt + X` |
 
 ## Request Editing
 
