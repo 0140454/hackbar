@@ -11,10 +11,14 @@
         @click="applyFunction('Encode.URL.encode')"
       />
       <VListItem
+        title="URL encode (all characters)"
+        @click="applyFunction('Encode.URL.encodeAllCharacter')"
+      />
+      <VListItem
         title="URL decode"
         @click="applyFunction('Encode.URL.decode')"
       />
-      <VListItem @click="applyFunction('Encode.URL.decodePlus')">
+      <VListItem @click="applyFunction('Encode.URL.decodePlusAsSpace')">
         <VListItemTitle> URL decode (+ <i>is</i> space) </VListItemTitle>
       </VListItem>
       <VDivider />

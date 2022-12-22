@@ -3,9 +3,21 @@ import CryptoJS from 'crypto-js'
 window.Encode = {}
 
 window.Encode.URL = {
-  encode: value => encodeURIComponent(value),
-  decode: value => decodeURIComponent(value),
-  decodePlus: value => decodeURIComponent(value.replaceAll('+', ' ')),
+  encode: value => {
+    return encodeURIComponent(value)
+  },
+  encodeAllCharacter: value => {
+    return window.Encode.Hexadecimal.encode(value).replace(
+      /.{2}/g,
+      str => `%${str}`,
+    )
+  },
+  decode: value => {
+    return decodeURIComponent(value)
+  },
+  decodePlusAsSpace: value => {
+    return decodeURIComponent(value.replaceAll('+', ' '))
+  },
 }
 
 window.Encode.Base64 = {
