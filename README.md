@@ -65,6 +65,10 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Html encode/decode with hex/dec/entity name
   - String.fromCharCode encode/decode
 
+- LFI
+
+  - PHP wrapper - Base64
+
 - SSRF
 
   - AWS - IAM role name
