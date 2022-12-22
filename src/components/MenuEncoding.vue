@@ -12,7 +12,7 @@
       />
       <VListItem
         title="URL encode (all characters)"
-        @click="applyFunction('Encode.URL.encodeAllCharacter')"
+        @click="applyFunction('Encode.URL.encodeAllCharacters')"
       />
       <VListItem
         title="URL decode"

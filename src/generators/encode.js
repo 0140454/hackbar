@@ -6,7 +6,7 @@ window.Encode.URL = {
   encode: value => {
     return encodeURIComponent(value)
   },
-  encodeAllCharacter: value => {
+  encodeAllCharacters: value => {
     return window.Encode.Hexadecimal.encode(value).replace(
       /.{2}/g,
       str => `%${str}`,
