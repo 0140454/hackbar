@@ -73,13 +73,6 @@
         @render="onRenderRequested"
       />
     </VMain>
-    <VOverlay
-      :model-value="isExecuting"
-      class="align-center justify-center"
-      persistent
-    >
-      <VProgressCircular indeterminate size="64" />
-    </VOverlay>
     <DialogReloadPrompt v-model="reloadDialog" />
     <DialogRequestLoader
       v-if="requestLoaderDialog.show"
@@ -218,7 +211,6 @@ export default defineComponent({
     const response = ref<BrowseResponse>()
     /* Mode / Status */
     const isRawMode = ref(false)
-    const isExecuting = ref(false)
 
     const enableRawMode = (enabled: boolean) => {
       if (isRawMode.value !== enabled) {
@@ -266,7 +258,7 @@ export default defineComponent({
     }
 
     const execute = () => {
-      if (request.url.length === 0 || isExecuting.value) {
+      if (request.url.length === 0) {
         return
       }
 
@@ -278,7 +270,6 @@ export default defineComponent({
           request,
         },
       })
-      isExecuting.value = true
     }
 
     function isLoadMessage(
@@ -337,9 +328,7 @@ export default defineComponent({
       } else if (isExecuteMessage(message)) {
         response.value = message.data
         await nextTick()
-        isExecuting.value = false
       } else if (isErrorMessage(message)) {
-        isExecuting.value = false
         snackbar.value.text = message.data
         snackbar.value.show = true
       } else if (isTestMessage(message)) {
@@ -570,7 +559,6 @@ export default defineComponent({
       request,
       response,
       isRawMode,
-      isExecuting,
 
       load,
       split,
