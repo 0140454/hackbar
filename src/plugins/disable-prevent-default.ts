@@ -3,7 +3,7 @@ import { Directive, DirectiveBinding, Plugin } from 'vue'
 function handler(e: Event) {
   e.preventDefault = () => {
     // eslint-disable-next-line no-console
-    console.warn('preventDefault call ignored, since it is unexpected')
+    console.warn('preventDefault is disabled explicitly')
   }
 }
 
@@ -14,7 +14,7 @@ function process(
 ) {
   const eventNames = Object.keys(modifiers).filter(name => !!name)
   if (!eventNames.length) {
-    throw new TypeError('at least one modifier required')
+    throw new TypeError('at least one modifier is required')
   }
 
   eventNames.forEach(name => {
