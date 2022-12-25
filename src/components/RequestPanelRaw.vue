@@ -13,6 +13,7 @@
           />
           <VTextField
             v-model="rawRequest.host"
+            v-disable-prevent-default.keydown
             class="pl-2 monospaced"
             label="Host"
             placeholder="example.com, example.com:8443, etc."
@@ -47,6 +48,7 @@
         <VTextarea
           ref="rawRequestInput"
           v-model="rawRequest.content"
+          v-disable-prevent-default.keydown
           class="monospaced"
           :hint="
             [

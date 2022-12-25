@@ -3,6 +3,7 @@
     <VTextarea
       ref="urlInput"
       v-model="request.url"
+      v-disable-prevent-default.keydown
       auto-grow
       class="pb-3 monospaced"
       hide-details
@@ -38,6 +39,7 @@
         <VTextarea
           v-show="isBodyEnabled"
           v-model="request.body.content"
+          v-disable-prevent-default.keydown
           class="monospaced"
           :class="postControlWrapped ? 'pt-3' : 'pt-1'"
           label="Body"
@@ -80,6 +82,7 @@
               />
               <VTextField
                 v-model="header.value"
+                v-disable-prevent-default.keydown
                 class="pl-2 monospaced"
                 style="flex: 1 0"
                 label="Value"

@@ -8,6 +8,7 @@
           <div class="d-flex pt-3">
             <VTextField
               v-model="result.host"
+              v-disable-prevent-default.keydown
               label="Host"
               :rules="[v => !!v.length || 'Invalid host']"
               style="flex: 4 0"
@@ -17,6 +18,7 @@
             />
             <VTextField
               v-model="result.port"
+              v-disable-prevent-default.keydown
               class="pl-2"
               style="flex: 1 0"
               label="Port"

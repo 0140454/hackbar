@@ -15,6 +15,7 @@
           <div class="d-flex pt-3">
             <VTextField
               v-model="result.columns"
+              v-disable-prevent-default.keydown
               :min="result.position"
               label="The number of columns"
               :rules="[
@@ -32,6 +33,7 @@
             <VTextField
               v-if="modelValue.positionRequired"
               v-model="result.position"
+              v-disable-prevent-default.keydown
               class="pl-2"
               style="flex: 1 0"
               label="Output position"

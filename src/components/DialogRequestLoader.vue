@@ -22,6 +22,7 @@
           <div class="d-flex pt-3">
             <VTextarea
               v-model="userInput"
+              v-disable-prevent-default.keydown
               class="monospaced"
               label="Command"
               :rows="3"

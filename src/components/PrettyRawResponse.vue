@@ -57,6 +57,7 @@
         <VTextField
           ref="searchInput"
           v-model="searchOptions.keyword"
+          v-disable-prevent-default.keydown
           class="ml-2 monospaced"
           :class="$style.searchInput"
           density="compact"
