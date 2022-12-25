@@ -8,7 +8,7 @@
     <VList>
       <VListItem
         title="PHP wrapper - Base64"
-        @click="applyFunction('Payload.LFI.phpWrapperBas64', true)"
+        @click="applyFunction('Payload.LFI.phpWrapperBase64', true)"
       />
     </VList>
   </VMenu>

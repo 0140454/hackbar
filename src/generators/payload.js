@@ -264,7 +264,7 @@ window.Payload.XSS = {
 }
 
 window.Payload.LFI = {
-  phpWrapperBas64: value =>
+  phpWrapperBase64: value =>
     'php://filter/convert.base64-encode/resource=' + value,
 }
 
