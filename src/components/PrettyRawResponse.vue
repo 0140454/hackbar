@@ -386,13 +386,11 @@ export default defineComponent({
       onScroll()
     }
 
-    watch(
-      () => searchOptions.keyword,
-      debounce(() => {
-        performSearch()
-        highlightCurrentSearchResult()
-      }, 256),
-    )
+    const startNewSearch = () => {
+      performSearch()
+      highlightCurrentSearchResult()
+    }
+    watch(() => searchOptions.keyword, debounce(startNewSearch, 256))
     watch(
       () => searchOptions.enabled,
       () => {
@@ -401,16 +399,16 @@ export default defineComponent({
         })
       },
     )
+    watch(() => {
+      return `${searchOptions.enabled}-${searchOptions.caseSensitive}-${searchOptions.regexp}`
+    }, startNewSearch)
+    watch(() => searchResult.current, highlightCurrentSearchResult)
     watch(
+      () => props.response,
       () => {
-        return `${searchOptions.enabled}-${searchOptions.caseSensitive}-${searchOptions.regexp}`
-      },
-      () => {
-        performSearch()
-        highlightCurrentSearchResult()
+        nextTick(startNewSearch)
       },
     )
-    watch(() => searchResult.current, highlightCurrentSearchResult)
 
     onKeyStroke(
       ['Enter', 'Shift+Enter'],
