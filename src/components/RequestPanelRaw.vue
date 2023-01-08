@@ -83,9 +83,18 @@
 
 <script lang="ts">
 import httpZ from 'http-z'
-import { PropType, defineComponent, nextTick, reactive, ref, watch } from 'vue'
+import {
+  PropType,
+  defineComponent,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
 import { VTextarea } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
+import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
 import PrettyRawResponse from './PrettyRawResponse.vue'
@@ -247,6 +256,27 @@ export default defineComponent({
         }
 
         renderResponse()
+      },
+    )
+
+    /* Preferences */
+    onMounted(async () => {
+      const preferences = (await browser.storage.local.get({
+        rawModeFollowRedirect: false,
+        rawModeAutoRenderEnabled: true,
+      })) as RawPanelPreferences
+
+      request.followRedirect = preferences.rawModeFollowRedirect
+      isAutoRenderEnabled.value = preferences.rawModeAutoRenderEnabled
+    })
+
+    watch(
+      () => `${request.followRedirect}-${isAutoRenderEnabled.value}`,
+      () => {
+        browser.storage.local.set({
+          rawModeFollowRedirect: request.followRedirect,
+          rawModeAutoRenderEnabled: isAutoRenderEnabled.value,
+        })
       },
     )
 

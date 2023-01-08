@@ -5,6 +5,11 @@ type Preferences = {
   rawModeEnabled: boolean
 }
 
+type RawPanelPreferences = {
+  rawModeFollowRedirect: boolean
+  rawModeAutoRenderEnabled: boolean
+}
+
 /* Request */
 
 type Header = {
