@@ -227,7 +227,7 @@ const messageListener = async (message: TestRequest) => {
       reporter.stop()
       browser.runtime.onMessage.removeListener(
         messageListener as Parameters<
-          Parameters<typeof browser.runtime.onMessage['removeListener']>[0]
+          Parameters<(typeof browser.runtime.onMessage)['removeListener']>[0]
         >[0],
       )
     }
@@ -247,6 +247,6 @@ const messageListener = async (message: TestRequest) => {
 
 browser.runtime.onMessage.addListener(
   messageListener as Parameters<
-    Parameters<typeof browser.runtime.onMessage['removeListener']>[0]
+    Parameters<(typeof browser.runtime.onMessage)['removeListener']>[0]
   >[0],
 )

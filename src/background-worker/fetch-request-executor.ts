@@ -55,7 +55,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       details:
         | Parameters<
             Parameters<
-              typeof browser.webRequest.onSendHeaders['addListener']
+              (typeof browser.webRequest.onSendHeaders)['addListener']
             >[0]
           >[0],
     ) => {
@@ -111,7 +111,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       details:
         | Parameters<
             Parameters<
-              typeof browser.webRequest.onBeforeRedirect['addListener']
+              (typeof browser.webRequest.onBeforeRedirect)['addListener']
             >[0]
           >[0],
     ) => {
@@ -137,7 +137,9 @@ export class FetchRequestExecutor extends RequestExecutor {
     const onCompletedHandler = async (
       details:
         | Parameters<
-            Parameters<typeof browser.webRequest.onCompleted['addListener']>[0]
+            Parameters<
+              (typeof browser.webRequest.onCompleted)['addListener']
+            >[0]
           >[0],
     ) => {
       if (!isSelfOrigin(details.initiator)) {
@@ -164,7 +166,7 @@ export class FetchRequestExecutor extends RequestExecutor {
       details:
         | Parameters<
             Parameters<
-              typeof browser.webRequest.onErrorOccurred['addListener']
+              (typeof browser.webRequest.onErrorOccurred)['addListener']
             >[0]
           >[0],
     ) => {
