@@ -134,6 +134,7 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
 import xml from 'highlight.js/lib/languages/xml'
 import httpZ from 'http-z'
+import { inRange } from 'lodash'
 import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
 import {
@@ -283,6 +284,31 @@ export default defineComponent({
         (searchResult.current - 1 + searchResult.ranges.length) %
         searchResult.ranges.length
     }
+    const highlightInViewportSearchResult = () => {
+      const viewportTop = window.scrollY
+      const viewportBottom = window.scrollY + window.innerHeight
+
+      const lowerBound = binarySearch(searchResult.ranges, range => {
+        const rect = range.getBoundingClientRect()
+        const absoluteBottom = rect.bottom + window.scrollY
+
+        return absoluteBottom - viewportTop
+      })
+      const upperBound = binarySearch(searchResult.ranges, range => {
+        const rect = range.getBoundingClientRect()
+        const absoluteTop = rect.top + window.scrollY
+
+        return absoluteTop - viewportBottom
+      })
+
+      const visibleRanges = searchResult.ranges.slice(
+        lowerBound,
+        upperBound,
+      ) as Array<Range>
+      CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
+
+      return [lowerBound, upperBound]
+    }
     const highlightCurrentSearchResult = () => {
       if (!searchResult.ranges.length) {
         return
@@ -381,9 +407,17 @@ export default defineComponent({
         currentOffset = textEnd
       }
 
-      searchResult.current = 0
       searchResult.ranges = results.map(result => result.range)
-      onScroll()
+      const [inViewportStartIndex, inViewportEndIndex] =
+        highlightInViewportSearchResult()
+
+      searchResult.current = inRange(
+        searchResult.current,
+        inViewportStartIndex,
+        inViewportEndIndex,
+      )
+        ? searchResult.current
+        : inViewportStartIndex
     }
 
     const startNewSearch = () => {
@@ -411,9 +445,9 @@ export default defineComponent({
     )
 
     onKeyStroke(
-      ['Enter', 'Shift+Enter'],
+      ['Enter', 'Shift+Enter', 'F3', 'Shift+F3'],
       (event: KeyboardEvent) => {
-        if (event.code != 'Enter') {
+        if (!['Enter', 'F3'].includes(event.code)) {
           return
         }
 
@@ -447,32 +481,9 @@ export default defineComponent({
       selection.addRange(range as Range)
     }
 
-    const onScroll = () => {
-      const viewportTop = window.scrollY
-      const viewportBottom = window.scrollY + window.innerHeight
+    const onScroll = debounce(highlightInViewportSearchResult, 32)
 
-      const lowerBound = binarySearch(searchResult.ranges, range => {
-        const rect = range.getBoundingClientRect()
-        const absoluteBottom = rect.bottom + window.scrollY
-
-        return absoluteBottom - viewportTop
-      })
-      const upperBound = binarySearch(searchResult.ranges, range => {
-        const rect = range.getBoundingClientRect()
-        const absoluteTop = rect.top + window.scrollY
-
-        return absoluteTop - viewportBottom
-      })
-
-      const visibleRanges = searchResult.ranges.slice(
-        lowerBound,
-        upperBound,
-      ) as Array<Range>
-      CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
-    }
-    const debouncedOnScroll = debounce(onScroll, 32)
-
-    useEventListener(window, 'scroll', debouncedOnScroll)
+    useEventListener(window, 'scroll', onScroll)
     onKeyStroke(
       (event: KeyboardEvent) => {
         return (
