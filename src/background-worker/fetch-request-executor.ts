@@ -43,7 +43,7 @@ export class FetchRequestExecutor extends RequestExecutor {
     })
   }
 
-  getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleCondition {
+  getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleConditionType {
     return {
       initiatorDomains: [browser.runtime.id],
       resourceTypes: ['xmlhttprequest'],

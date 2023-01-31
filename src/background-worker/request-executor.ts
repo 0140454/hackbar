@@ -27,11 +27,13 @@ export abstract class RequestExecutor {
 
   abstract setupAdditionalHeaders(): void
 
-  abstract getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleCondition
+  abstract getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleConditionType
 
   getModifyHeaderInfo() {
     return this.request.headers.map(
-      (header): browser.DeclarativeNetRequest.ModifyHeaderInfo => {
+      (
+        header,
+      ): browser.DeclarativeNetRequest.RuleActionRequestHeadersItemType => {
         if (header.value.length !== 0 || !header.removeIfEmptyValue) {
           return {
             header: header.name,
@@ -52,9 +54,10 @@ export abstract class RequestExecutor {
     const ruleId = await store.allocateRuleId()
     const modifyHeaderInfo = this.getModifyHeaderInfo()
     const modifyHeaderCondition = this.getModifyHeaderCondition()
-    const ruleOptions: browser.DeclarativeNetRequest.UpdateRuleOptions = {
-      removeRuleIds: [ruleId],
-    }
+    const ruleOptions: browser.DeclarativeNetRequest.UpdateSessionRulesOptionsType =
+      {
+        removeRuleIds: [ruleId],
+      }
 
     if (modifyHeaderInfo.length > 0) {
       ruleOptions['addRules'] = [

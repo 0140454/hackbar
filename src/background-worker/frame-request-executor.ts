@@ -26,7 +26,7 @@ export class FrameRequestExecutor extends RequestExecutor {
     }
   }
 
-  getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleCondition {
+  getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleConditionType {
     return {
       tabIds: [this.tabId],
       resourceTypes: ['main_frame'],
