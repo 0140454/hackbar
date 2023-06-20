@@ -131,8 +131,13 @@ export const OpenReverseShellPromptKey: InjectionKey<(func: string) => void> =
   Symbol('openReverseShellPrompt')
 
 export const ControlTestKey: InjectionKey<
-  (action: string, script?: string, argument?: any) => void
+  (
+    action: BackgroundTestMessage['data']['action'],
+    script?: string,
+    argument?: any,
+  ) => void
 > = Symbol('controlTest')
 
-export const AppBarKey: InjectionKey<Ref<InstanceType<typeof VAppBar>>> =
-  Symbol('appBar')
+export const AppBarKey: InjectionKey<
+  Ref<InstanceType<typeof VAppBar> | undefined>
+> = Symbol('appBar')

@@ -121,7 +121,6 @@ import {
 } from '@mdi/js'
 import {
   MaybeComputedElementRef,
-  MaybeComputedRef,
   onKeyStroke,
   useElementBounding,
   useElementSize,
@@ -139,6 +138,7 @@ import debounce from 'lodash/debounce'
 import escapeRegExp from 'lodash/escapeRegExp'
 import {
   PropType,
+  StyleValue,
   computed,
   defineComponent,
   inject,
@@ -264,14 +264,14 @@ export default defineComponent({
     )
     const { bottom: iconPanelBottom } = useElementBounding(iconPanel)
     const searchPanelStyle = computed(() => {
-      if (iconPanelBottom.value > appBarHeight.value) {
-        return {}
+      const result: StyleValue = {}
+
+      if (iconPanelBottom.value <= appBarHeight.value) {
+        result['position'] = 'fixed'
+        result['top'] = `${appBarHeight.value}px`
       }
 
-      return {
-        position: 'fixed',
-        top: `${appBarHeight.value}px`,
-      }
+      return result
     })
 
     const nextSearchResult = () => {
@@ -457,7 +457,7 @@ export default defineComponent({
           nextSearchResult()
         }
       },
-      { target: searchInput as unknown as MaybeComputedRef<EventTarget> },
+      { target: searchInput },
     )
 
     /* Events */
