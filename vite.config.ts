@@ -1,7 +1,7 @@
 import path from 'path'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import vue from '@vitejs/plugin-vue'
-import glob from 'glob'
+import { glob } from 'glob'
 import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugins/vite-plugin-iife'

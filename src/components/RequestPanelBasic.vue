@@ -66,7 +66,9 @@
               : 'pt-2'
           "
         >
-          <VCheckboxBtn v-model="header.enabled" hide-details />
+          <div>
+            <VCheckboxBtn v-model="header.enabled" hide-details />
+          </div>
           <div class="d-flex flex-column flex-fill">
             <div class="d-flex align-end">
               <VCombobox

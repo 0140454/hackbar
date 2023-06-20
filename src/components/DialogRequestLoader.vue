@@ -61,6 +61,7 @@ import {
 import { VForm } from 'vuetify/components'
 import bodyProcessors from '../processors'
 import UrlencodedFormDataProcessor from '../processors/implementations/1-application-x-www-form-urlencoded'
+import JsonProcessor from '../processors/implementations/3-application-json'
 import { LoadFromKey } from '../utils/constants'
 
 export default defineComponent({
@@ -141,6 +142,8 @@ export default defineComponent({
 
         if (processor instanceof UrlencodedFormDataProcessor) {
           content = dataEntries.map(e => e.join('=')).join('&')
+        } else if (processor instanceof JsonProcessor) {
+          content = JSON.stringify(content)
         } else {
           content = dataEntries[0].join('')
         }

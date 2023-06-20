@@ -38,6 +38,8 @@ try {
 
 if (!version) {
   throw new Error('Failed to get version')
+} else {
+  console.info(`version: ${version}`)
 }
 
 // Get URLs
@@ -78,7 +80,7 @@ child_process.execFileSync(
 )
 const newPackageJson = child_process
   .execFileSync('jq', [
-    'del(.bin) | del(.browser) | del(.dependencies."tree-sitter") | del(.scripts.prepare)',
+    'del(.bin) | del(.browser) | del(.dependencies."@curlconverter/tree-sitter") | del(.scripts.prepare)',
     packageJsonPath,
   ])
   .toString()
@@ -88,7 +90,7 @@ child_process.execFileSync('rm', [
   '-rf',
   path.join(buildDir, 'dist/src'),
   path.join(buildDir, 'tools'),
-  path.join(buildDir, 'src/bash-parser.ts'),
+  path.join(buildDir, 'src/shell/Parser.ts'),
   path.join(buildDir, 'src/cli.ts'),
 ])
 

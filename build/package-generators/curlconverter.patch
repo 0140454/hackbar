@@ -1,16 +1,748 @@
-diff --git a/src/bash-parser-web.ts b/src/bash-parser-web.ts
-index 2cc594f..b97e4df 100644
---- a/src/bash-parser-web.ts
-+++ b/src/bash-parser-web.ts
-@@ -1,11 +1,29 @@
-+/* eslint-disable @typescript-eslint/ban-ts-comment */
-+
+diff --git a/src/Warnings.ts b/src/Warnings.ts
+index 8c8e02d..c215cdb 100644
+--- a/src/Warnings.ts
++++ b/src/Warnings.ts
+@@ -1,4 +1,4 @@
+-import type { Parser } from "./shell/Parser.js";
++import type { Parser } from "./shell/webParser.js";
+ import type { GlobalConfig } from "./curl/opts.js";
+ import type { Request } from "./Request.js";
+ 
+diff --git a/src/generators/ansible.ts b/src/generators/ansible.ts
+index 0c7c593..63235e4 100644
+--- a/src/generators/ansible.ts
++++ b/src/generators/ansible.ts
+@@ -348,14 +348,14 @@ export function _toAnsible(
+     2
+   );
+ }
+-export function toAnsibleWarn(
++export async function toAnsibleWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const ansible = _toAnsible(requests, warnings);
+   return [ansible, warnings];
+ }
+-export function toAnsible(curlCommand: string | string[]): string {
+-  return toAnsibleWarn(curlCommand)[0];
++export async function toAnsible(curlCommand: string | string[]): Promise<string> {
++  return (await toAnsibleWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/cfml.ts b/src/generators/cfml.ts
+index 2d4da9b..edde590 100644
+--- a/src/generators/cfml.ts
++++ b/src/generators/cfml.ts
+@@ -141,15 +141,15 @@ export function _toCFML(requests: Request[], warnings: Warnings = []): string {
+   return cfmlCode;
+ }
+ 
+-export function toCFMLWarn(
++export async function toCFMLWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const cfml = _toCFML(requests, warnings);
+   return [cfml, warnings];
+ }
+ 
+-export function toCFML(curlCommand: string | string[]): string {
+-  return toCFMLWarn(curlCommand)[0];
++export async function toCFML(curlCommand: string | string[]): Promise<string> {
++  return (await toCFMLWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/clojure.ts b/src/generators/clojure.ts
+index 3276f58..ac747e0 100644
+--- a/src/generators/clojure.ts
++++ b/src/generators/clojure.ts
+@@ -508,14 +508,14 @@ export function _toClojure(
+   return [...importLines].sort().join("\n") + "\n\n" + code + ")\n";
+ }
+ 
+-export function toClojureWarn(
++export async function toClojureWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const clojure = _toClojure(requests, warnings);
+   return [clojure, warnings];
+ }
+-export function toClojure(curlCommand: string | string[]): string {
+-  return toClojureWarn(curlCommand)[0];
++export async function toClojure(curlCommand: string | string[]): Promise<string> {
++  return (await toClojureWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/csharp.ts b/src/generators/csharp.ts
+index 8084b4c..3a0ac9a 100644
+--- a/src/generators/csharp.ts
++++ b/src/generators/csharp.ts
+@@ -372,14 +372,14 @@ export function _toCSharp(
+   }
+   return s;
+ }
+-export function toCSharpWarn(
++export async function toCSharpWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const cSharp = _toCSharp(requests, warnings);
+   return [cSharp, warnings];
+ }
+-export function toCSharp(curlCommand: string | string[]): string {
+-  return toCSharpWarn(curlCommand)[0];
++export async function toCSharp(curlCommand: string | string[]): Promise<string> {
++  return (await toCSharpWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/dart.ts b/src/generators/dart.ts
+index 4c0d9b2..9cdd0c0 100644
+--- a/src/generators/dart.ts
++++ b/src/generators/dart.ts
+@@ -257,14 +257,14 @@ export function _toDart(requests: Request[], warnings: Warnings = []): string {
+   importString += "import 'package:http/http.dart' as http;\n";
+   return importString + "\n" + s + "\n";
+ }
+-export function toDartWarn(
++export async function toDartWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const dart = _toDart(requests, warnings);
+   return [dart, warnings];
+ }
+-export function toDart(curlCommand: string | string[]): string {
+-  return toDartWarn(curlCommand)[0];
++export async function toDart(curlCommand: string | string[]): Promise<string> {
++  return (await toDartWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/elixir.ts b/src/generators/elixir.ts
+index eaa4516..8dbd253 100644
+--- a/src/generators/elixir.ts
++++ b/src/generators/elixir.ts
+@@ -338,15 +338,15 @@ export function _toElixir(
+   return requests.map((r) => requestToElixir(r, warnings)).join("\n");
+ }
+ 
+-export function toElixirWarn(
++export async function toElixirWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const elixir = _toElixir(requests, warnings);
+   return [elixir, warnings];
+ }
+ 
+-export function toElixir(curlCommand: string | string[]): string {
+-  return toElixirWarn(curlCommand)[0];
++export async function toElixir(curlCommand: string | string[]): Promise<string> {
++  return (await toElixirWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/go.ts b/src/generators/go.ts
+index 143d82d..f0e762a 100644
+--- a/src/generators/go.ts
++++ b/src/generators/go.ts
+@@ -256,14 +256,14 @@ export function _toGo(requests: Request[], warnings: Warnings = []): string {
+ 
+   return preamble + goCode + "\n";
+ }
+-export function toGoWarn(
++export async function toGoWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const go = _toGo(requests, warnings);
+   return [go, warnings];
+ }
+-export function toGo(curlCommand: string | string[]): string {
+-  return toGoWarn(curlCommand)[0];
++export async function toGo(curlCommand: string | string[]): Promise<string> {
++  return (await toGoWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/har.ts b/src/generators/har.ts
+index c03f35b..68c5f7b 100644
+--- a/src/generators/har.ts
++++ b/src/generators/har.ts
+@@ -132,16 +132,16 @@ export function _toHarString(
+   );
+ }
+ 
+-export function toHarStringWarn(
++export async function toHarStringWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   requests.map((r) => warnIfPartsIgnored(r, warnings, { multipleUrls: true }));
+ 
+   const har = _toHarString(requests, warnings);
+   return [har, warnings];
+ }
+-export function toHarString(curlCommand: string | string[]): string {
+-  return toHarStringWarn(curlCommand)[0];
++export async function toHarString(curlCommand: string | string[]): Promise<string> {
++  return (await toHarStringWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/http.ts b/src/generators/http.ts
+index 6c6b329..3097069 100644
+--- a/src/generators/http.ts
++++ b/src/generators/http.ts
+@@ -175,14 +175,14 @@ export function _toHTTP(requests: Request[], warnings: Warnings = []): string {
+   return s + "\n";
+ }
+ 
+-export function toHTTPWarn(
++export async function toHTTPWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const http = _toHTTP(requests, warnings);
+   return [http, warnings];
+ }
+-export function toHTTP(curlCommand: string | string[]): string {
+-  return toHTTPWarn(curlCommand)[0];
++export async function toHTTP(curlCommand: string | string[]): Promise<string> {
++  return (await toHTTPWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/httpie.ts b/src/generators/httpie.ts
+index 5328f19..48823fb 100644
+--- a/src/generators/httpie.ts
++++ b/src/generators/httpie.ts
+@@ -488,15 +488,15 @@ export function _toHttpie(
+   return commands.join("\n\n");
+ }
+ 
+-export function toHttpieWarn(
++export async function toHttpieWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const httpie = _toHttpie(requests, warnings);
+   return [httpie, warnings];
+ }
+ 
+-export function toHttpie(curlCommand: string | string[]): string {
+-  return toHttpieWarn(curlCommand)[0];
++export async function toHttpie(curlCommand: string | string[]): Promise<string> {
++  return (await toHttpieWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/java.ts b/src/generators/java.ts
+index 9e6f1c9..146c573 100644
+--- a/src/generators/java.ts
++++ b/src/generators/java.ts
+@@ -202,15 +202,15 @@ export function _toJava(requests: Request[], warnings: Warnings = []): string {
+ 
+   return preambleCode + javaCode + "\n";
+ }
+-export function toJavaWarn(
++export async function toJavaWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const java = _toJava(requests, warnings);
+   return [java, warnings];
+ }
+ 
+-export function toJava(curlCommand: string | string[]): string {
+-  return toJavaWarn(curlCommand)[0];
++export async function toJava(curlCommand: string | string[]): Promise<string> {
++  return (await toJavaWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/javascript/axios.ts b/src/generators/javascript/axios.ts
+index e2e1669..bc9e2a2 100644
+--- a/src/generators/javascript/axios.ts
++++ b/src/generators/javascript/axios.ts
+@@ -388,14 +388,14 @@ export function _toNodeAxios(
+ 
+   return importCode + "\n" + code;
+ }
+-export function toNodeAxiosWarn(
++export async function toNodeAxiosWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const nodeAxios = _toNodeAxios(requests, warnings);
+   return [nodeAxios, warnings];
+ }
+-export function toNodeAxios(curlCommand: string | string[]): string {
+-  return toNodeAxiosWarn(curlCommand)[0];
++export async function toNodeAxios(curlCommand: string | string[]): Promise<string> {
++  return (await toNodeAxiosWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/javascript/got.ts b/src/generators/javascript/got.ts
+index 2d93c0a..55b0270 100644
+--- a/src/generators/javascript/got.ts
++++ b/src/generators/javascript/got.ts
+@@ -358,14 +358,14 @@ export function _toNodeGot(
+ 
+   return importCode + "\n" + code;
+ }
+-export function toNodeGotWarn(
++export async function toNodeGotWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const nodeGot = _toNodeGot(requests, warnings);
+   return [nodeGot, warnings];
+ }
+-export function toNodeGot(curlCommand: string | string[]): string {
+-  return toNodeGotWarn(curlCommand)[0];
++export async function toNodeGot(curlCommand: string | string[]): Promise<string> {
++  return (await toNodeGotWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/javascript/javascript.ts b/src/generators/javascript/javascript.ts
+index a1e608e..cee668b 100644
+--- a/src/generators/javascript/javascript.ts
++++ b/src/generators/javascript/javascript.ts
+@@ -705,25 +705,25 @@ export function _toNode(requests: Request[], warnings: Warnings = []): string {
+   return _toJavaScriptOrNode(requests, warnings, true);
+ }
+ 
+-export function toJavaScriptWarn(
++export async function toJavaScriptWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, javaScriptSupportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, javaScriptSupportedArgs, warnings);
+   return [_toJavaScript(requests, warnings), warnings];
+ }
+-export function toJavaScript(curlCommand: string | string[]): string {
+-  const [result] = toJavaScriptWarn(curlCommand);
++export async function toJavaScript(curlCommand: string | string[]): Promise<string> {
++  const [result] = await toJavaScriptWarn(curlCommand);
+   return result;
+ }
+ 
+-export function toNodeWarn(
++export async function toNodeWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, nodeSupportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, nodeSupportedArgs, warnings);
+   return [_toNode(requests, warnings), warnings];
+ }
+-export function toNode(curlCommand: string | string[]): string {
+-  return toNodeWarn(curlCommand)[0];
++export async function toNode(curlCommand: string | string[]): Promise<string> {
++  return (await toNodeWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/javascript/request.ts b/src/generators/javascript/request.ts
+index 8640112..e94e916 100644
+--- a/src/generators/javascript/request.ts
++++ b/src/generators/javascript/request.ts
+@@ -121,16 +121,16 @@ export function _toNodeRequest(
+   return code + reprImportsRequire(imports) + "\n" + requestCode.join("\n\n");
+ }
+ 
+-export function toNodeRequestWarn(
++export async function toNodeRequestWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   warnings.unshift(["node-request", "the request package is deprecated"]);
+ 
+   const nodeRequests = _toNodeRequest(requests, warnings);
+   return [nodeRequests, warnings];
+ }
+-export function toNodeRequest(curlCommand: string | string[]): string {
+-  return toNodeRequestWarn(curlCommand)[0];
++export async function toNodeRequest(curlCommand: string | string[]): Promise<string> {
++  return (await toNodeRequestWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/json.ts b/src/generators/json.ts
+index 392685a..14f4f6a 100644
+--- a/src/generators/json.ts
++++ b/src/generators/json.ts
+@@ -240,14 +240,14 @@ export function _toJsonString(
+     ) + "\n"
+   );
+ }
+-export function toJsonStringWarn(
++export async function toJsonStringWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const json = _toJsonString(requests, warnings);
+   return [json, warnings];
+ }
+-export function toJsonString(curlCommand: string | string[]): string {
+-  return toJsonStringWarn(curlCommand)[0];
++export async function toJsonString(curlCommand: string | string[]): Promise<string> {
++  return (await toJsonStringWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/matlab/matlab.ts b/src/generators/matlab/matlab.ts
+index 28ab320..79d27d2 100644
+--- a/src/generators/matlab/matlab.ts
++++ b/src/generators/matlab/matlab.ts
+@@ -26,14 +26,14 @@ export function _toMATLAB(
+     .filter((line) => line !== null)
+     .join("\n");
+ }
+-export function toMATLABWarn(
++export async function toMATLABWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const matlab = _toMATLAB(requests, warnings);
+   return [matlab, warnings];
+ }
+-export function toMATLAB(curlCommand: string | string[]): string {
+-  return toMATLABWarn(curlCommand)[0];
++export async function toMATLAB(curlCommand: string | string[]): Promise<string> {
++  return (await toMATLABWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/php/guzzle.ts b/src/generators/php/guzzle.ts
+index b198662..3af43ab 100644
+--- a/src/generators/php/guzzle.ts
++++ b/src/generators/php/guzzle.ts
+@@ -355,15 +355,15 @@ export function _toPhpGuzzle(
+   );
+ }
+ 
+-export function toPhpGuzzleWarn(
++export async function toPhpGuzzleWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const guzzle = _toPhpGuzzle(requests, warnings);
+   return [guzzle, warnings];
+ }
+ 
+-export function toPhpGuzzle(curlCommand: string | string[]): string {
+-  return toPhpGuzzleWarn(curlCommand)[0];
++export async function toPhpGuzzle(curlCommand: string | string[]): Promise<string> {
++  return (await toPhpGuzzleWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/php/php.ts b/src/generators/php/php.ts
+index 944035d..08fafe6 100644
+--- a/src/generators/php/php.ts
++++ b/src/generators/php/php.ts
+@@ -203,14 +203,14 @@ export function _toPhp(requests: Request[], warnings: Warnings = []): string {
+   return phpCode;
+ }
+ 
+-export function toPhpWarn(
++export async function toPhpWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const php = _toPhp(requests, warnings);
+   return [php, warnings];
+ }
+-export function toPhp(curlCommand: string | string[]): string {
+-  return toPhpWarn(curlCommand)[0];
++export async function toPhp(curlCommand: string | string[]): Promise<string> {
++  return (await toPhpWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/php/requests.ts b/src/generators/php/requests.ts
+index 369bfbf..64e85ea 100644
+--- a/src/generators/php/requests.ts
++++ b/src/generators/php/requests.ts
+@@ -90,14 +90,14 @@ export function _toPhpRequests(
+ 
+   return phpCode + "\n";
+ }
+-export function toPhpRequestsWarn(
++export async function toPhpRequestsWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const php = _toPhpRequests(requests, warnings);
+   return [php, warnings];
+ }
+-export function toPhpRequests(curlCommand: string | string[]): string {
+-  return toPhpRequestsWarn(curlCommand)[0];
++export async function toPhpRequests(curlCommand: string | string[]): Promise<string> {
++  return (await toPhpRequestsWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/python.ts b/src/generators/python.ts
+index 3f11dc5..fdffcb7 100644
+--- a/src/generators/python.ts
++++ b/src/generators/python.ts
+@@ -2128,15 +2128,15 @@ export function _toPython(
+   return importCode + code.join(joinTwoLines ? "\n\n" : "\n");
+ }
+ 
+-export function toPythonWarn(
++export async function toPythonWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const python = _toPython(requests, warnings);
+   return [python, warnings];
+ }
+ 
+-export function toPython(curlCommand: string | string[]): string {
+-  return toPythonWarn(curlCommand)[0];
++export async function toPython(curlCommand: string | string[]): Promise<string> {
++  return (await toPythonWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/r.ts b/src/generators/r.ts
+index a13a179..c707b5c 100644
+--- a/src/generators/r.ts
++++ b/src/generators/r.ts
+@@ -271,14 +271,14 @@ export function _toR(requests: Request[], warnings: Warnings = []): string {
+ 
+   return rstatsCode + "\n";
+ }
+-export function toRWarn(
++export async function toRWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const rHttr = _toR(requests, warnings);
+   return [rHttr, warnings];
+ }
+-export function toR(curlCommand: string | string[]): string {
+-  return toRWarn(curlCommand)[0];
++export async function toR(curlCommand: string | string[]): Promise<string> {
++  return (await toRWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/ruby.ts b/src/generators/ruby.ts
+index c2435f2..1edcf69 100644
+--- a/src/generators/ruby.ts
++++ b/src/generators/ruby.ts
+@@ -547,15 +547,15 @@ export function _toRuby(requests: Request[], warnings: Warnings = []): string {
+   return prelude + "\n" + code;
+ }
+ 
+-export function toRubyWarn(
++export async function toRubyWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const ruby = _toRuby(requests, warnings);
+   return [ruby, warnings];
+ }
+ 
+-export function toRuby(curlCommand: string | string[]): string {
+-  return toRubyWarn(curlCommand)[0];
++export async function toRuby(curlCommand: string | string[]): Promise<string> {
++  return (await toRubyWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/rust.ts b/src/generators/rust.ts
+index 7aa4c33..e7dd670 100644
+--- a/src/generators/rust.ts
++++ b/src/generators/rust.ts
+@@ -234,14 +234,14 @@ export function _toRust(requests: Request[], warnings: Warnings = []): string {
+ 
+   return [...preambleLines, ...lines].join("\n") + "\n";
+ }
+-export function toRustWarn(
++export async function toRustWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const rust = _toRust(requests, warnings);
+   return [rust, warnings];
+ }
+-export function toRust(curlCommand: string | string[]): string {
+-  return toRustWarn(curlCommand)[0];
++export async function toRust(curlCommand: string | string[]): Promise<string> {
++  return (await toRustWarn(curlCommand))[0];
+ }
+diff --git a/src/generators/wget.ts b/src/generators/wget.ts
+index 7747641..4a3df64 100644
+--- a/src/generators/wget.ts
++++ b/src/generators/wget.ts
+@@ -461,15 +461,15 @@ export function _toWget(requests: Request[], warnings: Warnings = []): string {
+   return requests.map((r) => requestToWget(r, warnings)).join("\n\n");
+ }
+ 
+-export function toWgetWarn(
++export async function toWgetWarn(
+   curlCommand: string | string[],
+   warnings: Warnings = []
+-): [string, Warnings] {
+-  const requests = parse(curlCommand, supportedArgs, warnings);
++): Promise<[string, Warnings]> {
++  const requests = await parse(curlCommand, supportedArgs, warnings);
+   const wget = _toWget(requests, warnings);
+   return [wget, warnings];
+ }
+ 
+-export function toWget(curlCommand: string | string[]): string {
+-  return toWgetWarn(curlCommand)[0];
++export async function toWget(curlCommand: string | string[]): Promise<string> {
++  return (await toWgetWarn(curlCommand))[0];
+ }
+diff --git a/src/parse.ts b/src/parse.ts
+index 876d33f..c0f2c89 100644
+--- a/src/parse.ts
++++ b/src/parse.ts
+@@ -23,12 +23,12 @@ export function clip(s: string, maxLength = 30): string {
+   return s;
+ }
+ 
+-function findCommands(
++async function findCommands(
+   curlCommand: string | string[],
+   warnings: Warnings
+-): [Word[], Word?, Word?][] {
++): Promise<[Word[], Word?, Word?][]> {
+   if (typeof curlCommand === "string") {
+-    return tokenize(curlCommand, warnings);
++    return await tokenize(curlCommand, warnings);
+   }
+ 
+   if (curlCommand.length === 0) {
+@@ -49,13 +49,13 @@ function findCommands(
+  * @param command a string of Bash code containing at least one curl command or an
+  * array of shell argument tokens (meant for passing process.argv).
+  */
+-export function parse(
++export async function parse(
+   command: string | string[],
+   supportedArgs?: Set<string>,
+   warnings: Warnings = []
+-): Request[] {
++): Promise<Request[]> {
+   let requests: Request[] = [];
+-  const curlCommands = findCommands(command, warnings);
++  const curlCommands = await findCommands(command, warnings);
+   for (const [argv, stdin, stdinFile] of curlCommands) {
+     const globalConfig = curl.parseArgs(
+       argv,
+diff --git a/src/shell/Word.ts b/src/shell/Word.ts
+index ca85ab5..952fd4c 100644
+--- a/src/shell/Word.ts
++++ b/src/shell/Word.ts
+@@ -3,7 +3,7 @@
+ // They're implemented like this:
+ // ["foobar", {type: "variable", value: "baz", text: "$baz"}, "qux"]
+ 
+-import type { Parser } from "./Parser.js";
++import type { Parser } from "./webParser.js";
+ import { CCError } from "../utils.js";
+ 
+ export interface ShellToken {
+diff --git a/src/shell/tokenizer.ts b/src/shell/tokenizer.ts
+index 96ecb1f..a1b536a 100644
+--- a/src/shell/tokenizer.ts
++++ b/src/shell/tokenizer.ts
+@@ -3,8 +3,8 @@ import { Word, Token, firstShellToken } from "./Word.js";
+ import { CCError } from "../utils.js";
+ import { clip } from "../parse.js";
+ 
+-import parser from "./Parser.js";
+-import type { Parser } from "./Parser.js";
++import parserPromise from "./webParser.js";
++import type { Parser } from "./webParser.js";
+ 
+ import { underlineNode, type Warnings } from "../Warnings.js";
+ 
+@@ -265,7 +265,7 @@ function warnAboutErrorNodes(
+   cursor.gotoFirstChild();
+   while (cursor.gotoNextSibling()) {
+     if (cursor.nodeType === "ERROR") {
+-      let currentNode = cursor.currentNode;
++      let currentNode = cursor.currentNode();
+       try {
+         // TreeCursor.currentNode is a property in Node but a function in the browser
+         // https://github.com/tree-sitter/tree-sitter/issues/2195
+@@ -703,10 +703,11 @@ function nameToWord(
+   return nameWord;
+ }
+ 
+-export function tokenize(
++export async function tokenize(
+   curlCommand: string,
+   warnings: Warnings = []
+-): [Word[], Word?, Word?][] {
++): Promise<[Word[], Word?, Word?][]> {
++  const parser = await parserPromise;
+   const ast = parser.parse(curlCommand);
+   warnAboutErrorNodes(ast, curlCommand, warnings);
+ 
+diff --git a/src/shell/webParser.ts b/src/shell/webParser.ts
+index 3401fcf..d8e102e 100644
+--- a/src/shell/webParser.ts
++++ b/src/shell/webParser.ts
+@@ -1,13 +1,29 @@
+ // This file replaces Parser.ts when curlconverter is running in the browser.
+ 
  import Parser from "web-tree-sitter";
 +// @ts-ignore
-+import wasmParser from "../../../web-tree-sitter/tree-sitter.wasm?url";
++import wasmParser from "../../../../web-tree-sitter/tree-sitter.wasm?url";
 +// @ts-ignore
-+import wasmBash from "../tree-sitter-bash.wasm?url";
-+
++import wasmBash from "../../tree-sitter-bash.wasm?url";
+ 
+-// NOTE: Top-level await is not available in Safari until Safari 15
+-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#browser_compatibility
+-await Parser.init();
+-const Bash = await Parser.Language.load("/tree-sitter-bash.wasm");
+-const parser = new Parser();
+-parser.setLanguage(Bash);
 +export default new Promise<Parser>(async (resolve, reject) => {
 +  try {
 +    await Parser.init({
@@ -19,536 +751,17 @@ index 2cc594f..b97e4df 100644
 +          return wasmParser;
 +        }
  
--// NOTE: Top-level await is not available in Safari until Safari 15
--// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#browser_compatibility
--await Parser.init();
--const Bash = await Parser.Language.load("/tree-sitter-bash.wasm");
--const parser = new Parser();
--parser.setLanguage(Bash);
+-export default parser;
 +        return URL.createObjectURL(new Blob([wasmParser]));
 +      }
 +    });
 +    const Bash = await Parser.Language.load(wasmBash);
 +    const parser = new Parser();
 +    parser.setLanguage(Bash);
- 
--export default parser;
++
 +    resolve(parser);
 +  } catch (err) {
 +    reject(err);
 +  }
 +});
  export type { Parser };
-diff --git a/src/generators/ansible.ts b/src/generators/ansible.ts
-index da411c7..240e2c4 100644
---- a/src/generators/ansible.ts
-+++ b/src/generators/ansible.ts
-@@ -115,14 +115,14 @@ export const _toAnsible = (
-     2
-   );
- };
--export const toAnsibleWarn = (
-+export const toAnsibleWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const ansible = _toAnsible(request, warnings);
-   return [ansible, warnings];
- };
--export const toAnsible = (curlCommand: string | string[]): string => {
--  return toAnsibleWarn(curlCommand)[0];
-+export const toAnsible = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toAnsibleWarn(curlCommand))[0];
- };
-diff --git a/src/generators/cfml.ts b/src/generators/cfml.ts
-index 26b5d4d..6315ccf 100644
---- a/src/generators/cfml.ts
-+++ b/src/generators/cfml.ts
-@@ -150,15 +150,15 @@ export const _toCFML = (request: Request, warnings: Warnings = []): string => {
-   return cfmlCode;
- };
- 
--export const toCFMLWarn = (
-+export const toCFMLWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const cfml = _toCFML(request, warnings);
-   return [cfml, warnings];
- };
- 
--export const toCFML = (curlCommand: string | string[]): string => {
--  return toCFMLWarn(curlCommand)[0];
-+export const toCFML = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toCFMLWarn(curlCommand))[0];
- };
-diff --git a/src/generators/csharp.ts b/src/generators/csharp.ts
-index 83628a2..e359dde 100644
---- a/src/generators/csharp.ts
-+++ b/src/generators/csharp.ts
-@@ -314,14 +314,14 @@ export const _toCSharp = (
-   }
-   return s;
- };
--export const toCSharpWarn = (
-+export const toCSharpWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const cSharp = _toCSharp(request, warnings);
-   return [cSharp, warnings];
- };
--export const toCSharp = (curlCommand: string | string[]): string => {
--  return toCSharpWarn(curlCommand)[0];
-+export const toCSharp = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toCSharpWarn(curlCommand))[0];
- };
-diff --git a/src/generators/dart.ts b/src/generators/dart.ts
-index 1a4ad05..f39a6c0 100644
---- a/src/generators/dart.ts
-+++ b/src/generators/dart.ts
-@@ -218,14 +218,14 @@ export const _toDart = (request: Request, warnings: Warnings = []): string => {
-   importString += "import 'package:http/http.dart' as http;\n";
-   return importString + "\n" + s + "\n";
- };
--export const toDartWarn = (
-+export const toDartWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const dart = _toDart(request, warnings);
-   return [dart, warnings];
- };
--export const toDart = (curlCommand: string | string[]): string => {
--  return toDartWarn(curlCommand)[0];
-+export const toDart = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toDartWarn(curlCommand))[0];
- };
-diff --git a/src/generators/elixir.ts b/src/generators/elixir.ts
-index 0dc25dd..415a7a0 100644
---- a/src/generators/elixir.ts
-+++ b/src/generators/elixir.ts
-@@ -297,15 +297,15 @@ response = HTTPoison.request(request)
- `;
- };
- 
--export const toElixirWarn = (
-+export const toElixirWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const elixir = _toElixir(request, warnings);
-   return [elixir, warnings];
- };
- 
--export const toElixir = (curlCommand: string | string[]): string => {
--  return toElixirWarn(curlCommand)[0];
-+export const toElixir = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toElixirWarn(curlCommand))[0];
- };
-diff --git a/src/generators/go.ts b/src/generators/go.ts
-index 81499c5..475f88a 100644
---- a/src/generators/go.ts
-+++ b/src/generators/go.ts
-@@ -134,14 +134,14 @@ export const _toGo = (request: Request, warnings: Warnings = []): string => {
- 
-   return goCode + "\n";
- };
--export const toGoWarn = (
-+export const toGoWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const go = _toGo(request, warnings);
-   return [go, warnings];
- };
--export const toGo = (curlCommand: string | string[]): string => {
--  return toGoWarn(curlCommand)[0];
-+export const toGo = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toGoWarn(curlCommand))[0];
- };
-diff --git a/src/generators/java.ts b/src/generators/java.ts
-index a421751..a15113a 100644
---- a/src/generators/java.ts
-+++ b/src/generators/java.ts
-@@ -159,15 +159,15 @@ export const _toJava = (request: Request, warnings: Warnings = []): string => {
- 
-   return javaCode + "\n";
- };
--export const toJavaWarn = (
-+export const toJavaWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const java = _toJava(request, warnings);
-   return [java, warnings];
- };
- 
--export const toJava = (curlCommand: string | string[]): string => {
--  return toJavaWarn(curlCommand)[0];
-+export const toJava = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toJavaWarn(curlCommand))[0];
- };
-diff --git a/src/generators/javascript/axios.ts b/src/generators/javascript/axios.ts
-index fce11dc..83c45a5 100644
---- a/src/generators/javascript/axios.ts
-+++ b/src/generators/javascript/axios.ts
-@@ -368,14 +368,14 @@ export const _toNodeAxios = (
- 
-   return importCode + "\n" + code;
- };
--export const toNodeAxiosWarn = (
-+export const toNodeAxiosWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const nodeAxios = _toNodeAxios(request, warnings);
-   return [nodeAxios, warnings];
- };
--export const toNodeAxios = (curlCommand: string | string[]): string => {
--  return toNodeAxiosWarn(curlCommand)[0];
-+export const toNodeAxios = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toNodeAxiosWarn(curlCommand))[0];
- };
-diff --git a/src/generators/javascript/javascript.ts b/src/generators/javascript/javascript.ts
-index c4597a8..751afc9 100644
---- a/src/generators/javascript/javascript.ts
-+++ b/src/generators/javascript/javascript.ts
-@@ -386,32 +386,32 @@ export const _toNode = (request: Request, warnings: Warnings = []): string => {
-   return _toJavaScriptOrNode(request, warnings, true);
- };
- 
--export const toJavaScriptWarn = (
-+export const toJavaScriptWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(
-     curlCommand,
-     javaScriptSupportedArgs,
-     warnings
-   );
-   return [_toJavaScript(request, warnings), warnings];
- };
--export const toJavaScript = (curlCommand: string | string[]): string => {
--  return toJavaScriptWarn(curlCommand)[0];
-+export const toJavaScript = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toJavaScriptWarn(curlCommand))[0];
- };
- 
--export const toNodeWarn = (
-+export const toNodeWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(
-     curlCommand,
-     nodeSupportedArgs,
-     warnings
-   );
-   return [_toNode(request, warnings), warnings];
- };
--export const toNode = (curlCommand: string | string[]): string => {
--  return toNodeWarn(curlCommand)[0];
-+export const toNode = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toNodeWarn(curlCommand))[0];
- };
-diff --git a/src/generators/javascript/node-request.ts b/src/generators/javascript/node-request.ts
-index d3f1e96..abb7c1d 100644
---- a/src/generators/javascript/node-request.ts
-+++ b/src/generators/javascript/node-request.ts
-@@ -100,16 +100,16 @@ export const _toNodeRequest = (
- 
-   return nodeRequestCode + "\n";
- };
--export const toNodeRequestWarn = (
-+export const toNodeRequestWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   warnings.unshift(["node-request", "the request package is deprecated"]);
- 
-   const nodeRequests = _toNodeRequest(request, warnings);
-   return [nodeRequests, warnings];
- };
--export const toNodeRequest = (curlCommand: string | string[]): string => {
--  return toNodeRequestWarn(curlCommand)[0];
-+export const toNodeRequest = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toNodeRequestWarn(curlCommand))[0];
- };
-diff --git a/src/generators/json.ts b/src/generators/json.ts
-index f0dfa36..7a771ce 100644
---- a/src/generators/json.ts
-+++ b/src/generators/json.ts
-@@ -178,14 +178,14 @@ export const _toJsonString = (
-     ) + "\n"
-   );
- };
--export const toJsonStringWarn = (
-+export const toJsonStringWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const json = _toJsonString(request, warnings);
-   return [json, warnings];
- };
--export const toJsonString = (curlCommand: string | string[]): string => {
--  return toJsonStringWarn(curlCommand)[0];
-+export const toJsonString = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toJsonStringWarn(curlCommand))[0];
- };
-diff --git a/src/generators/matlab/matlab.ts b/src/generators/matlab/matlab.ts
-index 7c55fb9..7d3d81b 100644
---- a/src/generators/matlab/matlab.ts
-+++ b/src/generators/matlab/matlab.ts
-@@ -45,14 +45,14 @@ export const _toMATLAB = (
-     .filter((line) => line !== null)
-     .join("\n");
- };
--export const toMATLABWarn = (
-+export const toMATLABWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const matlab = _toMATLAB(request, warnings);
-   return [matlab, warnings];
- };
--export const toMATLAB = (curlCommand: string | string[]): string => {
--  return toMATLABWarn(curlCommand)[0];
-+export const toMATLAB = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toMATLABWarn(curlCommand))[0];
- };
-diff --git a/src/generators/php/php-requests.ts b/src/generators/php/php-requests.ts
-index 393c506..7c4247e 100644
---- a/src/generators/php/php-requests.ts
-+++ b/src/generators/php/php-requests.ts
-@@ -112,14 +112,14 @@ export const _toPhpRequests = (
- 
-   return phpCode + "\n";
- };
--export const toPhpRequestsWarn = (
-+export const toPhpRequestsWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const php = _toPhpRequests(request, warnings);
-   return [php, warnings];
- };
--export const toPhpRequests = (curlCommand: string | string[]): string => {
--  return toPhpRequestsWarn(curlCommand)[0];
-+export const toPhpRequests = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toPhpRequestsWarn(curlCommand))[0];
- };
-diff --git a/src/generators/php/php.ts b/src/generators/php/php.ts
-index 36dc1a9..8fe467f 100644
---- a/src/generators/php/php.ts
-+++ b/src/generators/php/php.ts
-@@ -213,14 +213,14 @@ export const _toPhp = (request: Request, warnings: Warnings = []): string => {
-   return phpCode;
- };
- 
--export const toPhpWarn = (
-+export const toPhpWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const php = _toPhp(request, warnings);
-   return [php, warnings];
- };
--export const toPhp = (curlCommand: string | string[]): string => {
--  return toPhpWarn(curlCommand)[0];
-+export const toPhp = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toPhpWarn(curlCommand))[0];
- };
-diff --git a/src/generators/python.ts b/src/generators/python.ts
-index d3882b9..cae86ff 100644
---- a/src/generators/python.ts
-+++ b/src/generators/python.ts
-@@ -1877,15 +1877,15 @@ export const _toPython = (
-   return pythonCode;
- };
- 
--export const toPythonWarn = (
-+export const toPythonWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const python = _toPython(request, warnings);
-   return [python, warnings];
- };
- 
--export const toPython = (curlCommand: string | string[]): string => {
--  return toPythonWarn(curlCommand)[0];
-+export const toPython = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toPythonWarn(curlCommand))[0];
- };
-diff --git a/src/generators/r.ts b/src/generators/r.ts
-index baf54d0..b75ba09 100644
---- a/src/generators/r.ts
-+++ b/src/generators/r.ts
-@@ -221,14 +221,14 @@ export const _toR = (request: Request, warnings: Warnings = []): string => {
- 
-   return rstatsCode + "\n";
- };
--export const toRWarn = (
-+export const toRWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const r = _toR(request, warnings);
-   return [r, warnings];
- };
--export const toR = (curlCommand: string | string[]): string => {
--  return toRWarn(curlCommand)[0];
-+export const toR = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toRWarn(curlCommand))[0];
- };
-diff --git a/src/generators/ruby.ts b/src/generators/ruby.ts
-index 5bb0858..186d33e 100644
---- a/src/generators/ruby.ts
-+++ b/src/generators/ruby.ts
-@@ -429,15 +429,15 @@ export const _toRuby = (request: Request, warnings: Warnings = []): string => {
-   return prelude + "\n" + code + "\n";
- };
- 
--export const toRubyWarn = (
-+export const toRubyWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const ruby = _toRuby(request, warnings);
-   return [ruby, warnings];
- };
- 
--export const toRuby = (curlCommand: string | string[]): string => {
--  return toRubyWarn(curlCommand)[0];
-+export const toRuby = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toRubyWarn(curlCommand))[0];
- };
-diff --git a/src/generators/rust.ts b/src/generators/rust.ts
-index 78edd02..398e95f 100644
---- a/src/generators/rust.ts
-+++ b/src/generators/rust.ts
-@@ -173,14 +173,14 @@ export const _toRust = (request: Request, warnings: Warnings = []): string => {
- 
-   return lines.join("\n") + "\n";
- };
--export const toRustWarn = (
-+export const toRustWarn = async (
-   curlCommand: string | string[],
-   warnings: Warnings = []
--): [string, Warnings] => {
--  const request = util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-+): Promise<[string, Warnings]> => {
-+  const request = await util.parseCurlCommand(curlCommand, supportedArgs, warnings);
-   const rust = _toRust(request, warnings);
-   return [rust, warnings];
- };
--export const toRust = (curlCommand: string | string[]): string => {
--  return toRustWarn(curlCommand)[0];
-+export const toRust = async (curlCommand: string | string[]): Promise<string> => {
-+  return (await toRustWarn(curlCommand))[0];
- };
-diff --git a/src/util.ts b/src/util.ts
-index c7d0d22..44f3eb1 100644
---- a/src/util.ts
-+++ b/src/util.ts
-@@ -1,7 +1,7 @@
- import URL from "url";
- 
--import parser from "./bash-parser.js";
--import type { Parser } from "./bash-parser.js";
-+import parserPromise from "./bash-parser-web.js";
-+import type { Parser } from "./bash-parser-web.js";
- 
- // TODO: this type doesn't work.
- function has<T, K extends PropertyKey>(
-@@ -1130,10 +1130,11 @@ interface TokenizeResult {
-   stdin?: string;
-   stdinFile?: string;
- }
--const tokenize = (
-+const tokenize = async (
-   curlCommand: string,
-   warnings: Warnings = []
--): TokenizeResult => {
-+): Promise<TokenizeResult> => {
-+  const parser = await parserPromise;
-   const ast = parser.parse(curlCommand);
-   // https://github.com/tree-sitter/tree-sitter-bash/blob/master/grammar.js
-   // The AST must be in a nice format, i.e.
-@@ -2100,11 +2101,11 @@ function buildRequest(
-   return request;
- }
- 
--function parseCurlCommand(
-+async function parseCurlCommand(
-   curlCommand: string | string[],
-   supportedArgs?: Set<string>,
-   warnings: Warnings = []
--): Request {
-+): Promise<Request> {
-   let cmdName: string,
-     args: string[],
-     stdin: undefined | string,
-@@ -2115,7 +2116,7 @@ function parseCurlCommand(
-       throw new CCError("no arguments provided");
-     }
-   } else {
--    ({ cmdName, args, stdin, stdinFile } = tokenize(curlCommand, warnings));
-+    ({ cmdName, args, stdin, stdinFile } = await tokenize(curlCommand, warnings));
-     if (typeof cmdName === "undefined") {
-       throw new CCError("failed to parse input");
-     }
