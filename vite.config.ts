@@ -7,7 +7,6 @@ import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugins/vite-plugin-iife'
 import webextensionManifest, {
   AvailableTarget,
-  ManifestTarget,
   isAvailableTarget,
 } from './build/vite-plugins/vite-plugin-manifest'
 
