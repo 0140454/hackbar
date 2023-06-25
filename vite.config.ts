@@ -6,7 +6,9 @@ import { ConfigEnv, defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import iife from './build/vite-plugins/vite-plugin-iife'
 import webextensionManifest, {
+  AvailableTarget,
   ManifestTarget,
+  isAvailableTarget,
 } from './build/vite-plugins/vite-plugin-manifest'
 
 function contentScriptNames() {
@@ -43,6 +45,15 @@ export default defineConfig((env: ConfigEnv) => {
           url: 'rollup-plugin-node-polyfills/polyfills/url',
           util: 'rollup-plugin-node-polyfills/polyfills/util',
         }
+  const buildTarget = process.env.VITE_BUILD_TARGET
+
+  if (!isAvailableTarget(buildTarget)) {
+    const expectedTargets = AvailableTarget.join(', ')
+    console.error(
+      `Unexpected build target "${buildTarget}", ${expectedTargets} expected`,
+    )
+    process.exit(1)
+  }
 
   return {
     plugins: [
@@ -50,7 +61,7 @@ export default defineConfig((env: ConfigEnv) => {
       vuetify({ autoImport: true }),
       iife(Object.keys(input)),
       webextensionManifest({
-        target: (process.env.TARGET as ManifestTarget) ?? 'chrome',
+        target: buildTarget,
       }),
     ],
     css: {

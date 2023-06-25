@@ -51,13 +51,15 @@
           v-disable-prevent-default.keydown
           class="monospaced"
           :hint="
-            [
-              'Protocol version in the editor will be fixed to HTTP/1.1, but it is actually decided by fetch API.',
-              'Furthermore, due to Chrome implementation, it always shows HTTP/1.1 in Response if used version is higher than or equal to HTTP/2.',
-            ].join(' ')
+            isChrome
+              ? [
+                  'Protocol version in the editor will be fixed to HTTP/1.1, but it is actually decided by fetch API.',
+                  'Furthermore, due to Chrome implementation, it always shows HTTP/1.1 in Response if used version is higher than or equal to HTTP/2.',
+                ].join(' ')
+              : ''
           "
           label="Request"
-          persistent-hint
+          :persistent-hint="isChrome"
           :rows="1"
           variant="underlined"
           :rules="[
@@ -97,6 +99,7 @@ import { useTheme } from 'vuetify/framework'
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
 import { BodyAvailableMethods } from '../utils/constants'
+import { isChrome } from '../utils/functions'
 import PrettyRawResponse from './PrettyRawResponse.vue'
 
 export default defineComponent({
@@ -319,6 +322,8 @@ export default defineComponent({
       onBlur,
 
       focus,
+
+      isChrome: isChrome(),
     }
   },
 })

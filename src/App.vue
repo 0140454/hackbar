@@ -270,7 +270,7 @@ export default defineComponent({
         type: 'execute',
         data: {
           rawMode: isRawMode.value,
-          request,
+          request: JSON.parse(JSON.stringify(request)),
         },
       })
     }

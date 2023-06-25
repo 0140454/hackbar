@@ -59,7 +59,7 @@ export class FetchRequestExecutor extends RequestExecutor {
             >[0]
           >[0],
     ) => {
-      if (!isSelfOrigin(details.initiator)) {
+      if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
       }
 
@@ -115,7 +115,7 @@ export class FetchRequestExecutor extends RequestExecutor {
             >[0]
           >[0],
     ) => {
-      if (!isSelfOrigin(details.initiator)) {
+      if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
       }
 
@@ -125,13 +125,18 @@ export class FetchRequestExecutor extends RequestExecutor {
 
       updateResponseInfo(details)
     }
+    const onBeforeRedirectOptions: Array<browser.WebRequest.OnBeforeRedirectOptions> =
+      [
+        'responseHeaders',
+        chrome.webRequest.OnBeforeRedirectOptions.EXTRA_HEADERS,
+      ]
     browser.webRequest.onBeforeRedirect.addListener(
       onBeforeRedirectHandler,
       {
         urls: ['*://*/*'],
         types: ['xmlhttprequest'],
       },
-      ['responseHeaders', 'extraHeaders'],
+      onBeforeRedirectOptions.filter(Boolean),
     )
 
     const onCompletedHandler = async (
@@ -142,7 +147,7 @@ export class FetchRequestExecutor extends RequestExecutor {
             >[0]
           >[0],
     ) => {
-      if (!isSelfOrigin(details.initiator)) {
+      if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
       }
 
@@ -153,13 +158,17 @@ export class FetchRequestExecutor extends RequestExecutor {
 
       updateResponseInfo(details)
     }
+    const onCompletedOptions: Array<browser.WebRequest.OnCompletedOptions> = [
+      'responseHeaders',
+      chrome.webRequest.OnCompletedOptions.EXTRA_HEADERS,
+    ]
     browser.webRequest.onCompleted.addListener(
       onCompletedHandler,
       {
         urls: ['*://*/*'],
         types: ['xmlhttprequest'],
       },
-      ['responseHeaders', 'extraHeaders'],
+      onCompletedOptions.filter(Boolean),
     )
 
     const onErrorOccurredHandler = async (
@@ -170,7 +179,7 @@ export class FetchRequestExecutor extends RequestExecutor {
             >[0]
           >[0],
     ) => {
-      if (!isSelfOrigin(details.initiator)) {
+      if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
       }
 

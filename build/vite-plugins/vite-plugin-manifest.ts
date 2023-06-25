@@ -13,7 +13,7 @@ const baseManifest = {
   content_security_policy: {
     extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
   },
-  permissions: ['storage', 'scripting', 'webRequest'],
+  permissions: ['storage', 'scripting', 'webRequest', 'declarativeNetRequest'],
   host_permissions: ['*://*/*'],
   web_accessible_resources: [
     {
@@ -54,7 +54,6 @@ const chromeManifest = {
   background: {
     service_worker: 'background.js',
   },
-  permissions: ['declarativeNetRequest'],
   minimum_chrome_version: '107',
 }
 
@@ -81,6 +80,14 @@ const mergeCustomizer = (objValue, srcValue) => {
 }
 
 export type ManifestTarget = keyof typeof extendedManifest
+
+export const AvailableTarget = Object.keys(extendedManifest) as Readonly<
+  Array<ManifestTarget>
+>
+
+export function isAvailableTarget(target: string): target is ManifestTarget {
+  return target in extendedManifest
+}
 
 export default function ({ target }: { target: ManifestTarget }): Plugin {
   return {

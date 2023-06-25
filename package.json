@@ -4,8 +4,8 @@
   "version": "1.0.5",
   "private": true,
   "scripts": {
-    "build:chrome": "vite build",
-    "build:firefox": "TARGET=firefox vite build",
+    "build:chrome": "VITE_BUILD_TARGET=chrome vite build",
+    "build:firefox": "VITE_BUILD_TARGET=firefox vite build",
     "dev:ui": "vite",
     "dev:server": "php -d allow_url_include=on -S 127.0.0.1:8888 -t contrib",
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
