@@ -895,7 +895,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.60.0
     "@vitejs/plugin-vue": ^4.2.3
     "@vueuse/core": ^10.2.0
-    chrome-types: ^0.1.206
+    chrome-types: ^0.1.209
     crypto-js: ^4.1.1
     curlconverter: ^4.7.1
     eslint: ^8.43.0
@@ -903,13 +903,13 @@ __metadata:
     eslint-plugin-import: ^2.27.5
     eslint-plugin-prettier: ^4.2.1
     eslint-plugin-require-sort: ^1.3.0
-    eslint-plugin-vue: ^9.15.0
-    glob: ^10.2.7
+    eslint-plugin-vue: ^9.15.1
+    glob: ^10.3.0
     highlight.js: ^11.8.0
     http-z: ^6.1.2
     lodash: ^4.17.21
     prettier: ^2.8.8
-    sass: ^1.63.4
+    sass: ^1.63.6
     typescript: ^5.1.3
     vite: ^4.3.9
     vite-plugin-vuetify: ^1.0.2
@@ -1285,10 +1285,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chrome-types@npm:^0.1.206":
-  version: 0.1.206
-  resolution: "chrome-types@npm:0.1.206"
-  checksum: db1a7ed8091c0d1b171250b6fb16775f9417887e9bef2b9cce846f6bb3adfbd0b0a73163fb18a0b2265c8c7bac716447dab9e4ce4115d70d25553ddd54b9f0f1
+"chrome-types@npm:^0.1.209":
+  version: 0.1.209
+  resolution: "chrome-types@npm:0.1.209"
+  checksum: bed34dd0ffe760144407a08153dfd504d56450dd6daae7fcef9476964f4b165bbd0f18b0ca702b65fd695f86d74fd0d3b0d6866d4b4e66e50e011c30e9e778fb
   languageName: node
   linkType: hard
 
@@ -1779,9 +1779,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:^9.15.0":
-  version: 9.15.0
-  resolution: "eslint-plugin-vue@npm:9.15.0"
+"eslint-plugin-vue@npm:^9.15.1":
+  version: 9.15.1
+  resolution: "eslint-plugin-vue@npm:9.15.1"
   dependencies:
     "@eslint-community/eslint-utils": ^4.3.0
     natural-compare: ^1.4.0
@@ -1792,7 +1792,7 @@ __metadata:
     xml-name-validator: ^4.0.0
   peerDependencies:
     eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
-  checksum: e2f135712e186c878240447a2292277a2339a374c1960b6044de5860f277de6af09587df52d559e87b795b07f23c764ccd44a7e1ab4ca65d835546b689fa25b8
+  checksum: b1cdb16e43e681938c25f1d3f2d5d0d76a99172efdcfa0fa98cdb21122d520e12ae2f8ff2b40bf47a5b9f476f54199494a2851d99edc5bad0a25156ef38eeac4
   languageName: node
   linkType: hard
 
@@ -2236,9 +2236,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.7":
-  version: 10.2.7
-  resolution: "glob@npm:10.2.7"
+"glob@npm:^10.3.0":
+  version: 10.3.0
+  resolution: "glob@npm:10.3.0"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
@@ -2247,7 +2247,7 @@ __metadata:
     path-scurry: ^1.7.0
   bin:
     glob: dist/cjs/src/bin.js
-  checksum: 555205a74607d6f8d9874ba888924b305b5ea1abfaa2e9ccb11ac713d040aac7edbf7d8702a2f4a1cd81b2d7666412170ce7ef061d33cddde189dae8c1a1a054
+  checksum: 6fa4ac0a86ffec1c5715a2e6fbdd63e1e7f1c2c8f5db08cc3256cdfcb81093678e7c80a3d100b502a1b9d141369ecf87bc24fe2bcb72acec7b14626d358a4eb0
   languageName: node
   linkType: hard
 
@@ -3766,16 +3766,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.63.4":
-  version: 1.63.4
-  resolution: "sass@npm:1.63.4"
+"sass@npm:^1.63.6":
+  version: 1.63.6
+  resolution: "sass@npm:1.63.6"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 12bde5beff85a7018157d90c8b9d5aec8b56832f89fcfeca146f10936eecf97e669d22fd41f812b3407ed259bbb114d69c9ecbfc7ee9b15308211fb910cdf5eb
+  checksum: 3372319904658eeafaf78a09a6fcb3368a68e6d76fe3c43c2d009f4f72e475ab22b82ef483ef5c00fcda3ab00066846c0bd88c36b42771b855f6ab80c7eda541
   languageName: node
   linkType: hard
 
