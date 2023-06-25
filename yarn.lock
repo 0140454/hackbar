@@ -2431,10 +2431,10 @@ __metadata:
 
 "http-z@patch:http-z@npm:^6.1.2#build/package-patches/http-z.patch::locator=HackBar%40workspace%3A.":
   version: 6.1.2
-  resolution: "http-z@patch:http-z@npm%3A6.1.2#build/package-patches/http-z.patch::version=6.1.2&hash=e05bdc&locator=HackBar%40workspace%3A."
+  resolution: "http-z@patch:http-z@npm%3A6.1.2#build/package-patches/http-z.patch::version=6.1.2&hash=934caa&locator=HackBar%40workspace%3A."
   dependencies:
     lodash: ^4.17.20
-  checksum: 88ae49b708988014fa2dbbb5d21fdcd0da3a067d982e6a406b9e9a632c59c8f0126aec29d564df8ea94623b2ecc0c830289dbe2299677f68c59c12acad313ac2
+  checksum: 054697a6b94cf0f31fffae7a77ac3a70722908515b0295b98225522928f974d2c07e24bbeccdcca2c14e40a7be95e465a2c5ca83d781e2fddfdfa44d7dff9578
   languageName: node
   linkType: hard
 
