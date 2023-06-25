@@ -150,7 +150,11 @@ import {
 import { VTextField } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import { AppBarKey } from '../utils/constants'
-import { binarySearch, generateRandomHexString } from '../utils/functions'
+import {
+  binarySearch,
+  generateRandomHexString,
+  isChrome,
+} from '../utils/functions'
 
 hljs.registerLanguage('css', css)
 hljs.registerLanguage('http', http)
@@ -305,7 +309,9 @@ export default defineComponent({
         lowerBound,
         upperBound,
       ) as Array<Range>
-      CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
+      if (isChrome()) {
+        CSS.highlights.set('searchResult', new Highlight(...visibleRanges))
+      }
 
       return [lowerBound, upperBound]
     }
@@ -316,10 +322,12 @@ export default defineComponent({
 
       const range = searchResult.ranges[searchResult.current] as Range
       const rect = range.getBoundingClientRect()
-      const highlight = new Highlight(range)
 
-      highlight.priority = 999
-      CSS.highlights.set('searchResultCurrent', highlight)
+      if (isChrome()) {
+        const highlight = new Highlight(range)
+        highlight.priority = 999
+        CSS.highlights.set('searchResultCurrent', highlight)
+      }
 
       const absoluteTop = rect.top + window.scrollY
       const absoluteBottom = rect.bottom + window.scrollY
@@ -333,7 +341,9 @@ export default defineComponent({
       }
     }
     const performSearch = () => {
-      CSS.highlights.clear()
+      if (isChrome()) {
+        CSS.highlights.clear()
+      }
 
       if (!searchOptions.keyword.length || !searchOptions.enabled) {
         searchResult.current = 0
