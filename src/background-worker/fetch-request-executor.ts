@@ -44,8 +44,10 @@ export class FetchRequestExecutor extends RequestExecutor {
   }
 
   getModifyHeaderCondition(): browser.DeclarativeNetRequest.RuleConditionType {
+    const extensionDomain = new URL(browser.runtime.getURL('/')).hostname
+
     return {
-      initiatorDomains: [browser.runtime.id],
+      initiatorDomains: [extensionDomain],
       resourceTypes: ['xmlhttprequest'],
     }
   }
