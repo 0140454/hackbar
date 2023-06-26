@@ -80,6 +80,7 @@ export default defineConfig((env: ConfigEnv) => {
       },
     },
     build: {
+      outDir: `dist/${buildTarget}`,
       minify: false,
       modulePreload: {
         pollyfill: false,

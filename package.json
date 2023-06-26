@@ -11,8 +11,8 @@
     "lint": "eslint --ext .js,.ts,.vue ./src/ && prettier --check .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue ./src/ && prettier --write .",
     "types:check": "vue-tsc --noEmit",
-    "dist:chrome": "run build:chrome && env -C dist zip ../${npm_package_name}-chrome.zip -FS -r .",
-    "dist:firefox": "run build:firefox && env -C dist zip ../${npm_package_name}-firefox.zip -FS -r ."
+    "dist:chrome": "run build:chrome && env -C dist/chrome zip ../../${npm_package_name}-chrome.zip -FS -r .",
+    "dist:firefox": "run build:firefox && env -C dist/firefox zip ../../${npm_package_name}-firefox.zip -FS -r ."
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.3",
