@@ -64,6 +64,7 @@ const firefoxManifest = {
   browser_specific_settings: {
     gecko: {
       id: '{e369192d-43df-486e-aca0-d771eaed541d}',
+      strict_min_version: '115.0',
     },
   },
 }
