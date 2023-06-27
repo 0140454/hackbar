@@ -1,10 +1,20 @@
 import browser from 'webextension-polyfill'
 import bodyProcessors from '../processors'
+import {
+  checkExtensionPermission,
+  openExtensionPermissionGrantPage,
+} from '../utils/functions'
 import { FetchRequestExecutor } from './fetch-request-executor'
 import { FrameRequestExecutor } from './frame-request-executor'
 import store from './store'
 
 const decoder = new TextDecoder()
+
+function isInitMessage(
+  m: BackgroundFunctionMessage,
+): m is BackgroundInitMessage {
+  return m.type === 'init'
+}
 
 function isLoadMessage(
   m: BackgroundFunctionMessage,
@@ -35,7 +45,13 @@ function isRenderMessage(
 const handleMessage = async (message: BackgroundFunctionMessage) => {
   const connection = (await store.getConnection(message.tabId))!
 
-  if (isLoadMessage(message)) {
+  if (isInitMessage(message)) {
+    if (await checkExtensionPermission()) {
+      return
+    }
+
+    openExtensionPermissionGrantPage()
+  } else if (isLoadMessage(message)) {
     connection.postMessage({
       type: 'load',
       data: await store.getBrowseRequest(message.tabId),
@@ -211,4 +227,18 @@ browser.commands.onCommand.addListener(async command => {
     type: 'command',
     data: command,
   } as DevtoolsCommandMessage)
+})
+
+/* Permission handler */
+
+browser.runtime.onInstalled.addListener(async details => {
+  if (details.reason != 'install') {
+    return
+  }
+
+  if (await checkExtensionPermission()) {
+    return
+  }
+
+  openExtensionPermissionGrantPage()
 })

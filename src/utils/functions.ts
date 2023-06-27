@@ -5,6 +5,15 @@ export function isChrome() {
   return import.meta.env.VITE_BUILD_TARGET != 'firefox'
 }
 
+export async function checkExtensionPermission() {
+  return await browser.permissions.contains({ origins: ['*://*/*'] })
+}
+
+export function openExtensionPermissionGrantPage() {
+  const permissionGrantPageUrl = browser.runtime.getURL('/permission.html')
+  browser.tabs.create({ url: permissionGrantPageUrl })
+}
+
 export function isSelfOrigin(val: string | URL | undefined) {
   if (!val) {
     return false

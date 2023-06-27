@@ -28,6 +28,7 @@ export default defineConfig((env: ConfigEnv) => {
   const input = {
     main: 'main.html',
     devtools: 'devtools.html',
+    permission: 'permission.html',
     background: 'src/background-worker/background.ts',
     ...contentScriptNames(),
   }
