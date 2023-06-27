@@ -2,7 +2,7 @@
 
 A browser extension for Penetration Testing.
 
-Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackbar/ginpbkfigcoaokgflihfhhmglmbchinc).
+Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackbar/ginpbkfigcoaokgflihfhhmglmbchinc) and [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/firefox-hackbar).
 
 ## Requested Permissions
 
