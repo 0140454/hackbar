@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import disablePreventDefault from './plugins/disable-prevent-default'
+import pinia from './plugins/pinia'
 import vuetify from './plugins/vuetify'
 
 // Styles
@@ -12,4 +13,4 @@ import './generators/encode'
 import './generators/hash'
 import './generators/payload'
 
-createApp(App).use(vuetify).use(disablePreventDefault).mount('#app')
+createApp(App).use(vuetify).use(pinia).use(disablePreventDefault).mount('#app')

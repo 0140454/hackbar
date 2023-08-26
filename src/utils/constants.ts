@@ -130,6 +130,10 @@ export const OpenSqlInjectionPromptKey: InjectionKey<
 export const OpenReverseShellPromptKey: InjectionKey<(func: string) => void> =
   Symbol('openReverseShellPrompt')
 
+export const OpenCustomPayloadManagementKey: InjectionKey<() => void> = Symbol(
+  'openCustomPayloadManagement',
+)
+
 export const ControlTestKey: InjectionKey<
   (
     action: BackgroundTestMessage['data']['action'],

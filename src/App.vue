@@ -34,6 +34,7 @@
       <MenuShell />
       <MenuEncoding />
       <MenuHashing />
+      <MenuCustomPayload />
       <VSpacer />
       <VMenu>
         <template #activator="{ props }">
@@ -81,6 +82,7 @@
     />
     <DialogSqlInjectionSetting v-model="sqlInjectionDialog" />
     <DialogReverseShellSetting v-model="reverseShellDialog" />
+    <DialogCustomPayloadManagement v-model="customPayloadDialog" />
     <DialogTestProgress v-model="testProgressDialog" />
     <VSnackbar v-model="snackbar.show" color="error" :timeout="3000" bottom>
       {{ snackbar.text }}
@@ -105,11 +107,13 @@ import {
 import { VAppBar } from 'vuetify/components'
 import { useTheme } from 'vuetify/framework'
 import browser from 'webextension-polyfill'
+import DialogCustomPayloadManagement from './components/DialogCustomPayloadManagement.vue'
 import DialogReloadPrompt from './components/DialogReloadPrompt.vue'
 import DialogRequestLoader from './components/DialogRequestLoader.vue'
 import DialogReverseShellSetting from './components/DialogReverseShellSetting.vue'
 import DialogSqlInjectionSetting from './components/DialogSqlInjectionSetting.vue'
 import DialogTestProgress from './components/DialogTestProgress.vue'
+import MenuCustomPayload from './components/MenuCustomPayload.vue'
 import MenuEncoding from './components/MenuEncoding.vue'
 import MenuHashing from './components/MenuHashing.vue'
 import MenuLfi from './components/MenuLfi.vue'
@@ -127,6 +131,7 @@ import {
   ApplyFunctionKey,
   ControlTestKey,
   LoadFromKey,
+  OpenCustomPayloadManagementKey,
   OpenReverseShellPromptKey,
   OpenSqlInjectionPromptKey,
 } from './utils/constants'
@@ -154,11 +159,13 @@ export default defineComponent({
     MenuShell,
     MenuEncoding,
     MenuHashing,
+    MenuCustomPayload,
     DialogReloadPrompt,
     DialogSqlInjectionSetting,
     DialogTestProgress,
     DialogReverseShellSetting,
     DialogRequestLoader,
+    DialogCustomPayloadManagement,
     RequestPanelBasic,
     RequestPanelRaw,
   },
@@ -187,6 +194,9 @@ export default defineComponent({
       show: false,
       positionRequired: true,
       func: '',
+    })
+    const customPayloadDialog = ref({
+      show: false,
     })
     const testProgressDialog = ref({
       show: false,
@@ -496,9 +506,14 @@ export default defineComponent({
       reverseShellDialog.value.show = true
     }
 
+    const openCustomPayloadManagement = () => {
+      customPayloadDialog.value.show = true
+    }
+
     provide(ApplyFunctionKey, applyFunction)
     provide(OpenSqlInjectionPromptKey, openSqlInjectionPrompt)
     provide(OpenReverseShellPromptKey, openReverseShellPrompt)
+    provide(OpenCustomPayloadManagementKey, openCustomPayloadManagement)
 
     /* Test */
     const controlTest = (
@@ -556,6 +571,7 @@ export default defineComponent({
       requestLoaderDialog,
       sqlInjectionDialog,
       reverseShellDialog,
+      customPayloadDialog,
       testProgressDialog,
       snackbar,
 
