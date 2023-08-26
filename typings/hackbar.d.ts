@@ -56,6 +56,11 @@ type PostInfo = {
   fields: Array<PostField>
 }
 
+type CustomPayload = {
+  name: string
+  value: string
+}
+
 type TestRequest = {
   action: 'start' | 'toggle' | 'stop'
   script?: string

