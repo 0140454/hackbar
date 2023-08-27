@@ -3,7 +3,11 @@
     <VCard>
       <VCardTitle> Manage Custom Payload </VCardTitle>
       <VCardText>
-        <VDataTable :headers="headers" :items="data" :search="search">
+        <VDataTable
+          :headers="headers"
+          :items="customPayloadList"
+          :search="search"
+        >
           <template #top>
             <VToolbar :class="$style.toolbar">
               <VTextField
@@ -41,6 +45,7 @@
 
 <script lang="ts">
 import { mdiDelete, mdiPencil } from '@mdi/js'
+import { storeToRefs } from 'pinia'
 import { PropType, computed, defineComponent, ref, toRefs } from 'vue'
 import { useCustomPayloadStore } from '../stores'
 import DialogCustomPayloadEdit from './DialogCustomPayloadEdit.vue'
@@ -72,6 +77,8 @@ export default defineComponent({
     })
 
     const customPayloadStore = useCustomPayloadStore()
+    const { data: customPayloadList } = storeToRefs(customPayloadStore)
+    const { save: savePayload, remove: removePayload } = customPayloadStore
 
     const editDialog = ref({
       show: false,
@@ -80,8 +87,11 @@ export default defineComponent({
         value: '',
       },
     })
-    const updatePayload = (payload: CustomPayload) => {
-      customPayloadStore.save(data.indexOf(editDialog.value.payload), payload)
+    const updatePayload = async (payload: CustomPayload) => {
+      await savePayload(
+        customPayloadList.value.indexOf(editDialog.value.payload),
+        payload,
+      )
     }
 
     const search = ref('')
@@ -101,7 +111,6 @@ export default defineComponent({
         sortable: false,
       },
     ] as const
-    const data = customPayloadStore.data
     const add = () => {
       editDialog.value.show = true
       editDialog.value.payload = {
@@ -114,7 +123,7 @@ export default defineComponent({
       editDialog.value.payload = payload
     }
     const remove = (payload: CustomPayload) => {
-      customPayloadStore.remove(data.indexOf(payload))
+      removePayload(customPayloadList.value.indexOf(payload))
     }
 
     return {
@@ -128,7 +137,7 @@ export default defineComponent({
 
       search,
       headers,
-      data,
+      customPayloadList,
       add,
       edit,
       remove,

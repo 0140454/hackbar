@@ -2,14 +2,14 @@
   <VMenu>
     <template #activator="{ props }">
       <VBtn :append-icon="mdiMenuDown" variant="text" v-bind="props">
-        Custom Payload
+        Custom
       </VBtn>
     </template>
     <VList>
       <VListItem title="Manage" @click="openCustomPayloadManagement" />
-      <VDivider v-if="customPayloads.length > 0" />
+      <VDivider v-if="customPayloadList.length > 0" />
       <VListItem
-        v-for="(payload, index) in customPayloads"
+        v-for="(payload, index) in customPayloadList"
         :key="`${index}-${payload.name}`"
         :title="payload.name"
         @click="applyFunction('Payload.Custom.insert', true, payload.value)"
@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { mdiMenuDown } from '@mdi/js'
+import { storeToRefs } from 'pinia'
 import { defineComponent, inject } from 'vue'
 import { useCustomPayloadStore } from '../stores'
 import {
@@ -33,14 +34,12 @@ export default defineComponent({
     const applyFunction = inject(ApplyFunctionKey)!
     const openCustomPayloadManagement = inject(OpenCustomPayloadManagementKey)!
 
-    const customPayloadStore = useCustomPayloadStore()
-
-    const customPayloads = customPayloadStore.data
+    const { data: customPayloadList } = storeToRefs(useCustomPayloadStore())
 
     return {
       mdiMenuDown,
 
-      customPayloads,
+      customPayloadList,
 
       applyFunction,
       openCustomPayloadManagement,

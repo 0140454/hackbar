@@ -5,16 +5,19 @@ import browser from 'webextension-polyfill'
 export default defineStore('custom-payload', () => {
   const data = ref<Array<CustomPayload>>([])
 
-  browser.storage.local
-    .get({
-      customPayloads: [],
+  const loadStorage = async () => {
+    const { customPayload } = await browser.storage.local.get({
+      customPayload: '[]',
     })
-    .then(({ customPayloads }) => {
-      data.value = customPayloads
+
+    data.value = JSON.parse(customPayload) as Array<CustomPayload>
+  }
+
+  const updateStorage = async () => {
+    await browser.storage.local.set({
+      customPayload: JSON.stringify(data.value),
     })
-    .catch(error => {
-      console.error(error)
-    })
+  }
 
   const save = async (index: number, payload: CustomPayload) => {
     if (index < 0) {
@@ -23,20 +26,17 @@ export default defineStore('custom-payload', () => {
       data.value[index] = payload
     }
 
-    await browser.storage.local.set({
-      customPayloads: data.value,
-    })
+    await updateStorage()
   }
   const remove = async (index: number) => {
     data.value.splice(index, 1)
 
-    await browser.storage.local.set({
-      customPayloads: data.value,
-    })
+    await updateStorage()
   }
 
   return {
     data,
+    init: loadStorage,
     save,
     remove,
   }
