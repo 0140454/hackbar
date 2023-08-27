@@ -41,6 +41,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Request editing mode
     - Basic
     - Raw
+  - Custom payload
 
 - Auto Test
 
@@ -179,8 +180,8 @@ However, there are some limitations:
 
 **Response**
 
-- It always shows `HTTP/1.1` if used protocol version is higher than or equal to HTTP/2.
-  > See also [Chromium Code Search](https://source.chromium.org/chromium/chromium/src/+/main:net/spdy/spdy_http_utils.cc;l=53;bpv=1;bpt=0)
+- [Chrome] It always shows `HTTP/1.1` if used protocol version is higher than or equal to HTTP/2.
+  > See also [Chromium Code Search](https://source.chromium.org/chromium/chromium/src/+/main:net/spdy/spdy_http_utils.cc;l=61;drc=30a7c30387dfa7d2d6529f8eebde7904624bf790;bpv=1;bpt=0)
 
 ## Third-party Libraries
 
