@@ -418,9 +418,9 @@ export default defineComponent({
       isRawMode.value = preferences.rawModeEnabled
     })
 
+    const { init: initCustomPayloadStore } = useCustomPayloadStore()
     onMounted(async () => {
-      const { init } = useCustomPayloadStore()
-      await init()
+      await initCustomPayloadStore()
     })
 
     /* Functionality */
