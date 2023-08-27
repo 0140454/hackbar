@@ -126,6 +126,7 @@ import MenuXss from './components/MenuXss.vue'
 import RequestPanelBasic from './components/RequestPanelBasic.vue'
 import RequestPanelRaw from './components/RequestPanelRaw.vue'
 import bodyProcessors from './processors'
+import { useCustomPayloadStore } from './stores'
 import {
   AppBarKey,
   ApplyFunctionKey,
@@ -403,7 +404,7 @@ export default defineComponent({
 
     watch(theme.global.name, redrawScrollbar, { immediate: true })
 
-    /* Preferences */
+    /* Saved data */
     onMounted(async () => {
       const systemDarkModeEnabled = window.matchMedia(
         '(prefers-color-scheme: dark)',
@@ -415,6 +416,11 @@ export default defineComponent({
 
       enableDarkTheme(preferences.darkThemeEnabled)
       isRawMode.value = preferences.rawModeEnabled
+    })
+
+    onMounted(async () => {
+      const { init } = useCustomPayloadStore()
+      await init()
     })
 
     /* Functionality */
