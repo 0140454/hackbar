@@ -30,7 +30,6 @@
               variant="underlined"
               auto-grow
               autofocus
-              required
             />
           </div>
         </VForm>

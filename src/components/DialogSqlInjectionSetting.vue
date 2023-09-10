@@ -28,7 +28,6 @@
               type="number"
               variant="underlined"
               autofocus
-              required
             />
             <VTextField
               v-if="modelValue.positionRequired"
@@ -46,7 +45,6 @@
               ]"
               type="number"
               variant="underlined"
-              required
             />
           </div>
         </VForm>

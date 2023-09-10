@@ -14,7 +14,6 @@
               style="flex: 4 0"
               variant="underlined"
               autofocus
-              required
             />
             <VTextField
               v-model="result.port"
@@ -30,7 +29,6 @@
               ]"
               type="number"
               variant="underlined"
-              required
             />
           </div>
         </VForm>

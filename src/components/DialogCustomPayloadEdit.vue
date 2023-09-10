@@ -12,7 +12,6 @@
               :rules="[v => !!v.length || 'Invalid name']"
               variant="underlined"
               autofocus
-              required
             />
             <VTextarea
               v-model="result.value"
