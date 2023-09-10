@@ -59,6 +59,7 @@ type PostInfo = {
 type CustomPayload = {
   name: string
   value: string
+  category: string
 }
 
 type TestRequest = {

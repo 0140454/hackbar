@@ -5,6 +5,16 @@
       <VCardText>
         <VForm ref="form" v-model="valid">
           <div class="d-flex flex-column">
+            <VCombobox
+              v-model="result.category"
+              v-disable-prevent-default.keydown
+              :items="availableCategories"
+              class="monospaced"
+              label="Category"
+              :rules="[v => !!v.length || 'Invalid category']"
+              :menu-props="{ maxHeight: 200 }"
+              variant="underlined"
+            />
             <VTextField
               v-model="result.name"
               v-disable-prevent-default.keydown
@@ -48,8 +58,10 @@
 
 <script lang="ts">
 import { cloneDeep } from 'lodash'
+import { storeToRefs } from 'pinia'
 import { PropType, computed, defineComponent, ref, toRefs } from 'vue'
 import { VForm } from 'vuetify/components'
+import { useCustomPayloadStore } from '../stores'
 
 export default defineComponent({
   name: 'DialogCustomPayloadEdit',
@@ -77,12 +89,16 @@ export default defineComponent({
       },
     })
 
+    const { availableCategories } = storeToRefs(useCustomPayloadStore())
+
     const form = ref<InstanceType<typeof VForm>>()
     const valid = ref(false)
     const result = ref<CustomPayload>(cloneDeep(modelValue.value.payload))
 
     return {
       shown,
+
+      availableCategories,
 
       form,
       valid,

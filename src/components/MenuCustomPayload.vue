@@ -7,10 +7,33 @@
     </template>
     <VList>
       <VListItem title="Manage" @click="openCustomPayloadManagement" />
-      <VDivider v-if="customPayloadList.length > 0" />
+      <VDivider v-if="hasCustomPayload" />
+      <VMenu
+        v-for="([category, items], categoryIndex) in categorizedItems"
+        :key="`category-${categoryIndex}-${category}`"
+        location="end"
+        open-on-hover
+      >
+        <template #activator="{ props }">
+          <VListItem
+            :append-icon="mdiChevronRight"
+            :title="category"
+            v-bind="props"
+            @click.stop
+          />
+        </template>
+        <VList>
+          <VListItem
+            v-for="(payload, payloadIndex) in items"
+            :key="`categorized-payload-${payloadIndex}-${payload.name}`"
+            :title="payload.name"
+            @click="applyFunction('Payload.Custom.insert', true, payload.value)"
+          />
+        </VList>
+      </VMenu>
       <VListItem
-        v-for="(payload, index) in customPayloadList"
-        :key="`${index}-${payload.name}`"
+        v-for="(payload, payloadIndex) in topLevelItems"
+        :key="`top-level-payload-${payloadIndex}-${payload.name}`"
         :title="payload.name"
         @click="applyFunction('Payload.Custom.insert', true, payload.value)"
       />
@@ -19,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { mdiMenuDown } from '@mdi/js'
+import { mdiChevronRight, mdiMenuDown } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { defineComponent, inject } from 'vue'
 import { useCustomPayloadStore } from '../stores'
@@ -34,12 +57,17 @@ export default defineComponent({
     const applyFunction = inject(ApplyFunctionKey)!
     const openCustomPayloadManagement = inject(OpenCustomPayloadManagementKey)!
 
-    const { data: customPayloadList } = storeToRefs(useCustomPayloadStore())
+    const { hasCustomPayload, topLevelItems, categorizedItems } = storeToRefs(
+      useCustomPayloadStore(),
+    )
 
     return {
+      mdiChevronRight,
       mdiMenuDown,
 
-      customPayloadList,
+      hasCustomPayload,
+      topLevelItems,
+      categorizedItems,
 
       applyFunction,
       openCustomPayloadManagement,

@@ -5,7 +5,8 @@
       <VCardText>
         <VDataTable
           :headers="headers"
-          :items="customPayloadList"
+          :items="allItems"
+          :group-by="groupBy"
           :search="search"
         >
           <template #top>
@@ -48,6 +49,7 @@ import { mdiDelete, mdiPencil } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { PropType, computed, defineComponent, ref, toRefs } from 'vue'
 import { useCustomPayloadStore } from '../stores'
+import { CustomPayloadTopLevel } from '../utils/constants'
 import DialogCustomPayloadEdit from './DialogCustomPayloadEdit.vue'
 
 export default defineComponent({
@@ -77,7 +79,7 @@ export default defineComponent({
     })
 
     const customPayloadStore = useCustomPayloadStore()
-    const { data: customPayloadList } = storeToRefs(customPayloadStore)
+    const { allItems } = storeToRefs(customPayloadStore)
     const { save: savePayload, remove: removePayload } = customPayloadStore
 
     const editDialog = ref({
@@ -85,11 +87,12 @@ export default defineComponent({
       payload: {
         name: '',
         value: '',
+        category: CustomPayloadTopLevel,
       },
     })
     const updatePayload = async (payload: CustomPayload) => {
       await savePayload(
-        customPayloadList.value.indexOf(editDialog.value.payload),
+        allItems.value.indexOf(editDialog.value.payload),
         payload,
       )
     }
@@ -111,11 +114,13 @@ export default defineComponent({
         sortable: false,
       },
     ] as const
+    const groupBy = [{ key: 'category', order: false }]
     const add = () => {
       editDialog.value.show = true
       editDialog.value.payload = {
         name: '',
         value: '',
+        category: CustomPayloadTopLevel,
       }
     }
     const edit = (payload: CustomPayload) => {
@@ -123,7 +128,7 @@ export default defineComponent({
       editDialog.value.payload = payload
     }
     const remove = (payload: CustomPayload) => {
-      removePayload(customPayloadList.value.indexOf(payload))
+      removePayload(allItems.value.indexOf(payload))
     }
 
     return {
@@ -137,7 +142,8 @@ export default defineComponent({
 
       search,
       headers,
-      customPayloadList,
+      groupBy,
+      allItems,
       add,
       edit,
       remove,

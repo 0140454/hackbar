@@ -110,6 +110,8 @@ export const DefaultSentRequestHeaders = [
   'User-Agent',
 ]
 
+export const CustomPayloadTopLevel = 'Top level'
+
 export const BodyAvailableMethods = ['POST', 'PUT', 'PATCH']
 
 export const LoadFromKey: InjectionKey<(source: BrowseRequest) => void> =
