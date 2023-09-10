@@ -12,7 +12,7 @@
             :append-icon="mdiChevronRight"
             title="Vue.js"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -40,7 +40,7 @@
             :append-icon="mdiChevronRight"
             title="Angular.js for strict CSP"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -67,7 +67,7 @@
             :append-icon="mdiChevronRight"
             title="HTML"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -103,7 +103,7 @@
             :append-icon="mdiChevronRight"
             title="String.fromCharCode"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -123,7 +123,7 @@
             :append-icon="mdiChevronRight"
             title="CTF Snippets"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>

@@ -12,7 +12,7 @@
             :append-icon="mdiChevronRight"
             title="MySQL"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -56,7 +56,7 @@
             :append-icon="mdiChevronRight"
             title="PostgreSQL"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -103,7 +103,7 @@
             :append-icon="mdiChevronRight"
             title="SQLite"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>

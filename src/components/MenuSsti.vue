@@ -12,7 +12,7 @@
             :append-icon="mdiChevronRight"
             title="Jinja2 (Python)"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -80,7 +80,7 @@
             :append-icon="mdiChevronRight"
             title="Java"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>

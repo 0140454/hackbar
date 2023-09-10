@@ -12,7 +12,7 @@
             :append-icon="mdiChevronRight"
             title="Common paths"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>

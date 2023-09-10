@@ -12,7 +12,7 @@
             :append-icon="mdiChevronRight"
             title="Python Reverse Shell"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -32,7 +32,7 @@
             :append-icon="mdiChevronRight"
             title="sh(bash) Reverse Shell"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -52,7 +52,7 @@
             :append-icon="mdiChevronRight"
             title="nc(ncat) Reverse Shell"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
@@ -72,7 +72,7 @@
             :append-icon="mdiChevronRight"
             title="PHP Webshell/Reverse Shell"
             v-bind="props"
-            @click.stop=""
+            @click.stop
           />
         </template>
         <VList>
