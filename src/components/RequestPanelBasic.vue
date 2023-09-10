@@ -73,6 +73,7 @@
             <div class="d-flex align-end">
               <VCombobox
                 v-model="header.name"
+                v-disable-prevent-default.keydown
                 :items="commonRequestHeaders"
                 class="monospaced"
                 label="Name"
