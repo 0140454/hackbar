@@ -48,15 +48,7 @@
 
 <script lang="ts">
 import { cloneDeep } from 'lodash'
-import {
-  PropType,
-  computed,
-  defineComponent,
-  nextTick,
-  ref,
-  toRefs,
-  watch,
-} from 'vue'
+import { PropType, computed, defineComponent, ref, toRefs } from 'vue'
 import { VForm } from 'vuetify/components'
 
 export default defineComponent({
@@ -88,14 +80,6 @@ export default defineComponent({
     const form = ref<InstanceType<typeof VForm>>()
     const valid = ref(false)
     const result = ref<CustomPayload>(cloneDeep(modelValue.value.payload))
-    watch(
-      () => {
-        return `${result.value.name}-${result.value.value}`
-      },
-      () => {
-        nextTick(() => form.value?.validate())
-      },
-    )
 
     return {
       shown,

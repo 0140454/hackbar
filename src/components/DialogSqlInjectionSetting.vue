@@ -59,16 +59,7 @@
 </template>
 
 <script lang="ts">
-import {
-  PropType,
-  computed,
-  defineComponent,
-  inject,
-  nextTick,
-  ref,
-  toRefs,
-  watch,
-} from 'vue'
+import { PropType, computed, defineComponent, inject, ref, toRefs } from 'vue'
 import { VForm } from 'vuetify/components'
 import { ApplyFunctionKey } from '../utils/constants'
 
@@ -105,14 +96,6 @@ export default defineComponent({
       columns: 1,
       position: 1,
     })
-    watch(
-      () => {
-        return `${modelValue.value.show}-${result.value.columns}-${result.value.position}`
-      },
-      () => {
-        nextTick(() => form.value?.validate())
-      },
-    )
 
     const applyFunction = inject(ApplyFunctionKey)!
     const apply = () => {
