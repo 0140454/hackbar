@@ -25,4 +25,4 @@ $body = print_r($data, true);
 header('Content-Type: text/plain');
 header('Content-Length: ' . strlen($body));
 header('X-Script: <script>alert(1)</script>');
-print($body);
+print $body;

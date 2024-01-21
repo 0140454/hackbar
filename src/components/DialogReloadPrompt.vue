@@ -58,5 +58,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style lang="scss" module></style>

@@ -62,8 +62,8 @@
             index === 0
               ? 'pt-3'
               : request.headers[index - 1].value.length === 0
-              ? 'pt-3'
-              : 'pt-2'
+                ? 'pt-3'
+                : 'pt-2'
           "
         >
           <div>
@@ -237,5 +237,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style lang="scss" module></style>
