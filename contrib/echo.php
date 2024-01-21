@@ -13,7 +13,7 @@ $empty = isset($_GET['empty']);
 
 if ($mode === 'csp') {
     header("Content-Security-Policy: script-src 'self'; form-action 'self';");
-} else if ($mode === 'redirect') {
+} elseif ($mode === 'redirect') {
     header('Location: ' . (empty($target) ? '/' : $target));
 }
 

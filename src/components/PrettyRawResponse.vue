@@ -400,7 +400,7 @@ export default defineComponent({
             resultStart >= textStart &&
             resultStart < textEnd
           ) {
-            record.range.setStart(node!, resultStart - textStart)
+            record.range.setStart(node, resultStart - textStart)
             record.startFound = true
           }
           if (
@@ -408,7 +408,7 @@ export default defineComponent({
             resultEnd >= textStart &&
             resultEnd <= textEnd
           ) {
-            record.range.setEnd(node!, resultEnd - textStart)
+            record.range.setEnd(node, resultEnd - textStart)
 
             finishedResultsIndex = idx
           }
@@ -488,7 +488,7 @@ export default defineComponent({
       range.selectNodeContents(htmlArea.value!)
 
       selection.removeAllRanges()
-      selection.addRange(range as Range)
+      selection.addRange(range)
     }
 
     const onScroll = debounce(highlightInViewportSearchResult, 32)

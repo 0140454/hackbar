@@ -78,10 +78,10 @@ export default defineComponent({
     const { modelValue } = toRefs(props)
     const shown = computed<boolean>({
       set: value => {
-        emit(
-          'update:modelValue',
-          Object.assign({}, modelValue.value, { show: value }),
-        )
+        emit('update:modelValue', {
+          ...modelValue.value,
+          show: value,
+        })
       },
       get: () => {
         return modelValue.value.show

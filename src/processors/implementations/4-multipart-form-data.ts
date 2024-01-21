@@ -28,7 +28,7 @@ export default class MultipartFormDataProcessor extends BodyProcessor {
       const content = parts[idx].substring(delimiterIndex + (crlf ? 4 : 2))
 
       let matched = null
-      const regex = RegExp('(name|filename)=(?:"([^"]+)"|([^;]+))', 'gi')
+      const regex = /(name|filename)=(?:"([^"]+)"|([^;]+))/gi
       while ((matched = regex.exec(header)) !== null) {
         if (matched[1].toLowerCase() === 'name') {
           field.name = matched[2] || matched[3]
