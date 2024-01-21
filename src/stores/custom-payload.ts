@@ -25,12 +25,15 @@ export default defineStore('custom-payload', () => {
   )
 
   const organized = computed(() => {
-    return allItems.value.reduce((result, item) => {
-      result[item.category] = result[item.category] || []
-      result[item.category].push(item)
+    return allItems.value.reduce(
+      (result, item) => {
+        result[item.category] = result[item.category] || []
+        result[item.category].push(item)
 
-      return result
-    }, {} as Record<string, Array<CustomPayload>>)
+        return result
+      },
+      {} as Record<string, Array<CustomPayload>>,
+    )
   })
   const topLevelItems = computed(() => {
     return organized.value[CustomPayloadTopLevel] ?? []

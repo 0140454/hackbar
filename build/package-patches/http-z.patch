@@ -1,42 +1,5 @@
-diff --git a/index.esm.js b/index.esm.js
-index 87bf99204d5c4342f153b80128e0ce3b0d7efdbc..3986847d4ba42740dcda95f2ab8fbe0c7dddfb1e 100644
---- a/index.esm.js
-+++ b/index.esm.js
-@@ -135,8 +135,6 @@
- 
-       this.name = this.constructor.name;
-       this.details = details;
--
--      Error.captureStackTrace(this, this.constructor);
-     }
-   };
- 
-@@ -444,11 +442,8 @@
-           throw HttpZError$5.get('Incorrect header row format, expected: Name: Value', hRow)
-         }
- 
--        // quoted string must be parsed as a single value (https://tools.ietf.org/html/rfc7230#section-3.2.6)
-         if (_$6.isNil(value)) {
-           value = '';
--        } else if (consts$6.regexps.quoutedHeaderValue.test(value)) {
--          value = _$6.trim(value, '"');
-         }
- 
-         return {
-diff --git a/src/error.js b/src/error.js
-index 8653938b355afd6ef87e82f9c64bcc035a36443a..2c36bf6779d2a1903f7e226f35fc3f39e06c0814 100644
---- a/src/error.js
-+++ b/src/error.js
-@@ -8,7 +8,5 @@ module.exports = class HttpZError extends Error {
- 
-     this.name = this.constructor.name
-     this.details = details
--
--    Error.captureStackTrace(this, this.constructor)
-   }
- }
 diff --git a/src/parsers/base.js b/src/parsers/base.js
-index 25a141697d3f27324fe1fd4f7ed7d30832d417e0..33475cb41f952775d99fb4b7ec82732ed956204f 100644
+index cdaccd25f96dd655b81e4d4e35e5e71335d890de..e8771282e3aaf2a857baf64798f18c6df41bc27c 100644
 --- a/src/parsers/base.js
 +++ b/src/parsers/base.js
 @@ -34,11 +34,8 @@ class HttpZBaseParser {

@@ -54,12 +54,9 @@ export class FetchRequestExecutor extends RequestExecutor {
 
   setupModifyHeaderRuleCleaner(ruleId: number) {
     const handler = async (
-      details:
-        | Parameters<
-            Parameters<
-              (typeof browser.webRequest.onSendHeaders)['addListener']
-            >[0]
-          >[0],
+      details: Parameters<
+        Parameters<(typeof browser.webRequest.onSendHeaders)['addListener']>[0]
+      >[0],
     ) => {
       if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
@@ -110,12 +107,11 @@ export class FetchRequestExecutor extends RequestExecutor {
     }
 
     const onBeforeRedirectHandler = async (
-      details:
-        | Parameters<
-            Parameters<
-              (typeof browser.webRequest.onBeforeRedirect)['addListener']
-            >[0]
-          >[0],
+      details: Parameters<
+        Parameters<
+          (typeof browser.webRequest.onBeforeRedirect)['addListener']
+        >[0]
+      >[0],
     ) => {
       if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
@@ -142,12 +138,9 @@ export class FetchRequestExecutor extends RequestExecutor {
     )
 
     const onCompletedHandler = async (
-      details:
-        | Parameters<
-            Parameters<
-              (typeof browser.webRequest.onCompleted)['addListener']
-            >[0]
-          >[0],
+      details: Parameters<
+        Parameters<(typeof browser.webRequest.onCompleted)['addListener']>[0]
+      >[0],
     ) => {
       if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return
@@ -174,12 +167,11 @@ export class FetchRequestExecutor extends RequestExecutor {
     )
 
     const onErrorOccurredHandler = async (
-      details:
-        | Parameters<
-            Parameters<
-              (typeof browser.webRequest.onErrorOccurred)['addListener']
-            >[0]
-          >[0],
+      details: Parameters<
+        Parameters<
+          (typeof browser.webRequest.onErrorOccurred)['addListener']
+        >[0]
+      >[0],
     ) => {
       if (!isSelfOrigin(details.initiator ?? details.originUrl)) {
         return

@@ -19,28 +19,8 @@ process.on('uncaughtException', err => {
   throw err
 })
 
-// Get version
-let version = undefined
-try {
-  const info = child_process
-    .execFileSync('yarn', ['info', '--json', '-R', 'curlconverter'], {
-      cwd: projectDir,
-    })
-    .toString()
-    .trim()
-  version = JSON.parse(info)['children']['Version']
-} catch (err) {
-  version = child_process
-    .execFileSync('npm', ['view', 'curlconverter', 'dist-tags.latest'])
-    .toString()
-    .trim()
-}
-
-if (!version) {
-  throw new Error('Failed to get version')
-} else {
-  console.info(`version: ${version}`)
-}
+// Target version
+const version = '4.9.0'
 
 // Get URLs
 const tarballUrl = child_process
@@ -64,6 +44,13 @@ child_process.execFileSync('curl', [
 child_process.execFileSync(
   'tar',
   ['-xf', tarballPath, '--strip-components=1'],
+  { cwd: buildDir },
+)
+
+// Remove all generators except bash
+child_process.execFileSync(
+  'find',
+  ['-not', '-name', 'json.ts', '-path', './src/generators/*', '-delete'],
   { cwd: buildDir },
 )
 

@@ -96,11 +96,14 @@ class Store {
     while (sortedRecords.length) {
       data = {
         ruleId: this.#ruleId,
-        records: sortedRecords.reduce((result, [tabId, tabData]) => {
-          result[tabId] = tabData.request!
+        records: sortedRecords.reduce(
+          (result, [tabId, tabData]) => {
+            result[tabId] = tabData.request!
 
-          return result
-        }, {} as Record<string, BrowseRequest>),
+            return result
+          },
+          {} as Record<string, BrowseRequest>,
+        ),
       }
 
       const length = this.#encoder.encode(JSON.stringify(data)).length

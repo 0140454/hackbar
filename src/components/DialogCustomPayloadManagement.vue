@@ -22,10 +22,10 @@
             </VToolbar>
           </template>
           <template #[`item.actions`]="{ item }">
-            <VBtn variant="plain" icon @click="edit(item.raw)">
+            <VBtn variant="plain" icon @click="edit(item)">
               <VIcon :icon="mdiPencil" />
             </VBtn>
-            <VBtn variant="plain" icon @click="remove(item.raw)">
+            <VBtn variant="plain" icon @click="remove(item)">
               <VIcon :icon="mdiDelete" />
             </VBtn>
           </template>

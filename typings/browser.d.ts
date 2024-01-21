@@ -4,8 +4,8 @@ import browser from 'webextension-polyfill'
 
 declare module 'webextension-polyfill' {
   namespace Storage {
-    interface Static {
-      session: typeof chrome.storage.session
+    interface StorageArea {
+      QUOTA_BYTES: typeof chrome.storage.session.QUOTA_BYTES
     }
   }
 }
