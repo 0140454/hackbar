@@ -1474,7 +1474,7 @@ __metadata:
 
 "curlconverter@exec:build/package-generators/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.9.0
-  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=a51877&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=410381&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": ^0.0.3
     jsesc: ^3.0.2
@@ -1482,7 +1482,7 @@ __metadata:
     tree-sitter: ^0.20.5
     web-tree-sitter: ^0.20.8
     yamljs: ^0.3.0
-  checksum: f24c179aa3ac543a4a3d9fabdcb66e14ca11648cc197d31093a129aa95c924d7e77b5d1437bb2d9478a40a817bf5902d1609792641c86298517e6cb71d3fd5f3
+  checksum: 77a008c5a4ddefd176dda98934f04b790d406dfdb3ee2b85d194cc9a300788828f02c0c5017b0438abb6f3d09b3f949da56fa14109a2b7e7cf9a2e45c276bc7a
   languageName: node
   linkType: hard
 

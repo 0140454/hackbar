@@ -47,11 +47,15 @@ child_process.execFileSync(
   { cwd: buildDir },
 )
 
-// Remove all generators except bash
+// Remove all generators except json
 child_process.execFileSync(
   'find',
   ['-not', '-name', 'json.ts', '-path', './src/generators/*', '-delete'],
   { cwd: buildDir },
+)
+fs.writeFileSync(
+  path.join(buildDir, 'src/index.ts'),
+  'export { toJsonString } from "./generators/json.js";',
 )
 
 // Patch packages
