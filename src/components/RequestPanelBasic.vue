@@ -28,7 +28,6 @@
             v-show="isBodyEnabled"
             ref="enctypeSelect"
             v-model="request.body.enctype"
-            :class="postControlWrapped ? 'pt-3' : ''"
             density="compact"
             :items="supportedEnctype"
             label="enctype"
@@ -41,7 +40,6 @@
           v-model="request.body.content"
           v-disable-prevent-default.keydown
           class="monospaced"
-          :class="postControlWrapped ? 'pt-3' : 'pt-1'"
           label="Body"
           :rows="1"
           variant="underlined"
@@ -186,20 +184,6 @@ export default defineComponent({
       request.headers.splice(index, 1)
     }
 
-    /* RWD */
-    const { y: enctypeSelectTop, height: enctypeSelectHeight } =
-      useElementBounding(enctypeSelect as MaybeComputedElementRef)
-    const { y: postEnabledSwitchTop, height: postEnabledSwitchHeight } =
-      useElementBounding(postEnabledSwitch as MaybeComputedElementRef)
-    const postControlWrapped = computed(() => {
-      const selectCenter =
-        enctypeSelectTop.value + enctypeSelectHeight.value / 2
-      const switchCenter =
-        postEnabledSwitchTop.value + postEnabledSwitchHeight.value / 2
-
-      return selectCenter != switchCenter
-    })
-
     /* Events */
     const onFocus = (event: FocusEvent) => {
       emit('focus', event)
@@ -225,7 +209,6 @@ export default defineComponent({
       isBodyEnabled,
 
       themeName: theme.global.name,
-      postControlWrapped,
 
       addHeader,
       deleteHeader,
