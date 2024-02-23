@@ -192,3 +192,4 @@ See `package.json` for details.
 
 - [lebr0nli](https://github.com/lebr0nli)
 - [boylin0](https://github.com/boylin0)
+- [HSwift](https://github.com/HSwift)
