@@ -1,7 +1,7 @@
 {
   "name": "HackBar",
   "description": "A browser extension for Penetration Testing",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": true,
   "scripts": {
     "build:chrome": "VITE_BUILD_TARGET=chrome vite build",
