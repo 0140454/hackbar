@@ -197,7 +197,7 @@ export default defineComponent({
       const switchCenter =
         postEnabledSwitchTop.value + postEnabledSwitchHeight.value / 2
 
-      return Math.abs(selectCenter - switchCenter) < 0.0001
+      return Math.abs(selectCenter - switchCenter) > 0.0001
     })
 
     /* Events */
