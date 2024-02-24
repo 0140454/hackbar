@@ -28,7 +28,7 @@
             v-show="isBodyEnabled"
             ref="enctypeSelect"
             v-model="request.body.enctype"
-            :class="postControlWrapped ? 'pt-3' : ''"
+            :class="postControlWrapped ? 'pt-5' : ''"
             density="compact"
             :items="supportedEnctype"
             label="enctype"
