@@ -63,6 +63,7 @@ const messageListener = async (message: BrowseRequest) => {
       message.body.content,
       message.body.enctype,
     )
+    const formPrototype = Object.getPrototypeOf(form) as typeof form
 
     const cspViolationEventName = 'securitypolicyviolation'
     const windowUnloadEventName = 'unload'
@@ -99,7 +100,7 @@ const messageListener = async (message: BrowseRequest) => {
     window.addEventListener(windowUnloadEventName, unloadListener)
 
     document.body.appendChild(form)
-    form.submit()
+    formPrototype.submit.call(form)
     document.body.removeChild(form)
 
     await waitPromise
