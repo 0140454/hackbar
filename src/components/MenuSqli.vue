@@ -123,6 +123,44 @@
           />
         </VList>
       </VMenu>
+      <VMenu location="end" open-on-hover>
+        <template #activator="{ props }">
+          <VListItem
+            :append-icon="mdiChevronRight"
+            title="Microsoft SQL Server"
+            v-bind="props"
+            @click.stop
+          />
+        </template>
+        <VList>
+          <VListItem
+            title="Dump all database names"
+            @click="openSqlInjectionPrompt('Payload.SQLi.MSSQL.dumpDatabases')"
+          />
+          <VListItem
+            title="Dump tables from database"
+            @click="openSqlInjectionPrompt('Payload.SQLi.MSSQL.dumpTables')"
+          />
+          <VListItem
+            title="Dump columns from database"
+            @click="openSqlInjectionPrompt('Payload.SQLi.MSSQL.dumpColumns')"
+          />
+          <VListItem
+            title="Union select statement"
+            @click="
+              openSqlInjectionPrompt('Payload.SQLi.MSSQL.unionSelect', false)
+            "
+          />
+          <VListItem
+            title="Error-based injection statement"
+            @click="applyFunction('Payload.SQLi.MSSQL.errorBased', true)"
+          />
+          <VListItem
+            title="Command execution statement"
+            @click="applyFunction('Payload.SQLi.MSSQL.cmdExec', true)"
+          />
+        </VList>
+      </VMenu>
       <VListItem
         title="Polyglot"
         @click="applyFunction('Payload.SQLi.polyglot', true)"

