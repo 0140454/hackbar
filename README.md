@@ -65,6 +65,7 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
   - Some snippets for CTF
   - Html encode/decode with hex/dec/entity name
   - String.fromCharCode encode/decode
+  - Helper function for converting payload with `atob`
 
 - LFI
 
