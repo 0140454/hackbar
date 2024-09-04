@@ -49,11 +49,11 @@ Available on [Chrome Web Store](https://chrome.google.com/webstore/detail/hackba
 
 - SQLi
 
-  - Dump all database names (MySQL, PostgreSQL)
-  - Dump tables from database (MySQL, PostgreSQL, SQLite)
-  - Dump columns from database (MySQL, PostgreSQL, SQLite)
-  - Union select statement (MySQL, PostgreSQL, SQLite)
-  - Error-based injection statement (MySQL, PostgreSQL)
+  - Dump all database names (MySQL, PostgreSQL, MSSQL)
+  - Dump tables from database (MySQL, PostgreSQL, SQLite, MSSQL)
+  - Dump columns from database (MySQL, PostgreSQL, SQLite, MSSQL)
+  - Union select statement (MySQL, PostgreSQL, SQLite, MSSQL)
+  - Error-based injection statement (MySQL, PostgreSQL, MSSQL)
   - [Dump in one shot payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-dios---dump-in-one-shot) (MySQL)
   - [Dump current query payload](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md#mysql-current-queries) (MySQL)
   - Space to Inline comment
