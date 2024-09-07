@@ -117,10 +117,6 @@
           />
         </VList>
       </VMenu>
-      <VListItem
-        title="atob() helper"
-        @click="applyFunction('Encode.AtobHelper.encode')"
-      />
       <VMenu location="end" open-on-hover>
         <template #activator="{ props }">
           <VListItem
@@ -145,6 +141,10 @@
           />
         </VList>
       </VMenu>
+      <VListItem
+        title="atob() helper"
+        @click="applyFunction('Encode.AtobHelper.encode')"
+      />
       <VListItem
         title="Polyglot"
         @click="applyFunction('Payload.XSS.polyglot', true)"
