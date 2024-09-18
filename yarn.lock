@@ -1105,7 +1105,7 @@ __metadata:
     prettier: ^3.2.5
     sass: ^1.71.1
     typescript: ^5.3.3
-    vite: ^5.4.4
+    vite: ^5.4.6
     vite-plugin-vuetify: ^2.0.4
     vue: ^3.4.19
     vue-cli-plugin-vuetify: ^2.5.8
@@ -4610,9 +4610,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.4.4":
-  version: 5.4.4
-  resolution: "vite@npm:5.4.4"
+"vite@npm:^5.4.6":
+  version: 5.4.6
+  resolution: "vite@npm:5.4.6"
   dependencies:
     esbuild: ^0.21.3
     fsevents: ~2.3.3
@@ -4649,7 +4649,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: fa05a5ef4ef76741c9c105bbf7096fdf41a4fcfff677a4c20e9ef07f66412a12ec41ef3c077a2cd078683abc9232281c18e64935a9f2cfd0ff4cf5d3ff663657
+  checksum: ea293748f624b3bb53e68d30ddc55e7addeaa38bbcde06d900e6d476bef3d0550de2a67f5316680dbeae483afedd3e735fb91b65004659f62bece537ed038a59
   languageName: node
   linkType: hard
 
