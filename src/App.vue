@@ -396,10 +396,6 @@ export default defineComponent({
 
     const redrawScrollbar = () => {
       document.documentElement.className = `v-theme--${theme.global.name.value}`
-      // force to redraw scrollbar
-      document.documentElement.style.overflowY = 'hidden'
-      document.documentElement.clientHeight.toString()
-      document.documentElement.style.overflowY = 'scroll'
     }
 
     watch(theme.global.name, redrawScrollbar, { immediate: true })
@@ -550,7 +546,7 @@ export default defineComponent({
     }
 
     const onScrollAppBar = (event: WheelEvent) => {
-      appBar.value!.$el.scrollLeft += event.deltaY
+      appBar.value!.$el.children[0].scrollLeft += event.deltaY
     }
 
     const onRenderRequested = () => {

@@ -51,6 +51,10 @@ body {
 
 header {
   overflow-x: auto !important;
+
+  .v-toolbar__content {
+    overflow: auto;
+  }
 }
 
 .ellipsis {
