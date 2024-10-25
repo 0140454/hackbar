@@ -24,7 +24,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '21'
       - name: Install dependencies
         run: |
           if ! yarn install; then
