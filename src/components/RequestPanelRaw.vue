@@ -286,7 +286,7 @@ export default defineComponent({
     /* Events */
     const onBlur = () => {
       isEditing = false
-      if (rawRequestInput.value.$el?.offsetHeight) {
+      if (rawRequestInput.value?.$el?.offsetHeight) {
         requestWatcher(props.modelValue)
       }
     }
