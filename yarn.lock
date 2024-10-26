@@ -1578,15 +1578,16 @@ __metadata:
 
 "curlconverter@exec:build/package-generators/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.9.0
-  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=410381&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=d5b1fd&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": ^0.0.3
     jsesc: ^3.0.2
     lossless-json: ^2.0.11
+    nan: ^2.22.0
     tree-sitter: ^0.20.5
     web-tree-sitter: ^0.20.8
     yamljs: ^0.3.0
-  checksum: 77a008c5a4ddefd176dda98934f04b790d406dfdb3ee2b85d194cc9a300788828f02c0c5017b0438abb6f3d09b3f949da56fa14109a2b7e7cf9a2e45c276bc7a
+  checksum: 2d3dfda6f23b306346ee0f4c10837aa39c9ec246a641a3da96d2feac20b08619e05e40b6807a7b0a5fa15dca994360bcd5f70e40927f46e45505963b1f2ee6a6
   languageName: node
   linkType: hard
 
@@ -3309,12 +3310,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.17.0, nan@npm:^2.18.0":
-  version: 2.20.0
-  resolution: "nan@npm:2.20.0"
+"nan@npm:^2.17.0, nan@npm:^2.18.0, nan@npm:^2.22.0":
+  version: 2.22.0
+  resolution: "nan@npm:2.22.0"
   dependencies:
     node-gyp: latest
-  checksum: eb09286e6c238a3582db4d88c875db73e9b5ab35f60306090acd2f3acae21696c9b653368b4a0e32abcef64ee304a923d6223acaddd16169e5eaaf5c508fb533
+  checksum: 222e3a090e326c72f6782d948f44ee9b81cfb2161d5fe53216f04426a273fd094deee9dcc6813096dd2397689a2b10c1a92d3885d2e73fd2488a51547beb2929
   languageName: node
   linkType: hard
 

@@ -71,7 +71,7 @@ child_process.execFileSync(
 )
 const newPackageJson = child_process
   .execFileSync('jq', [
-    'del(.bin) | del(.browser) | del(.dependencies."@curlconverter/tree-sitter") | del(.scripts.prepare)',
+    'del(.bin) | del(.browser) | del(.dependencies."@curlconverter/tree-sitter") | del(.scripts.prepare) | .dependencies.nan = "^2.22.0"',
     packageJsonPath,
   ])
   .toString()
