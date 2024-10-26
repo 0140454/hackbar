@@ -189,6 +189,32 @@ However, there are some limitations:
 
 See `package.json` for details.
 
+## Build Steps
+
+Assume that we are in a clean ubuntu:22.04 container
+
+```bash
+# Update apt
+apt update
+# Install basic tools
+apt install -y curl python3 make gcc g++ patch jq
+# Install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+# Restart shell
+exec "$SHELL"
+# Install Node.js 22
+nvm install 22
+# Install yarn
+npm install -g yarn
+# Go to the source code directory
+cd hackbar
+# Install hackbar dependencies
+yarn install
+# Build hackbar for Firefox and Chrome
+yarn build:firefox
+yarn build:chrome
+```
+
 ## Contributor
 
 - [lebr0nli](https://github.com/lebr0nli)
