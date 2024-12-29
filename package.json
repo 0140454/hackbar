@@ -63,5 +63,5 @@
     "curlconverter": "exec:build/package-generators/curlconverter.js",
     "http-z": "patch:http-z@npm:^7.0.0#build/package-patches/http-z.patch"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@4.5.3"
 }
