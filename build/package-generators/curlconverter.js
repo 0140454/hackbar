@@ -6,7 +6,30 @@ const path = require('path')
 
 const buildDir = execEnv.buildDir
 const packageJsonPath = path.join(buildDir, 'package.json')
+const packageLockPath = path.join(buildDir, 'package-lock.json')
+
 const projectDir = process.env.PROJECT_CWD
+const tarballPath = path.join(
+  projectDir,
+  'build',
+  'package-generators',
+  'curlconverter',
+  'curlconverter-4.9.0.tgz',
+)
+const packageLockSourcePath = path.join(
+  projectDir,
+  'build',
+  'package-generators',
+  'curlconverter',
+  'package-lock.json',
+)
+const patchPath = path.join(
+  projectDir,
+  'build',
+  'package-generators',
+  'curlconverter',
+  'curlconverter.patch',
+)
 
 process.on('uncaughtException', err => {
   if (err.stdout?.length) {
@@ -19,33 +42,13 @@ process.on('uncaughtException', err => {
   throw err
 })
 
-// Target version
-const version = '4.9.0'
-
-// Get URLs
-const tarballUrl = child_process
-  .execFileSync('npm', ['view', `curlconverter@${version}`, 'dist.tarball'])
-  .toString()
-  .trim()
-const packageLockUrl = `https://raw.githubusercontent.com/curlconverter/curlconverter/v${version}/package-lock.json`
-
-// Download files
-const tarballPath = path.join(execEnv.tempDir, 'tarball.tgz')
-const packageLockPath = path.join(buildDir, 'package-lock.json')
-child_process.execFileSync('curl', ['-s', tarballUrl, '-o', tarballPath])
-child_process.execFileSync('curl', [
-  '-s',
-  packageLockUrl,
-  '-o',
-  packageLockPath,
-])
-
-// Extract tarball
+// Prepare source files
 child_process.execFileSync(
   'tar',
   ['-xf', tarballPath, '--strip-components=1'],
   { cwd: buildDir },
 )
+fs.cpSync(packageLockSourcePath, packageLockPath)
 
 // Remove all generators except json
 child_process.execFileSync(
@@ -59,16 +62,10 @@ fs.writeFileSync(
 )
 
 // Patch packages
-child_process.execFileSync(
-  'patch',
-  [
-    '-p',
-    '1',
-    '-i',
-    path.join(projectDir, 'build/package-generators/curlconverter.patch'),
-  ],
-  { cwd: buildDir },
-)
+child_process.execFileSync('patch', ['-p', '1', '-i', patchPath], {
+  cwd: buildDir,
+})
+
 const newPackageJson = child_process
   .execFileSync('jq', [
     'del(.bin) | del(.browser) | del(.dependencies."@curlconverter/tree-sitter") | del(.scripts.prepare) | .dependencies.nan = "^2.22.0"',
@@ -77,6 +74,7 @@ const newPackageJson = child_process
   .toString()
   .trim()
 fs.writeFileSync(packageJsonPath, newPackageJson)
+
 child_process.execFileSync('rm', [
   '-rf',
   path.join(buildDir, 'dist/src'),
@@ -89,6 +87,8 @@ child_process.execFileSync('rm', [
 child_process.execFileSync('npm', ['install'], {
   cwd: buildDir,
 })
+
+// Build package
 child_process.execFileSync('npm', ['run', 'compile'], { cwd: buildDir })
 
 // Cleanup

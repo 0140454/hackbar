@@ -1790,7 +1790,7 @@ __metadata:
 
 "curlconverter@exec:build/package-generators/curlconverter.js::locator=HackBar%40workspace%3A.":
   version: 4.9.0
-  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=d5b1fd&locator=HackBar%40workspace%3A."
+  resolution: "curlconverter@exec:build/package-generators/curlconverter.js#build/package-generators/curlconverter.js::hash=d8dc70&locator=HackBar%40workspace%3A."
   dependencies:
     "@curlconverter/tree-sitter-bash": "npm:^0.0.3"
     jsesc: "npm:^3.0.2"
