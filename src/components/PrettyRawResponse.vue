@@ -592,7 +592,6 @@ export default defineComponent({
   white-space: pre-wrap;
   word-break: break-all;
 }
-// FIXME: Firefox doesn't support Custom Highlight API
 ::highlight(searchResult) {
   background-color: yellow;
   color: black;
