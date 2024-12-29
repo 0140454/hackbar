@@ -31,7 +31,7 @@ window.Encode.Base64 = {
     let result = null
     try {
       result = CryptoJS.enc.Utf8.stringify(wordArray)
-    } catch (error) {
+    } catch (_) {
       result = CryptoJS.enc.Latin1.stringify(wordArray)
     }
 
@@ -50,7 +50,7 @@ window.Encode.Hexadecimal = {
     let result = null
     try {
       result = CryptoJS.enc.Utf8.stringify(wordArray)
-    } catch (error) {
+    } catch (_) {
       result = CryptoJS.enc.Latin1.stringify(wordArray)
     }
 
