@@ -20,7 +20,7 @@
     "@mdi/js": "^7.4.47",
     "@vueuse/core": "^12.2.0",
     "crypto-js": "^4.2.0",
-    "curlconverter": "^4.9.0",
+    "curlconverter": "^4.11.0",
     "highlight.js": "^11.11.1",
     "http-z": "^7.1.1",
     "pinia": "^2.3.0",

@@ -1,5 +1,5 @@
 diff --git a/src/Warnings.ts b/src/Warnings.ts
-index 8c8e02d6e4bef19e1d385c8181cf24416a7ed642..c215cdbae8356d7b1cf30817d914cd280c7f8552 100644
+index e797c14..0014e02 100644
 --- a/src/Warnings.ts
 +++ b/src/Warnings.ts
 @@ -1,4 +1,4 @@
@@ -9,7 +9,7 @@ index 8c8e02d6e4bef19e1d385c8181cf24416a7ed642..c215cdbae8356d7b1cf30817d914cd28
  import type { Request } from "./Request.js";
  
 diff --git a/src/generators/json.ts b/src/generators/json.ts
-index 94f1147c3d6719eb6aed9f32f2c0972509bbbc9b..a9d34fc2ad5a25880d59f0442ee12808b750e70d 100644
+index 4a1a956..ce25d32 100644
 --- a/src/generators/json.ts
 +++ b/src/generators/json.ts
 @@ -235,14 +235,14 @@ export function _toJsonString(
@@ -19,7 +19,7 @@ index 94f1147c3d6719eb6aed9f32f2c0972509bbbc9b..a9d34fc2ad5a25880d59f0442ee12808
 -export function toJsonStringWarn(
 +export async function toJsonStringWarn(
    curlCommand: string | string[],
-   warnings: Warnings = []
+   warnings: Warnings = [],
 -): [string, Warnings] {
 -  const requests = parse(curlCommand, supportedArgs, warnings);
 +): Promise<[string, Warnings]> {
@@ -33,7 +33,7 @@ index 94f1147c3d6719eb6aed9f32f2c0972509bbbc9b..a9d34fc2ad5a25880d59f0442ee12808
 +  return (await toJsonStringWarn(curlCommand))[0];
  }
 diff --git a/src/parse.ts b/src/parse.ts
-index 876d33fe257f0b60e6b679cd8ee4df6842c6f990..c0f2c8994889e503ed483ff8cfb9b545f18bb36f 100644
+index 0b2c81c..48167c4 100644
 --- a/src/parse.ts
 +++ b/src/parse.ts
 @@ -23,12 +23,12 @@ export function clip(s: string, maxLength = 30): string {
@@ -43,7 +43,7 @@ index 876d33fe257f0b60e6b679cd8ee4df6842c6f990..c0f2c8994889e503ed483ff8cfb9b545
 -function findCommands(
 +async function findCommands(
    curlCommand: string | string[],
-   warnings: Warnings
+   warnings: Warnings,
 -): [Word[], Word?, Word?][] {
 +): Promise<[Word[], Word?, Word?][]> {
    if (typeof curlCommand === "string") {
@@ -60,17 +60,17 @@ index 876d33fe257f0b60e6b679cd8ee4df6842c6f990..c0f2c8994889e503ed483ff8cfb9b545
 +export async function parse(
    command: string | string[],
    supportedArgs?: Set<string>,
-   warnings: Warnings = []
+   warnings: Warnings = [],
 -): Request[] {
 +): Promise<Request[]> {
    let requests: Request[] = [];
 -  const curlCommands = findCommands(command, warnings);
 +  const curlCommands = await findCommands(command, warnings);
    for (const [argv, stdin, stdinFile] of curlCommands) {
-     const globalConfig = curl.parseArgs(
+     const [globalConfig] = curl.parseArgs(
        argv,
 diff --git a/src/shell/Word.ts b/src/shell/Word.ts
-index f8bbbff0fc7ac8fd4df730c03fdb66179c305f5f..50cb369101a7313e3020149dedd0e63fc0d703da 100644
+index b130ac4..d766e5e 100644
 --- a/src/shell/Word.ts
 +++ b/src/shell/Word.ts
 @@ -4,7 +4,7 @@
@@ -83,7 +83,7 @@ index f8bbbff0fc7ac8fd4df730c03fdb66179c305f5f..50cb369101a7313e3020149dedd0e63f
  
  export interface ShellToken {
 diff --git a/src/shell/tokenizer.ts b/src/shell/tokenizer.ts
-index 0ce8616e84e011c9bf2b8eb5cdd8820671561be0..bf4cb5b7f11be6ae9f5957263b40747bb8fb9f03 100644
+index 5270218..7db0f08 100644
 --- a/src/shell/tokenizer.ts
 +++ b/src/shell/tokenizer.ts
 @@ -3,8 +3,8 @@ import { Word, Token, firstShellToken } from "./Word.js";
@@ -95,36 +95,27 @@ index 0ce8616e84e011c9bf2b8eb5cdd8820671561be0..bf4cb5b7f11be6ae9f5957263b40747b
 +import parserPromise from "./webParser.js";
 +import type { Parser } from "./webParser.js";
  
- import { underlineNode, type Warnings } from "../Warnings.js";
+ import { underlineNode, underlineCursor, type Warnings } from "../Warnings.js";
  
-@@ -265,7 +265,7 @@ function warnAboutErrorNodes(
-   cursor.gotoFirstChild();
-   while (cursor.gotoNextSibling()) {
-     if (cursor.nodeType === "ERROR") {
--      let currentNode = cursor.currentNode;
-+      let currentNode = cursor.currentNode();
-       try {
-         // TreeCursor.currentNode is a property in Node but a function in the browser
-         // https://github.com/tree-sitter/tree-sitter/issues/2195
-@@ -703,10 +703,11 @@ function nameToWord(
+@@ -705,10 +705,11 @@ function nameToWord(
    return nameWord;
  }
  
 -export function tokenize(
 +export async function tokenize(
    curlCommand: string,
-   warnings: Warnings = []
+   warnings: Warnings = [],
 -): [Word[], Word?, Word?][] {
 +): Promise<[Word[], Word?, Word?][]> {
-+  const parser = await parserPromise;
++  const parser = await parserPromise
    const ast = parser.parse(curlCommand);
-   warnAboutErrorNodes(ast, curlCommand, warnings);
+   warnAboutBadNodes(ast, curlCommand, warnings);
  
 diff --git a/src/shell/webParser.ts b/src/shell/webParser.ts
-index 3401fcfcc29d459a62d539a8edf9b2c592fd9f5e..d8e102efe946de556517da1f77e0aef60754a57a 100644
+index 3222102..2509b47 100644
 --- a/src/shell/webParser.ts
 +++ b/src/shell/webParser.ts
-@@ -1,13 +1,29 @@
+@@ -1,18 +1,27 @@
  // This file replaces Parser.ts when curlconverter is running in the browser.
  
  import Parser from "web-tree-sitter";
@@ -133,31 +124,34 @@ index 3401fcfcc29d459a62d539a8edf9b2c592fd9f5e..d8e102efe946de556517da1f77e0aef6
 +// @ts-ignore
 +import wasmBash from "../../tree-sitter-bash.wasm?url";
  
--// NOTE: Top-level await is not available in Safari until Safari 15
+-// NOTE: top-level await requires Safari 15+
 -// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#browser_compatibility
--await Parser.init();
+-await Parser.init({
+-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-  locateFile(scriptName: string, scriptDirectory: string) {
+-    return "/" + scriptName;
+-  },
+-});
 -const Bash = await Parser.Language.load("/tree-sitter-bash.wasm");
 -const parser = new Parser();
 -parser.setLanguage(Bash);
 +export default new Promise<Parser>(async (resolve, reject) => {
-+  try {
-+    await Parser.init({
-+      locateFile: () => {
-+        if (typeof wasmParser === 'string') {
-+          return wasmParser;
-+        }
++  Parser.init({
++    locateFile: () => {
++      if (typeof wasmParser === 'string') {
++        return wasmParser;
++      }
++
++      return URL.createObjectURL(new Blob([wasmParser]));
++    }
++  }).then(() => {
++    return Parser.Language.load(wasmBash);
++  }).then(bash => {
++    const parser = new Parser();
++    parser.setLanguage(bash);
  
 -export default parser;
-+        return URL.createObjectURL(new Blob([wasmParser]));
-+      }
-+    });
-+    const Bash = await Parser.Language.load(wasmBash);
-+    const parser = new Parser();
-+    parser.setLanguage(Bash);
-+
 +    resolve(parser);
-+  } catch (err) {
-+    reject(err);
-+  }
++  }).catch(reject);
 +});
  export type { Parser };

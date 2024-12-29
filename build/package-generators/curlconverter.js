@@ -14,7 +14,7 @@ const tarballPath = path.join(
   'build',
   'package-generators',
   'curlconverter',
-  'curlconverter-4.9.0.tgz',
+  'curlconverter-4.11.0.tgz',
 )
 const packageLockSourcePath = path.join(
   projectDir,
