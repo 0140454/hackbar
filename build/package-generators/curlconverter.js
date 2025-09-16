@@ -7,6 +7,7 @@ const path = require('path')
 const buildDir = execEnv.buildDir
 const packageJsonPath = path.join(buildDir, 'package.json')
 const packageLockPath = path.join(buildDir, 'package-lock.json')
+const generatorsDir = path.join(buildDir, 'src', 'generators')
 
 const projectDir = process.env.PROJECT_CWD
 const tarballPath = path.join(
@@ -51,11 +52,11 @@ child_process.execFileSync(
 fs.cpSync(packageLockSourcePath, packageLockPath)
 
 // Remove all generators except json
-child_process.execFileSync(
-  'find',
-  ['-not', '-name', 'json.ts', '-path', './src/generators/*', '-delete'],
-  { cwd: buildDir },
-)
+for (const file of fs.readdirSync(generatorsDir)) {
+  if (file !== 'json.ts') {
+    fs.rmSync(path.join(generatorsDir, file), { recursive: true, force: true })
+  }
+}
 fs.writeFileSync(
   path.join(buildDir, 'src/index.ts'),
   'export { toJsonString } from "./generators/json.js";',
