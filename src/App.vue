@@ -19,7 +19,7 @@
           <VListItem title="From tab (default)" @click="load" />
           <VListItem
             title="From cURL command"
-            @click="requestLoaderDialog.show = true"
+            @click="curlCommandLoaderDialog.show = true"
           />
         </VList>
       </VMenu>
@@ -77,8 +77,8 @@
     </VMain>
     <DialogReloadPrompt v-model="reloadDialog" />
     <DialogRequestLoader
-      v-if="requestLoaderDialog.show"
-      v-model="requestLoaderDialog"
+      v-if="curlCommandLoaderDialog.show"
+      v-model="curlCommandLoaderDialog"
     />
     <DialogSqlInjectionSetting v-model="sqlInjectionDialog" />
     <DialogReverseShellSetting v-model="reverseShellDialog" />
@@ -183,7 +183,7 @@ export default defineComponent({
     const reloadDialog = ref({
       show: false,
     })
-    const requestLoaderDialog = ref({
+    const curlCommandLoaderDialog = ref({
       show: false,
     })
     const sqlInjectionDialog = ref({
@@ -570,7 +570,7 @@ export default defineComponent({
       theme,
 
       reloadDialog,
-      requestLoaderDialog,
+      curlCommandLoaderDialog,
       sqlInjectionDialog,
       reverseShellDialog,
       customPayloadDialog,
